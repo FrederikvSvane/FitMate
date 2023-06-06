@@ -5,7 +5,7 @@
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "The internationally awarded best app of all time",
+    "description": "flutter_fitness_app",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

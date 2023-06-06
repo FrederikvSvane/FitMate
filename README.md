@@ -1,6 +1,6 @@
 # flutter_fitness_app
 
-The internationally awarded best app of all time
+flutter_fitness_app
 
 ## Getting Started
 
