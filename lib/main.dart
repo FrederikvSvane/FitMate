@@ -27,7 +27,6 @@ Future<void> main()  async {
     routes: {
       "/": (context) => const Navigation(),
     },
-
   ));
 }
 

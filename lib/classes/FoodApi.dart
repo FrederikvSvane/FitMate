@@ -5,8 +5,9 @@ class FoodApi {
   final int barcode;
   final String nameComponent;
   final num calories;
+  final num proteins;
 
-  FoodApi({required this.barcode, required this.nameComponent, required this.calories});
+  FoodApi({required this.barcode, required this.nameComponent, required this.calories, required this.proteins});
 
   static Future<FoodApi> fetchFoodApi(int barcode) async {
     var uri = Uri.https('world.openfoodfacts.org', "/api/2/product/$barcode.json");
@@ -27,11 +28,13 @@ class FoodApi {
       int barcodeData = int.parse(json['code']);
       String nameComponentData = json['product']['product_name'] ?? '';
       num caloriesData = json['product']['nutriments']['energy-kcal_100g'] ?? 0;
+      num proteinsData =json['product']['nutriments']['proteins_100g'] ?? 0;
 
       FoodApi foodApi = FoodApi(
         barcode: barcodeData,
         nameComponent: nameComponentData,
         calories: caloriesData,
+        proteins: proteinsData,
       );
       return foodApi;
     } else {

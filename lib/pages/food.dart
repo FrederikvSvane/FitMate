@@ -11,13 +11,13 @@ class Food extends StatefulWidget {
 
 class FoodState extends State<Food> {
   final barcodeController = TextEditingController();
+  final howMuchController = TextEditingController();
+  String howMuch = '';
   Future<FoodApi>? foodApiFuture;
 
-  Future<FoodApi> fetchFood(String barcode) {
-    if (barcode.isEmpty) {
-      throw ArgumentError('Please enter a barcode');
-    }
 
+
+  Future<FoodApi> fetchFood(String barcode) {
     try {
       var barcodeInt = int.parse(barcode);
       return FoodApi.fetchFoodApi(barcodeInt);
@@ -52,11 +52,13 @@ class FoodState extends State<Food> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text('Name Component: ${snapshot.data!.nameComponent}'),
-                              Text('Calories: ${snapshot.data!.calories}'),
+                              Text('Calories pr. 100g: ${snapshot.data!.calories}'),
+                              Text('Proteins pr. 100g: ${snapshot.data!.proteins}'),
+                              Text('You ate this many calories:  ${snapshot.data!.calories * int.parse(howMuch) / 100}'),
+                              Text('You ate this much protein:  ${snapshot.data!.proteins * int.parse(howMuch) / 100}')
                             ],
                           ),
                         );
-
                     } else {
                       return const Text('Enter a barcode and press "Fetch Food"');
                     }
@@ -69,22 +71,34 @@ class FoodState extends State<Food> {
                 hintText: 'Enter barcode',
               ),
             ),
+            TextField(
+              controller: howMuchController,
+              decoration: const InputDecoration(
+                hintText: 'how many grams',
+              ),
+            ),
             const SizedBox(height: 10.0), // Adding some spacing between text field and button
             ElevatedButton(
               onPressed: () {
                 if (barcodeController.text.isNotEmpty) {
                   setState(() {
                     foodApiFuture = fetchFood(barcodeController.text);
+                    howMuch = howMuchController.text;
+                    barcodeController.clear();
+                    howMuchController.clear();
+
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Please enter a barcode.'),
-                      duration: Duration(seconds: 2),
+                      duration: Duration(seconds: 1),
                     ),
                   );
                 }
               },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.red[800],),
               child: const Text('Fetch Food'),
             ),
           ],
@@ -97,6 +111,7 @@ class FoodState extends State<Food> {
   void dispose() {
     // Clean up the controller when the widget is removed from the widget tree.
     barcodeController.dispose();
+    howMuchController.dispose();
     super.dispose();
   }
 }
