@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import '../classes/FoodApi.dart';
 
 class Food extends StatefulWidget {
@@ -12,10 +13,8 @@ class Food extends StatefulWidget {
 class FoodState extends State<Food> {
   final barcodeController = TextEditingController();
   final howMuchController = TextEditingController();
-  String howMuch = '';
+  String howMuch = '100';
   Future<FoodApi>? foodApiFuture;
-
-
 
   Future<FoodApi> fetchFood(String barcode) {
     try {
@@ -80,18 +79,34 @@ class FoodState extends State<Food> {
             const SizedBox(height: 10.0), // Adding some spacing between text field and button
             ElevatedButton(
               onPressed: () {
-                if (barcodeController.text.isNotEmpty) {
+                bool validNumbers = true;
+                // Check if they both can be parsed to int
+                try {
+                  int.parse(barcodeController.text);
+                  int.parse(howMuchController.text);
+                } catch (e) {
+                  validNumbers = false;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please enter a valid barcode and/or how much you ate'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                }
+                if (validNumbers && barcodeController.text.isNotEmpty && howMuchController.text.isNotEmpty) {
                   setState(() {
                     foodApiFuture = fetchFood(barcodeController.text);
+                    if (kDebugMode) {
+                      print(howMuchController.text.runtimeType);
+                    }
                     howMuch = howMuchController.text;
                     barcodeController.clear();
                     howMuchController.clear();
-
                   });
-                } else {
+                } else if (barcodeController.text.isEmpty || howMuchController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Please enter a barcode.'),
+                      content: Text('Please enter a barcode and/or how much you ate'),
                       duration: Duration(seconds: 1),
                     ),
                   );
@@ -101,6 +116,23 @@ class FoodState extends State<Food> {
                 foregroundColor: Colors.white, backgroundColor: Colors.red[800],),
               child: const Text('Fetch Food'),
             ),
+            ElevatedButton(
+              onPressed: () async {
+                var res = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SimpleBarcodeScannerPage(),
+                    ));
+                setState(() {
+                  if (res is String) {
+                    var result = res;
+                    print(result);
+                    barcodeController.text = result;
+                  }
+                });
+              },
+              child: const Text('Open Scanner'),
+            )
           ],
         ),
       ),
