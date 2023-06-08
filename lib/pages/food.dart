@@ -51,10 +51,10 @@ class FoodState extends State<Food> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text('Name Component: ${snapshot.data!.nameComponent}'),
-                              Text('Calories pr. 100g: ${snapshot.data!.calories}'),
-                              Text('Proteins pr. 100g: ${snapshot.data!.proteins}'),
-                              Text('You ate this many calories:  ${snapshot.data!.calories * int.parse(howMuch) / 100}'),
-                              Text('You ate this much protein:  ${snapshot.data!.proteins * int.parse(howMuch) / 100}')
+                              Text('Calories pr. 100g: ${(snapshot.data!.calories).toStringAsFixed(2)}'),
+                              Text('Proteins pr. 100g: ${(snapshot.data!.proteins).toStringAsFixed(2)}'),
+                              Text('You ate this many calories:  ${(snapshot.data!.calories * int.parse(howMuch) / 100).toStringAsFixed(2)}'),
+                              Text('You ate this much protein:  ${(snapshot.data!.proteins * int.parse(howMuch) / 100).toStringAsFixed(2)}')
                             ],
                           ),
                         );
