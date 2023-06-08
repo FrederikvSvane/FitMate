@@ -16,9 +16,9 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation> {
   int selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
+    Profile(),
     Food(),
     Workout(),
-    Profile(),
     History(),
     Measure(),
   ];
@@ -37,25 +37,25 @@ class _NavigationState extends State<Navigation> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.black),
+            icon: Icon(Icons.person, color: Colors.red[800]),
             label: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.set_meal, color: Colors.black),
+            icon: Icon(Icons.set_meal, color: Colors.red[800]),
             label: 'Food',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.fitness_center, color: Colors.black),
+            icon: Icon(Icons.fitness_center, color: Colors.red[800]),
             label: 'Workout',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.history, color: Colors.black),
+            icon: Icon(Icons.history, color: Colors.red[800]),
             label: 'History',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart, color: Colors.black),
+            icon: Icon(Icons.bar_chart, color: Colors.red[800]),
             label: 'Measure',
           ),
         ],

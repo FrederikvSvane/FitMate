@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
-import'package:http/http.dart' as http;
 
-import 'classes/FoodApi.dart';
 
-void main() {
-  FoodApi foodApi = FoodApi;
-  foodApi.fetchFoodApi(5060337502290);
+Future<void> main()  async {
+
+
   runApp(MaterialApp(
 
     // theme: ThemeData(
@@ -27,7 +25,7 @@ void main() {
 
     initialRoute: "/",
     routes: {
-      "/": (context) => Navigation(),
+      "/": (context) => const Navigation(),
     },
 
   ));
