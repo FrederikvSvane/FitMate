@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+
 import '../classes/FoodApi.dart';
+import '../main.dart';
 
 class Food extends StatefulWidget {
   const Food({super.key});
@@ -19,11 +21,46 @@ class FoodState extends State<Food> {
   Future<FoodApi> fetchFood(String barcode) {
     try {
       var barcodeInt = int.parse(barcode);
-      return FoodApi.fetchFoodApi(barcodeInt);
+      var foodApi = FoodApi.fetchFoodApi(barcodeInt);
+      return foodApi;
     } catch (e) {
       throw ArgumentError('Invalid barcode: $barcode');
     }
   }
+
+  Future<void> addMeal() async {
+    if (foodApiFuture != null) {
+      try {
+        FoodApi result = await foodApiFuture!;
+        await result.insertMeal(database);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Meal added successfully'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to add meal'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> printAllMeals() async {
+    List<FoodApi> meals = await FoodApi.getAllMeals(database);
+    for (var meal in meals) {
+      print('Barcode: ${meal.barcode}');
+      print('Name Component: ${meal.nameComponent}');
+      print('Calories: ${meal.calories}');
+      print('Proteins: ${meal.proteins}');
+      print('---------------------------');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +88,10 @@ class FoodState extends State<Food> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text('Name Component: ${snapshot.data!.nameComponent}'),
-                              Text('Calories pr. 100g: ${snapshot.data!.calories}'),
-                              Text('Proteins pr. 100g: ${snapshot.data!.proteins}'),
-                              Text('You ate this many calories:  ${snapshot.data!.calories * int.parse(howMuch) / 100}'),
-                              Text('You ate this much protein:  ${snapshot.data!.proteins * int.parse(howMuch) / 100}')
+                              Text('Calories pr. 100g: ${(snapshot.data!.calories).toStringAsFixed(2)}'),
+                              Text('Proteins pr. 100g: ${(snapshot.data!.proteins).toStringAsFixed(2)}'),
+                              Text('You ate this many calories:  ${(snapshot.data!.calories * int.parse(howMuch) / 100).toStringAsFixed(2)}'),
+                              Text('You ate this much protein:  ${(snapshot.data!.proteins * int.parse(howMuch) / 100).toStringAsFixed(2)}')
                             ],
                           ),
                         );
@@ -132,7 +169,16 @@ class FoodState extends State<Food> {
                 });
               },
               child: const Text('Open Scanner'),
-            )
+            ),
+            ElevatedButton(
+              onPressed: addMeal,
+              child: const Text('Add Meal'),
+            ),
+            ElevatedButton(
+              onPressed: printAllMeals,
+              child: const Text('Print All Meals'),
+            ),
+
           ],
         ),
       ),
