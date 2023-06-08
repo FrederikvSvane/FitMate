@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
+import 'package:flutter_fitness_app/pages/activeWorkout.dart';
 
 
 Future<void> main()  async {
@@ -26,6 +27,7 @@ Future<void> main()  async {
     initialRoute: "/",
     routes: {
       "/": (context) => const Navigation(),
+      "/activeWorkout": (context) => const ActiveWorkout(),
     },
   ));
 }
