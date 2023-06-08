@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import '../classes/FoodApi.dart';
 
 class Food extends StatefulWidget {
@@ -14,8 +15,6 @@ class FoodState extends State<Food> {
   final howMuchController = TextEditingController();
   String howMuch = '';
   Future<FoodApi>? foodApiFuture;
-
-
 
   Future<FoodApi> fetchFood(String barcode) {
     try {
@@ -101,6 +100,24 @@ class FoodState extends State<Food> {
                 foregroundColor: Colors.white, backgroundColor: Colors.red[800],),
               child: const Text('Fetch Food'),
             ),
+
+            ElevatedButton(
+              onPressed: () async {
+                var res = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SimpleBarcodeScannerPage(),
+                    ));
+                setState(() {
+                  if (res is String) {
+                    var result = res;
+                    print(result);
+                    barcodeController.text = result;
+                  }
+                });
+              },
+              child: const Text('Open Scanner'),
+            )
           ],
         ),
       ),
