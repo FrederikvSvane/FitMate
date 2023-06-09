@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/cardioExercise.dart';
+import 'package:flutter_fitness_app/classes/timerService.dart';
 
 class ActiveWorkout extends StatefulWidget {
   const ActiveWorkout({Key? key}) : super(key: key);
@@ -8,15 +9,24 @@ class ActiveWorkout extends StatefulWidget {
   @override
   State<ActiveWorkout> createState() => _ActiveWorkoutState();
 }
-
 class _ActiveWorkoutState extends State<ActiveWorkout> {
   List<Exercise> activeWeightExercises = [];
+  TimerService timerService = TimerService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Active Workout'),
+        title: StreamBuilder<int>(
+          stream: timerService.timerStream,
+          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+            if (snapshot.hasData) {
+              return Text('Active Workout: ${snapshot.data} seconds');
+            } else {
+              return Text('Active Workout');
+            }
+          },
+        ),
         foregroundColor: Colors.white,
         backgroundColor: Colors.red[800],
       ),
@@ -74,4 +84,10 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
       ),
     );
   }
+  @override
+  void dispose() {
+    timerService.dispose();
+    super.dispose();
+  }
 }
+
