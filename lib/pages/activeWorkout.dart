@@ -3,31 +3,14 @@ import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/cardioExercise.dart';
 
 class ActiveWorkout extends StatefulWidget {
-  const ActiveWorkout({super.key});
+  const ActiveWorkout({Key? key}) : super(key: key);
 
   @override
   State<ActiveWorkout> createState() => _ActiveWorkoutState();
 }
 
 class _ActiveWorkoutState extends State<ActiveWorkout> {
-
-  //This is very smart ok
-  //Vi laver objekter til weight exercise og cardio exercise
-  //Og så gemmer vi dem i en liste
-
-
-  List<Exercise> activeWeightExercises = [
-];
-
-
-  //Så skal vi også have noget total weight lifted, time spent working out, calories burned yada yada yada
-
-  // int totalWeightLifted = 0;
-  // int totalTimeSpent = 0;
-  // int totalCaloriesBurned = 0;
-  // int totalDistance = 0;
-  // int amountOfNewRecords = 0;
-
+  List<Exercise> activeWeightExercises = [];
 
   @override
   Widget build(BuildContext context) {
@@ -37,38 +20,55 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.red[800],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children:[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0,1,50,3),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    setState(() {
-                      activeWeightExercises.clear();
-                      Navigator.pop(context);
-                    });
-                  },
-                  icon: Icon(Icons.cancel_outlined), label: Text("Cancel Workout"),
-                ),
+      body: Stack(
+        children: [
+          // List of exercises
+          ListView.builder(
+            itemCount: activeWeightExercises.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(activeWeightExercises[index].name),
+                // add other fields of Exercise class as needed
+              );
+            },
+          ),
+          // Buttons to cancel workout and add exercise
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Cancel Workout Button
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        activeWeightExercises.clear();
+                        Navigator.pop(context);
+                      });
+                    },
+                    icon: Icon(Icons.cancel_outlined),
+                    label: Text("Cancel Workout"),
+                  ),
+                  // Add Exercise Button
+                  ElevatedButton.icon(
+                    onPressed: () async{
+                      dynamic result = await Navigator.pushNamed(context, '/addExercise');
+                      if (result != null) {
+                        setState(() {
+                          activeWeightExercises.add(result);
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text("Add Exercise"),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(40,1,10,3),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/addExercise');
-                  },
-                  icon: Icon(Icons.add), label: Text("Add Exercise"),
-                ),
-
-
-              ),
-            ],
-
+            ),
           ),
         ],
       ),

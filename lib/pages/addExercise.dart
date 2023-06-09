@@ -135,7 +135,10 @@ class _AddExerciseState extends State<AddExercise> {
               child: Card(
                 child: ListTile(
                   onTap: () {
-                    setState(() {});
+                    setState(() {
+                      Navigator.pop(context,
+                          Exercises[index]);
+                    });
                   },
                   title: Text(Exercises[index].name),
                 ),
