@@ -1,23 +1,36 @@
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
+
+  String userName = 'Jesper';
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container (
-        color: Colors.red[800],
-        child: Stack(
-          children: [
-            Positioned.fill(
-        child: Opacity (
-          opacity: 0.2,
-                child: Image.asset('assets/image/Front page 2.png',
-                fit: BoxFit.cover)
-        )
-            )
-          ],
-        )
-      )
+    return MaterialApp (
+
+    title: 'Flutter demo',
+        home: Scaffold(
+    body: Column (
+    children: [
+      Expanded(
+        flex: 1,
+        child: Container(
+          color: Colors.red[800],
+
+        ),
+      ),
+      Expanded(
+        flex: 1,
+          child: Container(
+      color: Colors.white,
+      ),
+      ),
+      ]
+    ),
+    )
     );
+
+
+
   }
 }
