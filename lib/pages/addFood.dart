@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/pages/food.dart';
-import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 import '../classes/FoodApi.dart';
@@ -182,6 +181,7 @@ class AddFoodState extends State<AddFood> {
   Future<void> printAllMeals() async {
     List<FoodApi> meals = await FoodApi.getAllMeals(database);
     for (var meal in meals) {
+      print('id: ${meal.id}');
       print('Barcode: ${meal.barcode}');
       print('Name Component: ${meal.nameComponent}');
       print('Calories: ${meal.calories}');

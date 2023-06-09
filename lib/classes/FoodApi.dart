@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:sqflite/sqflite.dart';
 
 class FoodApi {
+  final int? id;
   final int barcode;
   final String nameComponent;
   final num calories;
@@ -11,10 +12,11 @@ class FoodApi {
   String? mealType;
   String? date;
 
-  FoodApi({required this.barcode, required this.nameComponent, required this.calories, required this.proteins,this.mealType,this.date});
+  FoodApi({this.id, required this.barcode, required this.nameComponent, required this.calories, required this.proteins,this.mealType,this.date});
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id, // SQLite will automatically assign this if it's null.
       'barcode': barcode,
       'nameComponent': nameComponent,
       'calories': calories,
@@ -28,6 +30,7 @@ class FoodApi {
     final List<Map<String, dynamic>> maps = await db.query('meals');
     return List.generate(maps.length, (i) {
       return FoodApi(
+        id: maps[i]['id'],
         barcode: maps[i]['barcode'],
         nameComponent: maps[i]['nameComponent'],
         calories: maps[i]['calories'],
@@ -92,10 +95,13 @@ class FoodApi {
     );
     if (maps.isNotEmpty) {
       return FoodApi(
+        id: maps[0]['id'],
         barcode: maps[0]['barcode'],
         nameComponent: maps[0]['nameComponent'],
         calories: maps[0]['calories'],
         proteins: maps[0]['proteins'],
+        mealType: maps[0]['mealType'],
+        date: maps[0]['date'],
       );
     }
     return null; // Returns null if there are no entries in the database.
