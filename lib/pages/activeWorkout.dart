@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/classes/weightExercise.dart';
+import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/cardioExercise.dart';
 
 class ActiveWorkout extends StatefulWidget {
@@ -16,12 +16,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   //Og så gemmer vi dem i en liste
 
 
-  List<WeightExercise> activeWeightExercises = [
+  List<Exercise> activeWeightExercises = [
 ];
 
-  List<CardioExercise> activeCardioExercises = [
-
-  ];
 
   //Så skal vi også have noget total weight lifted, time spent working out, calories burned yada yada yada
 
@@ -51,7 +48,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                   onPressed: () {
                     setState(() {
                       activeWeightExercises.clear();
-                      activeCardioExercises.clear();
                       Navigator.pop(context);
                     });
                   },
