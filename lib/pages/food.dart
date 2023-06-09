@@ -1,9 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
-import '../classes/FoodApi.dart';
-import '../main.dart';
+
 
 class Food extends StatefulWidget {
   const Food({super.key});
@@ -11,10 +8,12 @@ class Food extends StatefulWidget {
   @override
   State<Food> createState() => _FoodState();
 }
+int? whereDidIComeFrom;
 
 class _FoodState extends State<Food> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -25,13 +24,33 @@ class _FoodState extends State<Food> {
               child: ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, "/addFood");
-
-                    //SKriv mere her hehheh
-
+                    whereDidIComeFrom = 0;
 
                   },
                   child: const Text("Add breakfast")),
+
             ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/addFood");
+                  whereDidIComeFrom = 1;
+
+                },
+                child: const Text("Add Lunch")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/addFood");
+                  whereDidIComeFrom = 2;
+
+                },
+                child: const Text("Add Dinner")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/addFood");
+                  whereDidIComeFrom = 3;
+
+                },
+                child: const Text("Add Snacks")),
           ],
         ),
       ),
