@@ -15,9 +15,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   //Vi laver objekter til weight exercise og cardio exercise
   //Og så gemmer vi dem i en liste
 
-  List<WeightExercise> activeWeightExercises = [
 
-  ];
+  List<WeightExercise> activeWeightExercises = [
+];
 
   List<CardioExercise> activeCardioExercises = [
 
