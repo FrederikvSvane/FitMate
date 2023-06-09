@@ -33,7 +33,7 @@ class _FoodState extends State<Food> {
                     onPressed: () async {
                       whereDidIComeFrom = 0;
                       dynamic text = await Navigator.pushNamed(context, "/addFood");
-                      List<String> list = ['barcode: ${text["barcode"]}, name: ${text["nameComponent"]}, Calories: ${text["calories"]}, proteins: ${text["proteins"]}'];
+                      List<String> list = ['name: ${text["nameComponent"]}, Calories: ${text["calories"]}, proteins: ${text["proteins"]}'];
                       setState(() {
                         breakfastController.text = list.toString();
                       });
