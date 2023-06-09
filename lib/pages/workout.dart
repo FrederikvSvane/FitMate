@@ -41,7 +41,7 @@ class _WorkoutState extends State<Workout> {
                   
                 });
                 },
-              child: Text('Start Workout'),
+              child: Text('Start Emtpy Workout'),
             ),
           ),
         ],

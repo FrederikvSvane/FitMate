@@ -15,28 +15,21 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   //Vi laver objekter til weight exercise og cardio exercise
   //Og så gemmer vi dem i en liste
 
-  List<WeightExercise> weightExercises = [
-    WeightExercise(name: "Squat", sets: 3, reps: 10, weight: 60), //Objekterne jeg sætter ind her er bare til at teste med :DD
-    WeightExercise(name: "Bench Press", sets: 3, reps: 10, weight: 60),
-    WeightExercise(name: "Deadlift", sets: 3, reps: 10, weight: 60),
-    WeightExercise(name: "Overhead Press", sets: 3, reps: 10, weight: 60),
-    WeightExercise(name: "Barbell Row", sets: 3, reps: 10, weight: 60),
+  List<WeightExercise> activeWeightExercises = [
+
   ];
-  List<CardioExercise> cardioExercises = [
-    CardioExercise(name: "Running", time: 30, distance: 5, speed: 10),
-    CardioExercise(name: "Cycling", time: 30, distance: 5, speed: 10),
-    CardioExercise(name: "Rowing", time: 30, distance: 5, speed: 10),
-    CardioExercise(name: "Swimming", time: 30, distance: 5, speed: 10),
-    CardioExercise(name: "Walking", time: 30, distance: 5, speed: 10),
+
+  List<CardioExercise> activeCardioExercises = [
+
   ];
 
   //Så skal vi også have noget total weight lifted, time spent working out, calories burned yada yada yada
 
-  int totalWeightLifted = 0;
-  int totalTimeSpent = 0;
-  int totalCaloriesBurned = 0;
-  int totalDistance = 0;
-  int amountOfNewRecords = 0;
+  // int totalWeightLifted = 0;
+  // int totalTimeSpent = 0;
+  // int totalCaloriesBurned = 0;
+  // int totalDistance = 0;
+  // int amountOfNewRecords = 0;
 
 
   @override
@@ -45,44 +38,42 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
       appBar: AppBar(
         title: Text('Active Workout'),
       ),
-      body: ListView.builder(
-        itemCount: weightExercises.length + cardioExercises.length,
-        itemBuilder: (context, index) {
-          if (index < weightExercises.length) {
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 4.0),
-              child: Card(
-                child: ListTile(
-                  onTap: () {
-                    // Noget logik for at trykke på styrke øvelse
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children:[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0,1,50,3),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      activeWeightExercises.clear();
+                      activeCardioExercises.clear();
+                      Navigator.pop(context);
+                    });
                   },
-                  title: Text(weightExercises[index].name),
+                  icon: Icon(Icons.cancel_outlined), label: Text("Cancel Workout"),
                 ),
               ),
-            );
-          } else {
-
-            int cardioIndex = index - weightExercises.length;
-            //Det kan godt være at der kommer problemer med det her,
-            // når vi skal kunne tilføje øvelser manuelt inde i appen....
-            // Vi må se
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 4.0),
-              child: Card(
-                child: ListTile(
-                  onTap: () {
-                    // Noget logik for at trykke på cardio øvelse
+              Padding(
+                padding: const EdgeInsets.fromLTRB(40,1,10,3),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/addExercise');
                   },
-                  title: Text(cardioExercises[cardioIndex].name),
+                  icon: Icon(Icons.add), label: Text("Add Exercise"),
                 ),
+
+
               ),
-            );
-          }
-        },
+            ],
+
+          ),
+        ],
       ),
-
     );
   }
 }

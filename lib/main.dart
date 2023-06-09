@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/pages/addExercise.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:flutter_fitness_app/pages/activeWorkout.dart';
 
@@ -28,6 +29,7 @@ Future<void> main()  async {
     routes: {
       "/": (context) => const Navigation(),
       "/activeWorkout": (context) => const ActiveWorkout(),
+      "/addExercise": (context) => const AddExercise(),
     },
   ));
 }
