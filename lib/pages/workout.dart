@@ -13,6 +13,8 @@ class _WorkoutState extends State<Workout> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Workout Page'),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.red[800],
       ),
       body: Column(
         children: [

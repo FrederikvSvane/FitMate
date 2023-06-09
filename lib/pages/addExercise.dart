@@ -105,6 +105,8 @@ class _AddExerciseState extends State<AddExercise> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Active Workout'),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.red[800],
       ),
       body: ListView.builder(
         itemCount: Exercises.length,

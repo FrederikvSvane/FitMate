@@ -66,6 +66,8 @@ class AddFoodState extends State<AddFood> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Food'),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.red[800],
       ),
       body: SafeArea(
         child: Padding(

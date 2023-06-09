@@ -16,6 +16,11 @@ class _FoodState extends State<Food> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Food Page'),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.red[800],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

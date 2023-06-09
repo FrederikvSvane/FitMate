@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/pages/activeWorkout.dart';
 import 'package:flutter_fitness_app/pages/addExercise.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:path/path.dart';
