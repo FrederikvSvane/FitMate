@@ -50,8 +50,6 @@ class AddFoodState extends State<AddFood> {
           String calories = result.getCalories().toString();
           String proteins = result.getProteins().toString();
 
-          print(
-              '$barcode, $nameComponent, $calories, $proteins-------------------------------------------');
           Navigator.pop(context, {
             'barcode': barcode,
             'nameComponent': nameComponent,
