@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/pages/activeWorkout.dart';
+import 'package:flutter_fitness_app/pages/addExercise.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -44,6 +46,8 @@ Future<void> main() async {
     initialRoute: "/",
     routes: {
       "/": (context) => const Navigation(),
+      "/activeWorkout": (context) => const ActiveWorkout(),
+      "/addExercise": (context) => const AddExercise(),
 
       "/addFood": (context) => const AddFood(),
     },
