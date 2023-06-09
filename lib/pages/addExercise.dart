@@ -16,11 +16,12 @@ class _AddExerciseState extends State<AddExercise> {
   //Og så gemmer vi dem i en liste
 
   List<WeightExercise> weightExercises = [
-    WeightExercise(name: "Squat", sets: 3, reps: 10, weight: 60), //Objekterne jeg sætter ind her er bare til at teste med :DD
-    WeightExercise(name: "Bench Press", sets: 3, reps: 10, weight: 60),
-    WeightExercise(name: "Deadlift", sets: 3, reps: 10, weight: 60),
-    WeightExercise(name: "Overhead Press", sets: 3, reps: 10, weight: 60),
-    WeightExercise(name: "Barbell Row", sets: 3, reps: 10, weight: 60),
+    WeightExercise(name: "Squat", sets: [], reps: [], weight: []), //Objekterne jeg sætter ind her er bare til at teste med :DD
+    WeightExercise(name: "Bench Press", sets: [], reps: [], weight: []),
+    WeightExercise(name: "Deadlift", sets: [], reps: [], weight: []),
+    WeightExercise(name: "Overhead Press", sets: [], reps: [], weight: []),
+    WeightExercise(name: "Barbell Row", sets: [], reps: [], weight: []),
+
   ];
   List<CardioExercise> cardioExercises = [
     CardioExercise(name: "Running", time: 30, distance: 5, speed: 10),
