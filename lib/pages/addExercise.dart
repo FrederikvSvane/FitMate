@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
+import 'package:flutter_fitness_app/pages/SearchExercises.dart';
 
 class AddExercise extends StatefulWidget {
   const AddExercise({super.key});
@@ -77,10 +78,11 @@ class _AddExerciseState extends State<AddExercise> {
     Exercise(name: "High Knees", time: [], reps: []),
   ];
 
-  sortExercises(){
-    for(int i = 0; i < Exercises.length; i++){
-      for(int j = i+1; j < Exercises.length; j++){
-        if(Exercises[i].name.toLowerCase().compareTo(Exercises[j].name.toLowerCase()) > 0){
+  sortExercises() {
+    for (int i = 0; i < Exercises.length; i++) {
+      for (int j = i + 1; j < Exercises.length; j++) {
+        if (Exercises[i].name.toLowerCase().compareTo(
+            Exercises[j].name.toLowerCase()) > 0) {
           Exercise temp = Exercises[i];
           Exercises[i] = Exercises[j];
           Exercises[j] = temp;
@@ -88,31 +90,48 @@ class _AddExerciseState extends State<AddExercise> {
       }
     }
   }
-  //write method to sort the lists alphabetically
+
+  void _showExerciseSearch(BuildContext context) async {
+    final selectedExercise = await showSearch(
+      context: context,
+      delegate: SearchExercises(Exercises),
+    );
+
+    if (selectedExercise != null) {
+      // Handle the selected exercise
+      // ...
+    }
+    //write method to sort the lists alphabetically
 
 
-  //Så skal vi også have noget total weight lifted, time spent working out, calories burned yada yada yada
+    //Så skal vi også have noget total weight lifted, time spent working out, calories burned yada yada yada
 
-  int totalWeightLifted = 0;
-  int totalTimeSpent = 0;
-  int totalCaloriesBurned = 0;
-  int totalDistance = 0;
-  int amountOfNewRecords = 0;
+    int totalWeightLifted = 0;
+    int totalTimeSpent = 0;
+    int totalCaloriesBurned = 0;
+    int totalDistance = 0;
+    int amountOfNewRecords = 0;
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    sortExercises();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Active Workout'),
-      ),
-      body: ListView.builder(
-        itemCount: Exercises.length,
-        itemBuilder: (context, index) {
-
+    @override
+    Widget build(BuildContext context) {
+      sortExercises();
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Active Workout'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () => _showExerciseSearch(context),
+            ),
+          ],
+        ),
+        body: ListView.builder(
+          itemCount: Exercises.length,
+          itemBuilder: (context, index) {
             return Padding(
               padding:
-                  const EdgeInsets.symmetric(vertical: 3.0, horizontal: 4.0),
+              const EdgeInsets.symmetric(vertical: 3.0, horizontal: 4.0),
               child: Card(
                 child: ListTile(
                   onTap: () {
@@ -122,9 +141,8 @@ class _AddExerciseState extends State<AddExercise> {
                 ),
               ),
             );
-
-        },
-      ),
-    );
+          },
+        ),
+      );
+    }
   }
-}
