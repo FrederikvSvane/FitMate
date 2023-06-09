@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:sqflite/sqflite.dart';
+
 class FoodApi {
   final int barcode;
   final String nameComponent;
@@ -9,12 +11,46 @@ class FoodApi {
 
   FoodApi({required this.barcode, required this.nameComponent, required this.calories, required this.proteins});
 
+  Map<String, dynamic> toMap() {
+    return {
+      'barcode': barcode,
+      'nameComponent': nameComponent,
+      'calories': calories,
+      'proteins': proteins,
+    };
+  }
+
+  static Future<List<FoodApi>> getAllMeals(Database db) async {
+    final List<Map<String, dynamic>> maps = await db.query('meals');
+    return List.generate(maps.length, (i) {
+      return FoodApi(
+        barcode: maps[i]['barcode'],
+        nameComponent: maps[i]['nameComponent'],
+        calories: maps[i]['calories'],
+        proteins: maps[i]['proteins'],
+      );
+    });
+  }
+
+
+  Future<void> insertMeal(Database db) async {
+    // Insert the meal into the correct table.
+    await db.insert(
+      'meals',
+      toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+
   static Future<FoodApi> fetchFoodApi(int barcode) async {
     var uri = Uri.https('world.openfoodfacts.org', "/api/2/product/$barcode.json");
 
     Map<String, String> requestHeaders = {
       'User-Agent': 'Your-App-Name - Android - Version 1.0'
     };
+
+
 
     var response = await http.get(uri, headers: requestHeaders);
 
@@ -42,3 +78,4 @@ class FoodApi {
     }
   }
 }
+
