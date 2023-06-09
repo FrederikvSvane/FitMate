@@ -15,6 +15,7 @@ class _AddExerciseState extends State<AddExercise> {
   //This is very smart ok
   //Vi laver objekter til weight exercise og cardio exercise
   //Og så gemmer vi dem i en liste
+  Exercise? selectedExercise;
 
   List<Exercise> Exercises = [
     Exercise(name: "Squat", sets: [], reps: [], weight: []),
@@ -78,7 +79,7 @@ class _AddExerciseState extends State<AddExercise> {
     Exercise(name: "High Knees", time: [], reps: []),
   ];
 
-  sortExercises() {
+  sortExercises() { //Sorterer øvelserne alfabetisk
     for (int i = 0; i < Exercises.length; i++) {
       for (int j = i + 1; j < Exercises.length; j++) {
         if (Exercises[i].name.toLowerCase().compareTo(
@@ -92,18 +93,17 @@ class _AddExerciseState extends State<AddExercise> {
   }
 
   void _showExerciseSearch(BuildContext context) async {
-    final selectedExercise = await showSearch(
+    final result = await showSearch(
       context: context,
       delegate: SearchExercises(Exercises),
     );
 
-    if (selectedExercise != null) {
-      // Handle the selected exercise
-      // ...
+    if (result != null) {
+      //Den valgte øvelse bliver returneret tilbage til active workout
+      setState(() {
+        Navigator.pop(context, result);
+      });
     }
-    //write method to sort the lists alphabetically
-
-
     //Så skal vi også have noget total weight lifted, time spent working out, calories burned yada yada yada
 
     int totalWeightLifted = 0;
