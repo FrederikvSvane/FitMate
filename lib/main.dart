@@ -16,7 +16,7 @@ Future<void> main() async {
     join(await getDatabasesPath(), 'meal_database.db'),
     onCreate: (db, version) {
       return db.execute(
-        'CREATE TABLE meals(barcode INTEGER PRIMARY KEY, nameComponent TEXT, calories REAL, proteins REAL)',
+        'CREATE TABLE meals(barcode INTEGER PRIMARY KEY, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)',
       );
     },
     version: 1,

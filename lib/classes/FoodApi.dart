@@ -19,6 +19,8 @@ class FoodApi {
       'nameComponent': nameComponent,
       'calories': calories,
       'proteins': proteins,
+      'mealType': mealType,
+      'date': date,
     };
   }
 
