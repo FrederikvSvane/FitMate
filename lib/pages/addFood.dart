@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/pages/food.dart';
+import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 import '../classes/FoodApi.dart';
@@ -30,22 +32,149 @@ class AddFoodState extends State<AddFood> {
 
   Future<void> addMeal() async {
     if (foodApiFuture != null) {
-      try {
-        FoodApi result = await foodApiFuture!;
-        await result.insertMeal(database);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Meal added successfully'),
-            duration: Duration(seconds: 1),
-          ),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to add meal'),
-            duration: Duration(seconds: 1),
-          ),
-        );
+      if (whereDidIComeFrom == 0) {
+        try {
+          FoodApi result = await foodApiFuture!;
+          String mealType = 'Breakfast';
+          String date = DateTime.now().toString();
+          result.date = date;
+          result.mealType = mealType;
+          await result.insertMeal(database);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Meal added successfully'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          String barcode = result.getBarcode().toString();
+          String nameComponent = result.getNameComponent().toString();
+          String calories = result.getCalories().toString();
+          String proteins = result.getProteins().toString();
+
+          print(
+              '$barcode, $nameComponent, $calories, $proteins-------------------------------------------');
+          Navigator.pop(context, {
+            'barcode': barcode,
+            'nameComponent': nameComponent,
+            'calories': calories,
+            'proteins': proteins,
+          });
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to add meal'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
+      } else if (whereDidIComeFrom == 1) {
+        try {
+          FoodApi result = await foodApiFuture!;
+          String mealType = 'Lunch';
+          String date = DateTime.now().toString();
+          result.date = date;
+          result.mealType = mealType;
+          await result.insertMeal(database);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Meal added successfully'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          String barcode = result.getBarcode().toString();
+          String nameComponent = result.getNameComponent().toString();
+          String calories = result.getCalories().toString();
+          String proteins = result.getProteins().toString();
+
+          print(
+              '$barcode, $nameComponent, $calories, $proteins-------------------------------------------');
+          Navigator.pop(context, {
+            'barcode': barcode,
+            'nameComponent': nameComponent,
+            'calories': calories,
+            'proteins': proteins,
+          });
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to add meal'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
+
+      } else if (whereDidIComeFrom == 2) {
+        try {
+          FoodApi result = await foodApiFuture!;
+          String mealType = 'Dinner';
+          String date = DateTime.now().toString();
+          result.date = date;
+          result.mealType = mealType;
+          await result.insertMeal(database);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Meal added successfully'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          String barcode = result.getBarcode().toString();
+          String nameComponent = result.getNameComponent().toString();
+          String calories = result.getCalories().toString();
+          String proteins = result.getProteins().toString();
+
+          print(
+              '$barcode, $nameComponent, $calories, $proteins-------------------------------------------');
+          Navigator.pop(context, {
+            'barcode': barcode,
+            'nameComponent': nameComponent,
+            'calories': calories,
+            'proteins': proteins,
+          });
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to add meal'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
+
+      } else if (whereDidIComeFrom == 3) {
+        try {
+          FoodApi result = await foodApiFuture!;
+          String mealType = 'Snacks';
+          String date = DateTime.now().toString();
+          result.date = date;
+          result.mealType = mealType;
+          await result.insertMeal(database);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Meal added successfully'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          String barcode = result.getBarcode().toString();
+          String nameComponent = result.getNameComponent().toString();
+          String calories = result.getCalories().toString();
+          String proteins = result.getProteins().toString();
+
+          print(
+              '$barcode, $nameComponent, $calories, $proteins-------------------------------------------');
+          Navigator.pop(context, {
+            'barcode': barcode,
+            'nameComponent': nameComponent,
+            'calories': calories,
+            'proteins': proteins,
+          });
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to add meal'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
+
       }
     }
   }
@@ -57,6 +186,8 @@ class AddFoodState extends State<AddFood> {
       print('Name Component: ${meal.nameComponent}');
       print('Calories: ${meal.calories}');
       print('Proteins: ${meal.proteins}');
+      print('Meal Type: ${meal.mealType}');
+      print('Date: ${meal.date}');
       print('---------------------------');
     }
   }
@@ -89,19 +220,24 @@ class AddFoodState extends State<AddFood> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text('Name Component: ${snapshot.data!.nameComponent}'),
-                              Text('Calories pr. 100g: ${(snapshot.data!.calories).toStringAsFixed(2)}'),
-                              Text('Proteins pr. 100g: ${(snapshot.data!.proteins).toStringAsFixed(2)}'),
-                              Text('You ate this many calories:  ${(snapshot.data!.calories * int.parse(howMuch) / 100).toStringAsFixed(2)}'),
-                              Text('You ate this much protein:  ${(snapshot.data!.proteins * int.parse(howMuch) / 100).toStringAsFixed(2)}')
+                              Text(
+                                  'Name Component: ${snapshot.data!.nameComponent}'),
+                              Text(
+                                  'Calories pr. 100g: ${(snapshot.data!.calories).toStringAsFixed(2)}'),
+                              Text(
+                                  'Proteins pr. 100g: ${(snapshot.data!.proteins).toStringAsFixed(2)}'),
+                              Text(
+                                  'You ate this many calories:  ${(snapshot.data!.calories * int.parse(howMuch) / 100).toStringAsFixed(2)}'),
+                              Text(
+                                  'You ate this much protein:  ${(snapshot.data!.proteins * int.parse(howMuch) / 100).toStringAsFixed(2)}')
                             ],
                           ),
                         );
                       } else {
-                        return const Text('Enter a barcode and press "Fetch Food"');
+                        return const Text(
+                            'Enter a barcode and press "Fetch Food"');
                       }
-                    }
-                ),
+                    }),
                 TextField(
                   controller: barcodeController,
                   decoration: const InputDecoration(
@@ -114,7 +250,8 @@ class AddFoodState extends State<AddFood> {
                     hintText: 'how many grams',
                   ),
                 ),
-                const SizedBox(height: 10.0), // Adding some spacing between text field and button
+                const SizedBox(height: 10.0),
+                // Adding some spacing between text field and button
                 ElevatedButton(
                   onPressed: () {
                     bool validNumbers = true;
@@ -166,7 +303,8 @@ class AddFoodState extends State<AddFood> {
                     var res = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const SimpleBarcodeScannerPage(),
+                          builder: (context) =>
+                              const SimpleBarcodeScannerPage(),
                         ));
                     setState(() {
                       if (res is String) {

@@ -8,8 +8,10 @@ class FoodApi {
   final String nameComponent;
   final num calories;
   final num proteins;
+  String? mealType;
+  String? date;
 
-  FoodApi({required this.barcode, required this.nameComponent, required this.calories, required this.proteins});
+  FoodApi({required this.barcode, required this.nameComponent, required this.calories, required this.proteins,this.mealType,this.date});
 
   Map<String, dynamic> toMap() {
     return {
@@ -28,6 +30,8 @@ class FoodApi {
         nameComponent: maps[i]['nameComponent'],
         calories: maps[i]['calories'],
         proteins: maps[i]['proteins'],
+        mealType: maps[i]['mealType'],
+        date: maps[i]['date'],
       );
     });
   }
@@ -77,5 +81,36 @@ class FoodApi {
       throw Exception('Failed to load FoodApi');
     }
   }
+
+  static Future<FoodApi?> getLatestMeal(Database db) async {
+    final List<Map<String, dynamic>> maps = await db.query(
+      'meals',
+      orderBy: 'id DESC',
+      limit: 1,
+    );
+    if (maps.isNotEmpty) {
+      return FoodApi(
+        barcode: maps[0]['barcode'],
+        nameComponent: maps[0]['nameComponent'],
+        calories: maps[0]['calories'],
+        proteins: maps[0]['proteins'],
+      );
+    }
+    return null; // Returns null if there are no entries in the database.
+  }
+
+  getBarcode() {
+    return barcode;
+  }
+  getNameComponent() {
+    return nameComponent;
+  }
+  getCalories() {
+    return calories;
+  }
+  getProteins() {
+    return proteins;
+  }
+
 }
 
