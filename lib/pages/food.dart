@@ -55,7 +55,7 @@ class _FoodState extends State<Food> {
                   onPressed: () async {
                     whereDidIComeFrom = 1;
                     dynamic text = await Navigator.pushNamed(context, "/addFood");
-                    List<String> list = [text["barcode"], text["nameComponent"], text["calories"], text["proteins"]];
+                    List<String> list = ['name: ${text["nameComponent"]}, Calories: ${text["calories"]}, proteins: ${text["proteins"]}'];
                     setState(() {
                       lunchController.text = list.toString();
                     });
@@ -76,7 +76,7 @@ class _FoodState extends State<Food> {
                   onPressed: () async {
                     whereDidIComeFrom = 2;
                     dynamic text = await Navigator.pushNamed(context, "/addFood");
-                    List<String> list = [text["barcode"], text["nameComponent"], text["calories"], text["proteins"]];
+                    List<String> list = ['name: ${text["nameComponent"]}, Calories: ${text["calories"]}, proteins: ${text["proteins"]}'];
                     setState(() {
                       dinnerController.text = list.toString();
                     });
@@ -97,7 +97,7 @@ class _FoodState extends State<Food> {
                   onPressed: () async {
                     whereDidIComeFrom = 3;
                     dynamic text = await Navigator.pushNamed(context, "/addFood");
-                    List<String> list = [text["barcode"], text["nameComponent"], text["calories"], text["proteins"]];
+                    List<String> list = ['name: ${text["nameComponent"]}, Calories: ${text["calories"]}, proteins: ${text["proteins"]}'];
                     setState(() {
                       snacksController.text = list.toString();
                     });
