@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class CardioExercise {
   String name;
-  int time;
-  int distance;
-  int speed;
+  List<num> time;
+  List <num>? distance;
+  List<num>? reps;
 
-  CardioExercise({required this.name, required this.time, required this.distance, required this.speed});
+  CardioExercise({required this.name, required this.time, this.distance, this.reps});
 }
