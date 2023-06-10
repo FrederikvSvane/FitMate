@@ -35,6 +35,16 @@ class DBHelper {
     return maps;
   }
 
+  //Remove meal from database
+  static Future<void> removeMeal(int id) async {
+    final db = await getDatabase();
+    await db.delete(
+      'meals',
+      where: "id = ?",
+      whereArgs: [id],
+    );
+  }
+
 
   static Future<FoodApi?> getLatestMeal() async {
     final db = await getDatabase();
@@ -60,5 +70,7 @@ class DBHelper {
   getDB(){
   return getDatabase();
   }
+
+
 
 }

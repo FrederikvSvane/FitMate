@@ -76,12 +76,11 @@ class AddFoodState extends State<AddFood> {
           duration: Duration(seconds: 1),
         ),
       );
-
       Navigator.pop(context, {
-        'barcode': barcodeController.text,
+        'barcode': int.tryParse(barcodeController.text) ?? 0,
         'nameComponent': nameController.text,
-        'calories': caloriesController.text,
-        'proteins': proteinsController.text,
+        'calories': double.tryParse(caloriesController.text) ?? 0.0,
+        'proteins': double.tryParse(proteinsController.text) ?? 0.0,
       });
     } catch (e) {
       print(e);
@@ -120,14 +119,14 @@ class AddFoodState extends State<AddFood> {
                         hintText: 'Enter name',
                       ),
                     ),
-                    Text("Calories:"),
+                    const Text("Calories:"),
                     TextField(
                       controller: caloriesController,
                       decoration: const InputDecoration(
                         hintText: 'Enter calories',
                       ),
                     ),
-                    Text("Proteins:"),
+                    const Text("Proteins:"),
                     TextField(
                       controller: proteinsController,
                       decoration: const InputDecoration(
