@@ -168,6 +168,7 @@ class _FoodState extends State<Food> {
                             });
                           });
                         }
+                        loadMealsFromDatabase();
                       }
                     },
                     child: const Text("Add breakfast"),
@@ -228,6 +229,7 @@ class _FoodState extends State<Food> {
                         });
                       });
                     }
+                    loadMealsFromDatabase();
                   },
                   child: const Text("Add Lunch"),
                 ),
@@ -286,6 +288,7 @@ class _FoodState extends State<Food> {
                         });
                       });
                     }
+                    loadMealsFromDatabase();
                   },
                   child: const Text("Add Dinner"),
                 ),
@@ -344,6 +347,7 @@ class _FoodState extends State<Food> {
                         });
                       });
                     }
+                    loadMealsFromDatabase();
                   },
                   child: const Text("Add Snacks"),
                 ),
