@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/DB/DBHelper.dart';
+import 'package:intl/intl.dart';
+
 
 class Food extends StatefulWidget {
   const Food({Key? key}) : super(key: key);
@@ -86,7 +88,7 @@ class _FoodState extends State<Food> {
               final DateTime? picked = await showDatePicker(
                 context: context,
                 initialDate: selectedDate,
-                firstDate: DateTime(2021),
+                firstDate: DateTime(2023),
                 lastDate: DateTime.now(),
               );
               if (picked != null && picked != selectedDate) {
@@ -98,17 +100,50 @@ class _FoodState extends State<Food> {
             },
           )
         ],
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.red[800],
       ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Chosen date is: ${selectedDate.toString().substring(0, 10)}',
-              style: const TextStyle(fontSize: 20),
+            //Design for the selected day is made with assistance from chatGPT
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.only(bottom: 20.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: Colors.blue[50],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Chosen Date',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue[800],
+                    ),
+                  ),
+                  const SizedBox(height: 10.0),
+                  Text(
+                    DateFormat('EEEE, MMMM d, y').format(selectedDate),
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue[900],
+                    ),
+                  ),
+                ],
+              ),
             ),
+
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -354,7 +389,8 @@ class _FoodState extends State<Food> {
               ],
             ),
             const Divider(
-              color: Colors.black,
+              //color: Colors.red[800],
+              thickness: 2,
             ),
             const Padding(padding: EdgeInsets.all(10)),
             const Text("Todays total calories:",
