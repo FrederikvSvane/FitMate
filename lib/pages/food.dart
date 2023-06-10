@@ -16,6 +16,8 @@ class _FoodState extends State<Food> {
   List<Map<String, dynamic>> dinnerMeals = [];
   List<Map<String, dynamic>> snacksMeals = [];
   DateTime selectedDate = DateTime.now();
+  double totalCalories = 0;
+  double totalProteins = 0;
 
   @override
   void initState() {
@@ -34,13 +36,14 @@ class _FoodState extends State<Food> {
     lunchMeals.clear();
     dinnerMeals.clear();
     snacksMeals.clear();
+    totalCalories = 0;
+    totalProteins = 0;
 
     for (var meal in meals) {
       print(meal);
       if (meal['date'] != null && meal['date'].length >= 10) {
         String mealDate = meal['date'].substring(0, 10);
         if (mealDate == currentDate) {
-
           Map<String, dynamic> mealDetails = {
             'id': meal['id'],
             'nameComponent': meal['nameComponent'],
@@ -66,9 +69,10 @@ class _FoodState extends State<Food> {
           }
         }
       }
+      totalCalories = totalCalories + meal['calories'];
+      totalProteins = totalProteins + meal['proteins'];
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -109,19 +113,50 @@ class _FoodState extends State<Food> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
+
+                  const SizedBox(height: 10),
+                  const Text('Today\'s breakfast meals:',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Column(
+                    children: breakfastMeals.map((meal) {
+                      String mealDetails =
+                          'Name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
+                      int mealId = meal['id'];
+                      return Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(mealDetails),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () async {
+                                await DBHelper.removeMeal(mealId);
+                                setState(() {
+                                  breakfastMeals.remove(meal);
+                                });
+                              },
+                            )
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
                   ElevatedButton(
                     onPressed: () async {
                       whereDidIComeFrom = 0;
-                      var result = await Navigator.pushNamed(context, "/addFood");
+                      var result =
+                      await Navigator.pushNamed(context, "/addFood");
                       if (result != null) {
-                        Map<String, dynamic> mealData = result as Map<String, dynamic>;
+                        Map<String, dynamic> mealData =
+                        result as Map<String, dynamic>;
                         if (mealData['id'] != null &&
                             mealData['nameComponent'] != null &&
                             mealData['calories'] != null &&
                             mealData['proteins'] != null &&
                             mealData['mealType'] != null &&
-                            mealData['date'] != null
-                        ) {
+                            mealData['date'] != null) {
                           setState(() {
                             breakfastMeals.add({
                               'id': mealData['id'],
@@ -133,51 +168,55 @@ class _FoodState extends State<Food> {
                             });
                           });
                         }
-
                       }
                     },
                     child: const Text("Add breakfast"),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text('Today\'s breakfast meals:'),
-                  Column(
-                    children: breakfastMeals.map((meal) {
-                      String mealDetails =
-                          'name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
-                      int mealId = meal['id'];
-                      return Row(
-                        children: [
-                          Text(mealDetails),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () async {
-                              await DBHelper.removeMeal(mealId);
-                              setState(() {
-                                breakfastMeals.remove(meal);
-                              });
-                            },
-                          )
-                        ],
-                      );
-                    }).toList(),
                   ),
                 ],
               ),
             ),
             Column(
               children: [
+
+                const SizedBox(height: 10),
+                const Text('Today\'s lunch meals:',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                Column(
+                  children: lunchMeals.map((meal) {
+                    String mealDetails =
+                        'Name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
+                    int mealId = meal['id'];
+                    return Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(mealDetails),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () async {
+                            await DBHelper.removeMeal(mealId);
+                            setState(() {
+                              lunchMeals.remove(meal);
+                            });
+                          },
+                        )
+                      ],
+                    ));
+                  }).toList(),
+                ),
                 ElevatedButton(
                   onPressed: () async {
                     whereDidIComeFrom = 1;
                     var result = await Navigator.pushNamed(context, "/addFood");
-                    Map<String, dynamic> mealData = result as Map<String, dynamic>;
+                    Map<String, dynamic> mealData =
+                    result as Map<String, dynamic>;
                     if (mealData['id'] != null &&
                         mealData['nameComponent'] != null &&
                         mealData['calories'] != null &&
                         mealData['proteins'] != null &&
                         mealData['mealType'] != null &&
-                        mealData['date'] != null
-                    ) {
+                        mealData['date'] != null) {
                       setState(() {
                         lunchMeals.add({
                           'id': mealData['id'],
@@ -192,14 +231,23 @@ class _FoodState extends State<Food> {
                   },
                   child: const Text("Add Lunch"),
                 ),
+              ],
+            ),
+            Column(
+              children: [
+
                 const SizedBox(height: 10),
-                const Text('Today\'s lunch meals:'),
+                const Text('Today\'s dinner meals:',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 Column(
-                  children: lunchMeals.map((meal) {
+                  children: dinnerMeals.map((meal) {
                     String mealDetails =
-                        'name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
+                        'Name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
                     int mealId = meal['id'];
-                    return Row(
+                    return Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(mealDetails),
                         IconButton(
@@ -207,30 +255,26 @@ class _FoodState extends State<Food> {
                           onPressed: () async {
                             await DBHelper.removeMeal(mealId);
                             setState(() {
-                              lunchMeals.remove(meal);
+                              dinnerMeals.remove(meal);
                             });
                           },
                         )
                       ],
-                    );
+                    ));
                   }).toList(),
                 ),
-              ],
-            ),
-            Column(
-              children: [
                 ElevatedButton(
                   onPressed: () async {
                     whereDidIComeFrom = 2;
                     var result = await Navigator.pushNamed(context, "/addFood");
-                    Map<String, dynamic> mealData = result as Map<String, dynamic>;
+                    Map<String, dynamic> mealData =
+                    result as Map<String, dynamic>;
                     if (mealData['id'] != null &&
                         mealData['nameComponent'] != null &&
                         mealData['calories'] != null &&
                         mealData['proteins'] != null &&
                         mealData['mealType'] != null &&
-                        mealData['date'] != null
-                    ) {
+                        mealData['date'] != null) {
                       setState(() {
                         dinnerMeals.add({
                           'id': mealData['id'],
@@ -245,14 +289,23 @@ class _FoodState extends State<Food> {
                   },
                   child: const Text("Add Dinner"),
                 ),
+              ],
+            ),
+            Column(
+              children: [
+
                 const SizedBox(height: 10),
-                const Text('Today\'s dinner meals:'),
+                const Text('Today\'s snack meals:',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 Column(
-                  children: dinnerMeals.map((meal) {
+                  children: snacksMeals.map((meal) {
                     String mealDetails =
-                        'name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
+                        'Name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
                     int mealId = meal['id'];
-                    return Row(
+                    return Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(mealDetails),
                         IconButton(
@@ -260,30 +313,26 @@ class _FoodState extends State<Food> {
                           onPressed: () async {
                             await DBHelper.removeMeal(mealId);
                             setState(() {
-                              dinnerMeals.remove(meal);
+                              snacksMeals.remove(meal);
                             });
                           },
                         )
                       ],
-                    );
+                    ));
                   }).toList(),
                 ),
-              ],
-            ),
-            Column(
-              children: [
                 ElevatedButton(
                   onPressed: () async {
                     whereDidIComeFrom = 3;
                     var result = await Navigator.pushNamed(context, "/addFood");
-                    Map<String, dynamic> mealData = result as Map<String, dynamic>;
+                    Map<String, dynamic> mealData =
+                    result as Map<String, dynamic>;
                     if (mealData['id'] != null &&
                         mealData['nameComponent'] != null &&
                         mealData['calories'] != null &&
                         mealData['proteins'] != null &&
                         mealData['mealType'] != null &&
-                        mealData['date'] != null
-                    ) {
+                        mealData['date'] != null) {
                       setState(() {
                         snacksMeals.add({
                           'id': mealData['id'],
@@ -298,30 +347,24 @@ class _FoodState extends State<Food> {
                   },
                   child: const Text("Add Snacks"),
                 ),
-                const SizedBox(height: 10),
-                const Text('Today\'s snack meals:'),
-                Column(
-                  children: snacksMeals.map((meal) {
-                    String mealDetails =
-                        'name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
-                    int mealId = meal['id'];
-                    return Row(
-                      children: [
-                        Text(mealDetails),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () async {
-                            await DBHelper.removeMeal(mealId);
-                            setState(() {
-                              snacksMeals.remove(meal);
-                            });
-                          },
-                        )
-                      ],
-                    );
-                  }).toList(),
-                ),
               ],
+            ),
+            const Divider(
+              color: Colors.black,
+            ),
+            const Padding(padding: EdgeInsets.all(10)),
+            const Text("Todays total calories:",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(
+              totalCalories.toString(),
+              style: const TextStyle(fontSize: 20),
+            ),
+            const Padding(padding: EdgeInsets.all(10)),
+            const Text("Todays total proteins:",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(
+              totalProteins.toString(),
+              style: const TextStyle(fontSize: 20),
             ),
           ],
         ),

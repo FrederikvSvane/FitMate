@@ -35,6 +35,16 @@ class AddFoodState extends State<AddFood> {
   String mealType = '';
 
   Future<void> addMeal() async {
+    if (nameController.text.isEmpty ||
+        caloriesController.text.isEmpty ||
+        proteinsController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all fields'),
+        ),
+      );
+      return;
+    }
     // Make a switch statement here to check where the user came from
     // 0 = breakfast, 1 = lunch, 2 = dinner, 3 = snacks
     switch (whereDidIComeFrom) {
@@ -76,12 +86,15 @@ class AddFoodState extends State<AddFood> {
           duration: Duration(seconds: 1),
         ),
       );
-      Navigator.pop(context, {
+
+      final localContext = context;
+      Navigator.pop(localContext, {
         'barcode': int.tryParse(barcodeController.text) ?? 0,
         'nameComponent': nameController.text,
         'calories': double.tryParse(caloriesController.text) ?? 0.0,
         'proteins': double.tryParse(proteinsController.text) ?? 0.0,
       });
+
     } catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -175,15 +188,20 @@ class AddFoodState extends State<AddFood> {
                         howMuch = howMuchController.text;
 
                         foodApiFuture!.then((foodApi) async {
-                          nameController.text = foodApi.nameComponent;
-                          double caloriesPerGram = (await foodApiFuture)?.calories.toDouble() ?? 0.0;
-                          double proteinsPerGram = (await foodApiFuture)?.proteins.toDouble() ?? 0.0;
+                          double caloriesPerGram = foodApi.calories.toDouble();
+                          double proteinsPerGram = foodApi.proteins.toDouble();
                           double totalCalories = caloriesPerGram * double.parse(howMuch) / 100;
                           double totalProteins = proteinsPerGram * double.parse(howMuch) / 100;
-                          caloriesController.text = totalCalories.toStringAsFixed(2);
-                          proteinsController.text = totalProteins.toStringAsFixed(2);
 
+                          if (mounted) {
+                            setState(() {
+                              nameController.text = foodApi.nameComponent;
+                              caloriesController.text = totalCalories.toStringAsFixed(2);
+                              proteinsController.text = totalProteins.toStringAsFixed(2);
+                            });
+                          }
                         });
+
                       });
 
                     } else if (barcodeController.text.isEmpty ||

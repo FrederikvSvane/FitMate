@@ -30,6 +30,13 @@ Future<void> main() async {
     //      ThemeMode.dark for dark theme
     //   */
 
+    theme: ThemeData(
+      colorScheme: ColorScheme.fromSwatch().copyWith(
+
+        primary: Colors.red[800],
+      )
+    ),
+
     debugShowCheckedModeBanner: false,
 
     initialRoute: "/",
