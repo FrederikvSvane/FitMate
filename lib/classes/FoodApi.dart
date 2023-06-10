@@ -5,10 +5,10 @@ import 'package:sqflite/sqflite.dart';
 
 class FoodApi {
   final int? id;
-  final int barcode;
-  final String nameComponent;
-  final num calories;
-  final num proteins;
+  final String barcode;
+  late final String nameComponent;
+  late final double calories;
+  late final double proteins;
   String? mealType;
   String? date;
 
@@ -70,10 +70,10 @@ class FoodApi {
         throw Exception('Product not found');
       }
 
-      int barcodeData = int.parse(json['code']);
+      String barcodeData = json['code'];
       String nameComponentData = json['product']['product_name'] ?? '';
-      num caloriesData = json['product']['nutriments']['energy-kcal_100g'] ?? 0;
-      num proteinsData =json['product']['nutriments']['proteins_100g'] ?? 0;
+      double caloriesData = (json['product']['nutriments']['energy-kcal_100g'] ?? 0).toDouble();
+      double proteinsData = (json['product']['nutriments']['proteins_100g'] ?? 0).toDouble();
 
       FoodApi foodApi = FoodApi(
         barcode: barcodeData,
@@ -119,6 +119,8 @@ class FoodApi {
   getProteins() {
     return proteins;
   }
+
+
 
 }
 

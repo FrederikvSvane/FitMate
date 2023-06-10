@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../classes/FoodApi.dart';
-import '../main.dart';
+import 'package:flutter_fitness_app/DB/DBHelper.dart';
+
 
 class Food extends StatefulWidget {
   const Food({Key? key}) : super(key: key);
@@ -27,44 +27,44 @@ class _FoodState extends State<Food> {
   Future<void> loadMealsFromDatabase() async {
     DateTime now = DateTime.now();
     String currentDate = now.toString().substring(0, 10);
-    List<FoodApi> meals = await FoodApi.getAllMeals(database);
+    List<Map<String, dynamic>> meals = await DBHelper.getAllMeals();
 
     breakfastMeals.clear();
     lunchMeals.clear();
     dinnerMeals.clear();
     snacksMeals.clear();
 
-
     for (var meal in meals) {
-      print(meal.date);
-      String mealdate = meal.date.toString().substring(0, 10);
-      print (mealdate);
-      print(currentDate);
-      if (mealdate == currentDate) {
-        String mealDetails =
-            'name: ${meal.nameComponent}, Calories: ${meal.calories}, proteins: ${meal.proteins}';
-
-        if (meal.mealType == 'Breakfast') {
-          setState(() {
-            breakfastMeals.add(mealDetails);
-            print(breakfastMeals);
-          });
-        } else if (meal.mealType == 'Lunch') {
-          setState(() {
-            lunchMeals.add(mealDetails);
-          });
-        } else if (meal.mealType == 'Dinner') {
-          setState(() {
-            dinnerMeals.add(mealDetails);
-          });
-        } else if (meal.mealType == 'Snacks') {
-          setState(() {
-            snacksMeals.add(mealDetails);
-          });
+      if (meal['date'] != null && meal['date'].length >= 10) {
+        String mealdate = meal['date'].substring(0, 10);
+        print(mealdate);
+        print(currentDate);
+        if (mealdate == currentDate) {
+          String mealDetails =
+              'name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
+          if (meal['mealType'] == 'Breakfast') {
+            setState(() {
+              breakfastMeals.add(mealDetails);
+            });
+          } else if (meal['mealType'] == 'Lunch') {
+            setState(() {
+              lunchMeals.add(mealDetails);
+            });
+          } else if (meal['mealType'] == 'Dinner') {
+            setState(() {
+              dinnerMeals.add(mealDetails);
+            });
+          } else if (meal['mealType'] == 'Snacks') {
+            setState(() {
+              snacksMeals.add(mealDetails);
+            });
+          }
         }
       }
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +169,8 @@ class _FoodState extends State<Food> {
                   child: const Text("Add Snacks"),
                 ),
                 const SizedBox(height: 10),
-                Text('Today\'s snacks meals:'),
+                const Text('Today\'s snacks m'
+                    'eals:'),
                 Column(
                   children: snacksMeals.map((meal) => Text(meal)).toList(),
                 ),

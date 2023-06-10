@@ -1,10 +1,10 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/pages/food.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
+import '../DB/DBHelper.dart';
 import '../classes/FoodApi.dart';
-import '../main.dart';
 
 class AddFood extends StatefulWidget {
   const AddFood({super.key});
@@ -16,6 +16,9 @@ class AddFood extends StatefulWidget {
 class AddFoodState extends State<AddFood> {
   final barcodeController = TextEditingController();
   final howMuchController = TextEditingController();
+  final nameController = TextEditingController();
+  final caloriesController = TextEditingController();
+  final proteinsController = TextEditingController();
   String howMuch = '100';
   Future<FoodApi>? foodApiFuture;
 
@@ -29,166 +32,68 @@ class AddFoodState extends State<AddFood> {
     }
   }
 
+  String mealType = '';
+
   Future<void> addMeal() async {
-    if (foodApiFuture != null) {
-      if (whereDidIComeFrom == 0) {
-        try {
-          FoodApi result = await foodApiFuture!;
-          String mealType = 'Breakfast';
-          String date = DateTime.now().toString();
-          result.date = date;
-          result.mealType = mealType;
-          await result.insertMeal(database);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Meal added successfully'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          String barcode = result.getBarcode().toString();
-          String nameComponent = result.getNameComponent().toString();
-          String calories = result.getCalories().toString();
-          String proteins = result.getProteins().toString();
+    // Make a switch statement here to check where the user came from
+    // 0 = breakfast, 1 = lunch, 2 = dinner, 3 = snacks
+    switch (whereDidIComeFrom) {
+      case 0:
+        mealType = 'Breakfast';
+        break;
+      case 1:
+        mealType = 'Lunch';
+        break;
+      case 2:
+        mealType = 'Dinner';
+        break;
+      case 3:
+        mealType = 'Snacks';
+        break;
+      default:
+        mealType = 'null';
+    }
 
-          Navigator.pop(context, {
-            'barcode': barcode,
-            'nameComponent': nameComponent,
-            'calories': calories,
-            'proteins': proteins,
-          });
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to add meal'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-        }
-      } else if (whereDidIComeFrom == 1) {
-        try {
-          FoodApi result = await foodApiFuture!;
-          String mealType = 'Lunch';
-          String date = DateTime.now().toString();
-          result.date = date;
-          result.mealType = mealType;
-          await result.insertMeal(database);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Meal added successfully'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          String barcode = result.getBarcode().toString();
-          String nameComponent = result.getNameComponent().toString();
-          String calories = result.getCalories().toString();
-          String proteins = result.getProteins().toString();
+    try {
+      String date = DateTime.now().toString();
 
-          print(
-              '$barcode, $nameComponent, $calories, $proteins-------------------------------------------');
-          Navigator.pop(context, {
-            'barcode': barcode,
-            'nameComponent': nameComponent,
-            'calories': calories,
-            'proteins': proteins,
-          });
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to add meal'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-        }
+      Map<String, dynamic> mealData = {
+        'barcode': barcodeController.text,
+        'nameComponent': nameController.text ,
+        'calories': caloriesController.text,
+        'proteins': proteinsController.text,
+        'mealType': mealType,
+        'date': date,
+      };
 
-      } else if (whereDidIComeFrom == 2) {
-        try {
-          FoodApi result = await foodApiFuture!;
-          String mealType = 'Dinner';
-          String date = DateTime.now().toString();
-          result.date = date;
-          result.mealType = mealType;
-          await result.insertMeal(database);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Meal added successfully'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          String barcode = result.getBarcode().toString();
-          String nameComponent = result.getNameComponent().toString();
-          String calories = result.getCalories().toString();
-          String proteins = result.getProteins().toString();
+      await DBHelper.insertMeal(mealData);
 
-          print(
-              '$barcode, $nameComponent, $calories, $proteins-------------------------------------------');
-          Navigator.pop(context, {
-            'barcode': barcode,
-            'nameComponent': nameComponent,
-            'calories': calories,
-            'proteins': proteins,
-          });
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to add meal'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-        }
 
-      } else if (whereDidIComeFrom == 3) {
-        try {
-          FoodApi result = await foodApiFuture!;
-          String mealType = 'Snacks';
-          String date = DateTime.now().toString();
-          result.date = date;
-          result.mealType = mealType;
-          await result.insertMeal(database);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Meal added successfully'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          String barcode = result.getBarcode().toString();
-          String nameComponent = result.getNameComponent().toString();
-          String calories = result.getCalories().toString();
-          String proteins = result.getProteins().toString();
 
-          print(
-              '$barcode, $nameComponent, $calories, $proteins-------------------------------------------');
-          Navigator.pop(context, {
-            'barcode': barcode,
-            'nameComponent': nameComponent,
-            'calories': calories,
-            'proteins': proteins,
-          });
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to add meal'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-        }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Meal added successfully'),
+          duration: Duration(seconds: 1),
+        ),
+      );
 
-      }
+      Navigator.pop(context, {
+        'barcode': barcodeController.text,
+        'nameComponent': nameController.text,
+        'calories': caloriesController.text,
+        'proteins': proteinsController.text,
+      });
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to add meal'),
+          duration: Duration(seconds: 1),
+        ),
+      );
     }
   }
 
-  Future<void> printAllMeals() async {
-    List<FoodApi> meals = await FoodApi.getAllMeals(database);
-    for (var meal in meals) {
-      print('id: ${meal.id}');
-      print('Barcode: ${meal.barcode}');
-      print('Name Component: ${meal.nameComponent}');
-      print('Calories: ${meal.calories}');
-      print('Proteins: ${meal.proteins}');
-      print('Meal Type: ${meal.mealType}');
-      print('Date: ${meal.date}');
-      print('---------------------------');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,39 +110,33 @@ class AddFoodState extends State<AddFood> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                FutureBuilder<FoodApi>(
-                    future: foodApiFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        if (kDebugMode) {
-                          print('Error: ${snapshot.error}');
-                        }
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (snapshot.hasData) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                  'Name Component: ${snapshot.data!.nameComponent}'),
-                              Text(
-                                  'Calories pr. 100g: ${(snapshot.data!.calories).toStringAsFixed(2)}'),
-                              Text(
-                                  'Proteins pr. 100g: ${(snapshot.data!.proteins).toStringAsFixed(2)}'),
-                              Text(
-                                  'You ate this many calories:  ${(snapshot.data!.calories * int.parse(howMuch) / 100).toStringAsFixed(2)}'),
-                              Text(
-                                  'You ate this much protein:  ${(snapshot.data!.proteins * int.parse(howMuch) / 100).toStringAsFixed(2)}')
-                            ],
-                          ),
-                        );
-                      } else {
-                        return const Text(
-                            'Enter a barcode and press "Fetch Food"');
-                      }
-                    }),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("Name:"),
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter name',
+                      ),
+                    ),
+                    Text("Calories:"),
+                    TextField(
+                      controller: caloriesController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter calories',
+                      ),
+                    ),
+                    Text("Proteins:"),
+                    TextField(
+                      controller: proteinsController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter proteins',
+                      ),
+                    ),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.all(40.0)),
                 TextField(
                   controller: barcodeController,
                   decoration: const InputDecoration(
@@ -274,13 +173,20 @@ class AddFoodState extends State<AddFood> {
                         howMuchController.text.isNotEmpty) {
                       setState(() {
                         foodApiFuture = fetchFood(barcodeController.text);
-                        if (kDebugMode) {
-                          print(howMuchController.text.runtimeType);
-                        }
                         howMuch = howMuchController.text;
-                        barcodeController.clear();
-                        howMuchController.clear();
+
+                        foodApiFuture!.then((foodApi) async {
+                          nameController.text = foodApi.nameComponent;
+                          double caloriesPerGram = (await foodApiFuture)?.calories.toDouble() ?? 0.0;
+                          double proteinsPerGram = (await foodApiFuture)?.proteins.toDouble() ?? 0.0;
+                          double totalCalories = caloriesPerGram * double.parse(howMuch) / 100;
+                          double totalProteins = proteinsPerGram * double.parse(howMuch) / 100;
+                          caloriesController.text = totalCalories.toStringAsFixed(2);
+                          proteinsController.text = totalProteins.toStringAsFixed(2);
+
+                        });
                       });
+
                     } else if (barcodeController.text.isEmpty ||
                         howMuchController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -319,10 +225,6 @@ class AddFoodState extends State<AddFood> {
                 ElevatedButton(
                   onPressed: addMeal,
                   child: const Text('Add Meal'),
-                ),
-                ElevatedButton(
-                  onPressed: printAllMeals,
-                  child: const Text('Print All Meals'),
                 ),
               ],
             ),

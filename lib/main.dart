@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:flutter_fitness_app/pages/activeWorkout.dart';
 import 'package:flutter_fitness_app/pages/addExercise.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:flutter_fitness_app/pages/addFood.dart';
 
 var database;
@@ -14,17 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Open the database and store the reference.
-  database = await openDatabase(
-    join(await getDatabasesPath(), 'meal_database.db'),
-    onCreate: (db, version) {
-      return db.execute(
-          'CREATE TABLE meals(id INTEGER PRIMARY KEY, barcode INTEGER, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)'
-
-
-      );
-    },
-    version: 1,
-  );
+  database = await DBHelper().getDB();
 
   runApp(MaterialApp(
     // theme: ThemeData(
