@@ -20,6 +20,7 @@ class _FoodState extends State<Food> {
   DateTime selectedDate = DateTime.now();
   double totalCalories = 0;
   double totalProteins = 0;
+  GlobalKey<RefreshIndicatorState> refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -72,6 +73,61 @@ class _FoodState extends State<Food> {
         }
       }
     }
+  }
+
+
+
+  Future<void> _showDeleteConfirmationDialog(int mealId, String mealType) async {
+    List<Map<String, dynamic>> mealData = await DBHelper.getMealById(mealId);
+
+    // This is to prevent the dialog from being shown after the page is disposed
+    if (!context.mounted) return;
+
+    String mealName = mealData[0]['nameComponent'];
+    double mealCalories = mealData[0]['calories'];
+    double mealProteins = mealData[0]['proteins'];
+
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Meal'),
+          content: Text('Are you sure you want to delete this meal:\n\nName: $mealName\nCalories: $mealCalories\nProteins: $mealProteins\n\nThis action cannot be undone!'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await DBHelper.removeMeal(mealId);
+                setState(() {
+                  switch (mealType) {
+                    case 'Breakfast':
+                      breakfastMeals.removeWhere((meal) => meal['id'] == mealId);
+                      break;
+                    case 'Lunch':
+                      lunchMeals.removeWhere((meal) => meal['id'] == mealId);
+                      break;
+                    case 'Dinner':
+                      dinnerMeals.removeWhere((meal) => meal['id'] == mealId);
+                      break;
+                    case 'Snacks':
+                      snacksMeals.removeWhere((meal) => meal['id'] == mealId);
+                      break;
+                  }
+                });
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -163,11 +219,8 @@ class _FoodState extends State<Food> {
                             Text(mealDetails),
                             IconButton(
                               icon: const Icon(Icons.delete),
-                              onPressed: () async {
-                                await DBHelper.removeMeal(mealId);
-                                setState(() {
-                                  breakfastMeals.remove(meal);
-                                });
+                              onPressed: () {
+                                _showDeleteConfirmationDialog(mealId, 'Breakfast');
                               },
                             )
                           ],
@@ -228,11 +281,8 @@ class _FoodState extends State<Food> {
                         Text(mealDetails),
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () async {
-                            await DBHelper.removeMeal(mealId);
-                            setState(() {
-                              lunchMeals.remove(meal);
-                            });
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(mealId, 'Lunch');
                           },
                         )
                       ],
@@ -287,11 +337,8 @@ class _FoodState extends State<Food> {
                         Text(mealDetails),
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () async {
-                            await DBHelper.removeMeal(mealId);
-                            setState(() {
-                              dinnerMeals.remove(meal);
-                            });
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(mealId, 'Dinner');
                           },
                         )
                       ],
@@ -346,11 +393,8 @@ class _FoodState extends State<Food> {
                         Text(mealDetails),
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () async {
-                            await DBHelper.removeMeal(mealId);
-                            setState(() {
-                              snacksMeals.remove(meal);
-                            });
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(mealId, 'Snack');
                           },
                         )
                       ],

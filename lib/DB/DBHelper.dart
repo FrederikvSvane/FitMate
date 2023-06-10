@@ -45,6 +45,18 @@ class DBHelper {
     );
   }
 
+  //Get meal by id
+  static Future<List<Map<String, dynamic>>> getMealById(int id) async {
+    final db = await getDatabase();
+    final List<Map<String, dynamic>> maps = await db.query(
+      'meals',
+      where: "id = ?",
+      whereArgs: [id],
+    );
+    return maps;
+
+  }
+
 
   static Future<FoodApi?> getLatestMeal() async {
     final db = await getDatabase();
