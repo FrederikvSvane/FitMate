@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/pages/food.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -69,7 +68,7 @@ class AddFoodState extends State<AddFood> {
 
       Map<String, dynamic> mealData = {
         'barcode': barcodeController.text,
-        'nameComponent': nameController.text ,
+        'nameComponent': nameController.text,
         'calories': caloriesController.text,
         'proteins': proteinsController.text,
         'mealType': mealType,
@@ -77,8 +76,6 @@ class AddFoodState extends State<AddFood> {
       };
 
       await DBHelper.insertMeal(mealData);
-
-
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -94,7 +91,6 @@ class AddFoodState extends State<AddFood> {
         'calories': double.tryParse(caloriesController.text) ?? 0.0,
         'proteins': double.tryParse(proteinsController.text) ?? 0.0,
       });
-
     } catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -105,7 +101,6 @@ class AddFoodState extends State<AddFood> {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +141,13 @@ class AddFoodState extends State<AddFood> {
                         hintText: 'Enter proteins',
                       ),
                     ),
+                    const Text("How much did you eat? (in grams)"),
+                    TextField(
+                      controller: howMuchController,
+                      decoration: const InputDecoration(
+                        hintText: 'how many grams',
+                      ),
+                    ),
                   ],
                 ),
                 const Padding(padding: EdgeInsets.all(40.0)),
@@ -155,98 +157,107 @@ class AddFoodState extends State<AddFood> {
                     hintText: 'Enter barcode',
                   ),
                 ),
-                TextField(
-                  controller: howMuchController,
-                  decoration: const InputDecoration(
-                    hintText: 'how many grams',
-                  ),
-                ),
                 const SizedBox(height: 10.0),
-                // Adding some spacing between text field and button
-                ElevatedButton(
-                  onPressed: () {
-                    bool validNumbers = true;
-                    // Check if they both can be parsed to int
-                    try {
-                      int.parse(barcodeController.text);
-                      int.parse(howMuchController.text);
-                    } catch (e) {
-                      validNumbers = false;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                              'Please enter a valid barcode and/or how much you ate'),
-                          duration: Duration(seconds: 1),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            bool validNumbers = true;
+                            // Check if they both can be parsed to int
+                            try {
+                              int.parse(barcodeController.text);
+                            } catch (e) {
+                              validNumbers = false;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      'Please enter a valid barcode number'),
+                                  duration: Duration(seconds: 1),
+                                ),
+                              );
+                            }
+                            if (validNumbers && barcodeController.text.isNotEmpty) {
+                              setState(() {
+                                foodApiFuture =
+                                    fetchFood(barcodeController.text);
+
+                                foodApiFuture!.then((foodApi) async {
+                                  double caloriesPerGram =
+                                      foodApi.calories.toDouble();
+                                  double proteinsPerGram =
+                                      foodApi.proteins.toDouble();
+
+                                  if (mounted) {
+                                    setState(() {
+                                      nameController.text =
+                                          foodApi.nameComponent;
+                                      caloriesController.text =
+                                          caloriesPerGram.toStringAsFixed(2);
+                                      proteinsController.text =
+                                          proteinsPerGram.toStringAsFixed(2);
+                                    });
+                                  }
+                                });
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.red[800],
+                          ),
+                          icon: const Icon(
+                            Icons.download_sharp,
+                            color: Colors.white,
+                          ),
+                          label: const Text('Fetch Food'),
                         ),
-                      );
-                    }
-                    if (validNumbers &&
-                        barcodeController.text.isNotEmpty &&
-                        howMuchController.text.isNotEmpty) {
-                      setState(() {
-                        foodApiFuture = fetchFood(barcodeController.text);
-                        howMuch = howMuchController.text;
-
-                        foodApiFuture!.then((foodApi) async {
-                          double caloriesPerGram = foodApi.calories.toDouble();
-                          double proteinsPerGram = foodApi.proteins.toDouble();
-                          double totalCalories = caloriesPerGram * double.parse(howMuch) / 100;
-                          double totalProteins = proteinsPerGram * double.parse(howMuch) / 100;
-
-                          if (mounted) {
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            var res = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SimpleBarcodeScannerPage(),
+                                ));
                             setState(() {
-                              nameController.text = foodApi.nameComponent;
-                              caloriesController.text = totalCalories.toStringAsFixed(2);
-                              proteinsController.text = totalProteins.toStringAsFixed(2);
+                              if (res is String) {
+                                var result = res;
+                                barcodeController.text = result;
+                              }
                             });
-                          }
-                        });
+                          } ,
+                          icon: const Icon(
+                            Icons.qr_code_scanner,
+                            color: Colors.white,
+                          ),
 
-                      });
-
-                    } else if (barcodeController.text.isEmpty ||
-                        howMuchController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                              'Please enter a barcode and/or how much you ate'),
-                          duration: Duration(seconds: 1),
+                          label: const Text('Open Scanner'),
                         ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.red[800],
-                  ),
-                  child: const Text('Fetch Food'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    var res = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const SimpleBarcodeScannerPage(),
-                        ));
-                    setState(() {
-                      if (res is String) {
-                        var result = res;
-                        print(result);
-                        barcodeController.text = result;
-                      }
-                    });
-                  },
-                  child: const Text('Open Scanner'),
-                ),
-                ElevatedButton(
-                  onPressed: addMeal,
-                  child: const Text('Add Meal'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          addMeal();
+        },
+        backgroundColor: Colors.red[800],
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
       ),
     );
   }

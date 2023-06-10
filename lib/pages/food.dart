@@ -30,7 +30,6 @@ class _FoodState extends State<Food> {
 
   Future<void> loadMealsFromDatabase() async {
     DateTime now = selectedDate;
-    print(selectedDate);
     String currentDate = now.toString().substring(0, 10);
     List<Map<String, dynamic>> meals = await DBHelper.getAllMeals();
 
@@ -42,7 +41,6 @@ class _FoodState extends State<Food> {
     totalProteins = 0;
 
     for (var meal in meals) {
-      print(meal);
       if (meal['date'] != null && meal['date'].length >= 10) {
         String mealDate = meal['date'].substring(0, 10);
         if (mealDate == currentDate) {
@@ -69,10 +67,10 @@ class _FoodState extends State<Food> {
               snacksMeals.add(mealDetails);
             });
           }
+          totalCalories = totalCalories + meal['calories'];
+          totalProteins = totalProteins + meal['proteins'];
         }
       }
-      totalCalories = totalCalories + meal['calories'];
-      totalProteins = totalProteins + meal['proteins'];
     }
   }
 
