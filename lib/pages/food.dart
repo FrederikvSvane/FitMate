@@ -162,7 +162,7 @@ class _FoodState extends State<Food> {
             //Design for the selected day is made with assistance from chatGPT
             Container(
               padding: const EdgeInsets.all(10.0),
-              margin: const EdgeInsets.only(bottom: 20.0),
+              margin: const EdgeInsets.only(bottom: 10.0, top: 15.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
                 color: Colors.blue[50],
