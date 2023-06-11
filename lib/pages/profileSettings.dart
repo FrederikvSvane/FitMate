@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'profile.dart';
 
 class ProfileSettings extends StatefulWidget {
   const ProfileSettings({super.key});
@@ -15,8 +16,7 @@ class ProfileSettingsState extends State<ProfileSettings> {
   @override
   initState() {
     super.initState();
-    nameController.text = '0';
-
+    nameController.text = weight;
   }
 
   @override

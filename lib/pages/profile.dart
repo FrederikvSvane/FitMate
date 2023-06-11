@@ -9,9 +9,11 @@ class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
+String weight = '0';
+
 class _ProfileState extends State<Profile> {
   int? steps;
-  String? weight = '0';
+
   final List<String> workouts = [
     'Workout 1',
     'Workout 2',
@@ -152,6 +154,8 @@ class _ProfileState extends State<Profile> {
                               if (result != null) {
                                 Map<String, dynamic> profileData = result as Map<String, dynamic>;
                                 setState(() {
+                                  //TODO: Update profile data
+
                                   weight = profileData["weight"];
                                 });
                               }
