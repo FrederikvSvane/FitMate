@@ -1,29 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:sliding_switch/sliding_switch.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  @override
+  _ProfileState createState() => _ProfileState();
+}
 
-  final List<String> items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-    'Item 6',
-    'Item 7',
-    'Item 8',
-    'Item 9',
-    'Item 10',
-    'Item 11',
-    'Item 12',
-    'Item 13',
-    'Item 14',
-    'Item 15',
-    'Item 16',
-    'Item 17',
-    'Item 18',
-    'Item 19',
-    'Item 20',
-  ];
+class _ProfileState extends State<Profile> {
+
+  final List<String> workouts =
+  [ 'Workout 1',
+    'Workout 2',
+    'Workout 3',
+    'Workout 4',
+    'Workout 5',
+    'Workout 6',
+    'Workout 7',
+    'Workout 8',
+    'Workout 9',
+    'Workout 10',
+    'Workout 11',
+    'Workout 12',
+    'Workout 13',
+    'Workout 14',
+    'Workout 15',
+    'Workout 16',
+    'Workout 17',
+    'Workout 18',
+    'Workout 19',
+    'Workout 20'];
+
+  final List<String> meals =
+  [ 'Meal 1',
+    'Meal 2',
+    'Meal 3',
+    'Meal 4',
+    'Meal 5',
+    'Meal 6',
+    'Meal 7',
+    'Meal 8',
+    'Meal 9',
+    'Meal 10',
+    'Meal 11',
+    'Meal 12',
+    'Meal 13',
+    'Meal 14',
+    'Meal 15',
+    'Meal 16',
+    'Meal 17',
+    'Meal 18',
+    'Meal 19',
+    'Meal 20'];
+  List <String> current = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,27 +63,34 @@ class Profile extends StatelessWidget {
     body: Column (
     children: [
       Expanded(
-        flex: 2,
+        flex: 6,
         child: Container(
           color: Colors.red[800],
           padding: EdgeInsets.fromLTRB(20, 70, 20, 20),
-          child: const Stack(
+          child: Stack(
             children: [
             Align(
             alignment: Alignment.topLeft,
             child:
               Padding(padding: EdgeInsets.all(16),
-            child: Text(
-            "settings",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w500),
+                child:
+                GestureDetector(
+                  onTap: () {
+                    // Handle the tap event
+                    print('Text Pressed2');
+                  },
+                  child: const Text(
+                    'Settings',
+                    style: TextStyle(
+                      color: Colors.white,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
               ),
             ),
 
-              Align(
+              const Align(
                 alignment: Alignment.topCenter,
                 child:
                 Padding(padding: EdgeInsets.all(16),
@@ -67,12 +103,12 @@ class Profile extends StatelessWidget {
                   ),
                 ),
               ),
-              Align(
+              const Align(
                 alignment: Alignment.center,
                 child:
                 Padding(padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
                   child: Text(
-                    "Gg ez",
+                    "Din mor",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 30,
@@ -80,7 +116,7 @@ class Profile extends StatelessWidget {
                   ),
                 ),
               ),
-              Align(
+              const Align(
                 alignment: Alignment.bottomLeft,
                 child:
                 Padding(padding: EdgeInsets.all(10),
@@ -93,7 +129,7 @@ class Profile extends StatelessWidget {
                   ),
                 ),
               ),
-              Align(
+              const Align(
                 alignment: Alignment.bottomRight,
                 child:
                 Padding(padding: EdgeInsets.all(10),
@@ -111,20 +147,58 @@ class Profile extends StatelessWidget {
     )
     ),
      Expanded(
-    flex: 5,
-    child: Scaffold (
-      body: ListView.builder(
-        itemCount: items.length,
-          itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(items[index]),
+         flex: 2,
+         child:
+         Padding(padding: EdgeInsets.all(20),
+         child:
+         SlidingSwitch(
+
+           onDoubleTap: () {},
+           onSwipe: () {},
+           onTap: (){},
+           value: false,
+           height: 100,
+           width: 350,
+
+           textOff : "Workouts",
+           textOn : "Meals",
+           onChanged: (bool value) {
+             setState(() {
+               if (value) {
+                 current = meals;
+               }
+               else {
+                 current = workouts;
+               }
+             });
+
+           },
+           colorOn : Colors.red,
+           colorOff :   Colors.red,
+           background : const Color(0xFFEEEEEE),
+           buttonColor : Colors.white70,
+           inactiveColor : Colors.grey,
+           contentSize: 20,
+         ),
+
+     ),
+     ),
+
+      Expanded (
+        flex: 12,
+        child: ListView.builder(
+          shrinkWrap: true,
+        itemCount: current.length,
+          itemBuilder: (context,index) {
+          return ListTile (
+            title: Text(current[index]),
           );
           }
-      ),
 
-    ),
-    ),
-          ],
+
+        ),
+        ),
+  ],
     ),
     ),
     );
