@@ -231,7 +231,7 @@ class AddFoodState extends State<AddFood> {
                             setState(() {
                               if (res is String) {
                                 var result = res;
-                                if(result != -1 && result.length > 13){
+                                if(result != (-1).toString()){
                                   result = res.substring(0, 13);
                                 }
                               }
