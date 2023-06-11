@@ -231,7 +231,9 @@ class AddFoodState extends State<AddFood> {
                             setState(() {
                               if (res is String) {
                                 var result = res;
-                                barcodeController.text = result;
+                                if(result != -1 && result.length > 13){
+                                  result = res.substring(0, 13);
+                                }
                               }
                             });
                           } ,
@@ -239,7 +241,6 @@ class AddFoodState extends State<AddFood> {
                             Icons.qr_code_scanner,
                             color: Colors.white,
                           ),
-
                           label: const Text('Open Scanner'),
                         ),
                       ),
