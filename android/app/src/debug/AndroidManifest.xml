@@ -22,7 +22,7 @@
     <!-- Permissions for new android API (Health Connect) -->
     <uses-permission android:name="android.permission.health.READ_STEPS"/>
 
-    <application android:label="health_example"
+    <application android:label="FitMate"
                  android:icon="@mipmap/ic_launcher">
         <activity android:name=".MainActivity"
                   android:launchMode="singleTop"
