@@ -165,7 +165,7 @@ class _FoodState extends State<Food> {
               margin: const EdgeInsets.only(bottom: 10.0, top: 15.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: Colors.blue[50],
+                color: Colors.red[100],
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -176,22 +176,24 @@ class _FoodState extends State<Food> {
                 ],
               ),
               child: Column(
+                
                 children: <Widget>[
                   Text(
                     'Chosen Date',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
+                      color: Colors.red[900],
                     ),
                   ),
-                  const SizedBox(height: 10.0),
+                  const SizedBox(height: 20.0),
+
                   Text(
                     DateFormat('EEEE, MMMM d, y').format(selectedDate),
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[900],
+                      color: Colors.red[900]
                     ),
                   ),
                 ],
