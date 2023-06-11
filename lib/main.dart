@@ -4,6 +4,7 @@ import 'package:flutter_fitness_app/pages/activeWorkout.dart';
 import 'package:flutter_fitness_app/pages/addExercise.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:flutter_fitness_app/pages/addFood.dart';
+import 'package:flutter_fitness_app/pages/profileSettings.dart';
 
 var database;
 
@@ -46,6 +47,8 @@ Future<void> main() async {
       "/addExercise": (context) => const AddExercise(),
 
       "/addFood": (context) => const AddFood(),
+
+      "/profileSettings": (context) => const ProfileSettings(),
     },
   ));
 }

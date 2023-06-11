@@ -11,6 +11,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   int? steps;
+  String? weight = '0';
   final List<String> workouts = [
     'Workout 1',
     'Workout 2',
@@ -144,9 +145,16 @@ class _ProfileState extends State<Profile> {
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: GestureDetector(
-                            onTap: () {
-                              // Handle the tap event
-                              print('Text Pressed2');
+                            onTap: () async {
+                              var result =
+                                  await Navigator.pushNamed(context, "/profileSettings");
+
+                              if (result != null) {
+                                Map<String, dynamic> profileData = result as Map<String, dynamic>;
+                                setState(() {
+                                  weight = profileData["weight"];
+                                });
+                              }
                             },
                             child: const Text(
                               'Settings',
@@ -184,13 +192,13 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                       ),
-                      const Align(
+                      Align(
                         alignment: Alignment.bottomLeft,
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           child: Text(
-                            "Weight: " "220 kg",
-                            style: TextStyle(
+                            "Weight: $weight kg",
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500),
@@ -209,10 +217,12 @@ class _ProfileState extends State<Profile> {
                                 fontWeight: FontWeight.w500),
                           ),
                         ),
+
                       ),
                     ],
                   ),
                 )),
+
             Expanded(
               flex: 2,
               child: Padding(
