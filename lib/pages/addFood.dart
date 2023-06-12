@@ -104,7 +104,6 @@ class AddFoodState extends State<AddFood> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,7 +182,8 @@ class AddFoodState extends State<AddFood> {
                                 ),
                               );
                             }
-                            if (validNumbers && barcodeController.text.isNotEmpty) {
+                            if (validNumbers &&
+                                barcodeController.text.isNotEmpty) {
                               setState(() {
                                 foodApiFuture =
                                     fetchFood(barcodeController.text);
@@ -234,12 +234,12 @@ class AddFoodState extends State<AddFood> {
                             setState(() {
                               if (res is String) {
                                 var result = res;
-                                if(result != -1 && result.length > 13){
+                                if (result != -1 && result.length > 13) {
                                   result = res.substring(0, 13);
                                 }
                               }
                             });
-                          } ,
+                          },
                           icon: const Icon(
                             Icons.qr_code_scanner,
                             color: Colors.white,
@@ -255,14 +255,42 @@ class AddFoodState extends State<AddFood> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          addMeal();
-        },
-        backgroundColor: Colors.red[800],
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: MediaQuery.of(context).viewInsets.bottom > 0
+          ? Container()
+          : SafeArea(
+          child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                left: 0,
+                bottom: 0,
+                child: FloatingActionButton(
+                  onPressed: () {},
+                  backgroundColor: Colors.red[800],
+                  tooltip: 'Use favorite meals',
+                  child: const Icon(Icons.favorite),
+                ),
+              ),
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    addMeal();
+                  },
+                  backgroundColor: Colors.red[800],
+                  tooltip: 'Add Meal',
+                  child: const Icon(Icons.add),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
+
+
     );
   }
 

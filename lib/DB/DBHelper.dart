@@ -13,7 +13,8 @@ class DBHelper {
       version: 1,
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE meals(id INTEGER PRIMARY KEY, barcode INTEGER, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)',
+          'CREATE TABLE meals(id INTEGER PRIMARY KEY, barcode INTEGER, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)'
+              'CREATE TABLE favorite_meal(id INTEGER PRIMARY KEY, barcode INTEGER)',
         );
       },
     );

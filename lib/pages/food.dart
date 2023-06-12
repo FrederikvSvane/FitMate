@@ -120,7 +120,9 @@ class _FoodState extends State<Food> {
                       snacksMeals.removeWhere((meal) => meal['id'] == mealId);
                       break;
                   }
+                  loadMealsFromDatabase();
                 });
+                Navigator.of(context).pop();
               },
               child: const Text('Delete'),
             ),
@@ -203,16 +205,17 @@ class _FoodState extends State<Food> {
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
 
                   const SizedBox(height: 10),
-                  const Text('Today\'s breakfast meals:',
+                  const Text('Breakfast:',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Column(
                     children: breakfastMeals.map((meal) {
                       String mealDetails =
-                          'Name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
+                          'Name: ${meal['nameComponent']}\nCalories: ${meal['calories']}\nProteins: ${meal['proteins']}';
                       int mealId = meal['id'];
                       return Center(
                         child: Row(
@@ -222,7 +225,8 @@ class _FoodState extends State<Food> {
                             IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () {
-                                _showDeleteConfirmationDialog(mealId, 'Breakfast');
+                                _showDeleteConfirmationDialog(
+                                    mealId, 'Breakfast');
                               },
                             )
                           ],
@@ -230,15 +234,80 @@ class _FoodState extends State<Food> {
                       );
                     }).toList(),
                   ),
-
-                  ElevatedButton(
-                    onPressed: () async {
-                      whereDidIComeFrom = 0;
-                      var result =
-                      await Navigator.pushNamed(context, "/addFood");
-                      if (result != null) {
+                  SizedBox(
+                    width: 120.0,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        whereDidIComeFrom = 0;
+                        var result =
+                            await Navigator.pushNamed(context, "/addFood");
+                        if (result != null) {
+                          Map<String, dynamic> mealData =
+                              result as Map<String, dynamic>;
+                          if (mealData['id'] != null &&
+                              mealData['nameComponent'] != null &&
+                              mealData['calories'] != null &&
+                              mealData['proteins'] != null &&
+                              mealData['mealType'] != null &&
+                              mealData['date'] != null) {
+                            setState(() {
+                              breakfastMeals.add({
+                                'id': mealData['id'],
+                                'nameComponent': mealData['nameComponent'],
+                                'calories': mealData['calories'],
+                                'proteins': mealData['proteins'],
+                                'mealType': mealData['mealType'],
+                                'date': mealData['date'],
+                              });
+                            });
+                          }
+                          loadMealsFromDatabase();
+                        }
+                      },
+                      child: const Text("Add breakfast"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 10),
+                  const Text('Lunch:',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Column(
+                    children: lunchMeals.map((meal) {
+                      String mealDetails =
+                          'Name: ${meal['nameComponent']}\nCalories: ${meal['calories']}\nProteins: ${meal['proteins']}';
+                      int mealId = meal['id'];
+                      return Center(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(mealDetails),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              _showDeleteConfirmationDialog(mealId, 'Lunch');
+                            },
+                          )
+                        ],
+                      ));
+                    }).toList(),
+                  ),
+                  SizedBox(
+                    width: 120.0,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        whereDidIComeFrom = 1;
+                        var result =
+                            await Navigator.pushNamed(context, "/addFood");
                         Map<String, dynamic> mealData =
-                        result as Map<String, dynamic>;
+                            result as Map<String, dynamic>;
                         if (mealData['id'] != null &&
                             mealData['nameComponent'] != null &&
                             mealData['calories'] != null &&
@@ -246,7 +315,7 @@ class _FoodState extends State<Food> {
                             mealData['mealType'] != null &&
                             mealData['date'] != null) {
                           setState(() {
-                            breakfastMeals.add({
+                            lunchMeals.add({
                               'id': mealData['id'],
                               'nameComponent': mealData['nameComponent'],
                               'calories': mealData['calories'],
@@ -257,180 +326,138 @@ class _FoodState extends State<Food> {
                           });
                         }
                         loadMealsFromDatabase();
-                      }
-                    },
-                    child: const Text("Add breakfast"),
+                      },
+                      child: const Text("Add Lunch"),
+                    ),
                   ),
                 ],
               ),
             ),
-            Column(
-              children: [
-
-                const SizedBox(height: 10),
-                const Text('Today\'s lunch meals:',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                Column(
-                  children: lunchMeals.map((meal) {
-                    String mealDetails =
-                        'Name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
-                    int mealId = meal['id'];
-                    return Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(mealDetails),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            _showDeleteConfirmationDialog(mealId, 'Lunch');
-                          },
-                        )
-                      ],
-                    ));
-                  }).toList(),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    whereDidIComeFrom = 1;
-                    var result = await Navigator.pushNamed(context, "/addFood");
-                    Map<String, dynamic> mealData =
-                    result as Map<String, dynamic>;
-                    if (mealData['id'] != null &&
-                        mealData['nameComponent'] != null &&
-                        mealData['calories'] != null &&
-                        mealData['proteins'] != null &&
-                        mealData['mealType'] != null &&
-                        mealData['date'] != null) {
-                      setState(() {
-                        lunchMeals.add({
-                          'id': mealData['id'],
-                          'nameComponent': mealData['nameComponent'],
-                          'calories': mealData['calories'],
-                          'proteins': mealData['proteins'],
-                          'mealType': mealData['mealType'],
-                          'date': mealData['date'],
-                        });
-                      });
-                    }
-                    loadMealsFromDatabase();
-                  },
-                  child: const Text("Add Lunch"),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 10),
+                  const Text('Dinner:',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Column(
+                    children: dinnerMeals.map((meal) {
+                      String mealDetails =
+                          'Name: ${meal['nameComponent']}\nCalories: ${meal['calories']}\nProteins: ${meal['proteins']}';
+                      int mealId = meal['id'];
+                      return Center(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(mealDetails),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              _showDeleteConfirmationDialog(mealId, 'Dinner');
+                            },
+                          )
+                        ],
+                      ));
+                    }).toList(),
+                  ),
+                  SizedBox(
+                    width: 120.0,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        whereDidIComeFrom = 2;
+                        var result =
+                            await Navigator.pushNamed(context, "/addFood");
+                        Map<String, dynamic> mealData =
+                            result as Map<String, dynamic>;
+                        if (mealData['id'] != null &&
+                            mealData['nameComponent'] != null &&
+                            mealData['calories'] != null &&
+                            mealData['proteins'] != null &&
+                            mealData['mealType'] != null &&
+                            mealData['date'] != null) {
+                          setState(() {
+                            dinnerMeals.add({
+                              'id': mealData['id'],
+                              'nameComponent': mealData['nameComponent'],
+                              'calories': mealData['calories'],
+                              'proteins': mealData['proteins'],
+                              'mealType': mealData['mealType'],
+                              'date': mealData['date'],
+                            });
+                          });
+                        }
+                        loadMealsFromDatabase();
+                      },
+                      child: const Text("Add Dinner"),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Column(
-              children: [
-
-                const SizedBox(height: 10),
-                const Text('Today\'s dinner meals:',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                Column(
-                  children: dinnerMeals.map((meal) {
-                    String mealDetails =
-                        'Name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
-                    int mealId = meal['id'];
-                    return Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(mealDetails),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            _showDeleteConfirmationDialog(mealId, 'Dinner');
-                          },
-                        )
-                      ],
-                    ));
-                  }).toList(),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    whereDidIComeFrom = 2;
-                    var result = await Navigator.pushNamed(context, "/addFood");
-                    Map<String, dynamic> mealData =
-                    result as Map<String, dynamic>;
-                    if (mealData['id'] != null &&
-                        mealData['nameComponent'] != null &&
-                        mealData['calories'] != null &&
-                        mealData['proteins'] != null &&
-                        mealData['mealType'] != null &&
-                        mealData['date'] != null) {
-                      setState(() {
-                        dinnerMeals.add({
-                          'id': mealData['id'],
-                          'nameComponent': mealData['nameComponent'],
-                          'calories': mealData['calories'],
-                          'proteins': mealData['proteins'],
-                          'mealType': mealData['mealType'],
-                          'date': mealData['date'],
-                        });
-                      });
-                    }
-                    loadMealsFromDatabase();
-                  },
-                  child: const Text("Add Dinner"),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-
-                const SizedBox(height: 10),
-                const Text('Today\'s snack meals:',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                Column(
-                  children: snacksMeals.map((meal) {
-                    String mealDetails =
-                        'Name: ${meal['nameComponent']}, Calories: ${meal['calories']}, proteins: ${meal['proteins']}';
-                    int mealId = meal['id'];
-                    return Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(mealDetails),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            _showDeleteConfirmationDialog(mealId, 'Snack');
-                          },
-                        )
-                      ],
-                    ));
-                  }).toList(),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    whereDidIComeFrom = 3;
-                    var result = await Navigator.pushNamed(context, "/addFood");
-                    Map<String, dynamic> mealData =
-                    result as Map<String, dynamic>;
-                    if (mealData['id'] != null &&
-                        mealData['nameComponent'] != null &&
-                        mealData['calories'] != null &&
-                        mealData['proteins'] != null &&
-                        mealData['mealType'] != null &&
-                        mealData['date'] != null) {
-                      setState(() {
-                        snacksMeals.add({
-                          'id': mealData['id'],
-                          'nameComponent': mealData['nameComponent'],
-                          'calories': mealData['calories'],
-                          'proteins': mealData['proteins'],
-                          'mealType': mealData['mealType'],
-                          'date': mealData['date'],
-                        });
-                      });
-                    }
-                    loadMealsFromDatabase();
-                  },
-                  child: const Text("Add Snacks"),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 10),
+                  const Text('Snacks:',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Column(
+                    children: snacksMeals.map((meal) {
+                      String mealDetails =
+                          'Name: ${meal['nameComponent']}\nCalories: ${meal['calories']}\nProteins: ${meal['proteins']}';
+                      int mealId = meal['id'];
+                      return Center(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(mealDetails),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              _showDeleteConfirmationDialog(mealId, 'Snack');
+                            },
+                          )
+                        ],
+                      ));
+                    }).toList(),
+                  ),
+                  SizedBox(
+                    width: 120.0,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        whereDidIComeFrom = 3;
+                        var result =
+                            await Navigator.pushNamed(context, "/addFood");
+                        Map<String, dynamic> mealData =
+                            result as Map<String, dynamic>;
+                        if (mealData['id'] != null &&
+                            mealData['nameComponent'] != null &&
+                            mealData['calories'] != null &&
+                            mealData['proteins'] != null &&
+                            mealData['mealType'] != null &&
+                            mealData['date'] != null) {
+                          setState(() {
+                            snacksMeals.add({
+                              'id': mealData['id'],
+                              'nameComponent': mealData['nameComponent'],
+                              'calories': mealData['calories'],
+                              'proteins': mealData['proteins'],
+                              'mealType': mealData['mealType'],
+                              'date': mealData['date'],
+                            });
+                          });
+                        }
+                        loadMealsFromDatabase();
+                      },
+                      child: const Text("Add Snacks"),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const Divider(
               //color: Colors.red[800],
@@ -440,14 +467,14 @@ class _FoodState extends State<Food> {
             const Text("Todays total calories:",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             Text(
-              totalCalories.toString(),
+              totalCalories.toStringAsFixed(2),
               style: const TextStyle(fontSize: 20),
             ),
             const Padding(padding: EdgeInsets.all(10)),
             const Text("Todays total proteins:",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             Text(
-              totalProteins.toString(),
+              totalProteins.toStringAsFixed(2),
               style: const TextStyle(fontSize: 20),
             ),
           ],
