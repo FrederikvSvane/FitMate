@@ -120,6 +120,7 @@ class _FoodState extends State<Food> {
                       snacksMeals.removeWhere((meal) => meal['id'] == mealId);
                       break;
                   }
+                  loadMealsFromDatabase();
                 });
               },
               child: const Text('Delete'),

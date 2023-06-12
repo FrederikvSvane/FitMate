@@ -255,13 +255,30 @@ class AddFoodState extends State<AddFood> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          addMeal();
-        },
-        backgroundColor: Colors.red[800],
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            FloatingActionButton(
+              onPressed: () {
+                addMeal();
+              }, // replace with your icon
+              backgroundColor: Colors.red[800],
+              tooltip: 'Add Meal',
+              child: const Icon(Icons.add),
+            ),
+            FloatingActionButton(
+              onPressed: () {
+                // Add your onPressed code here!
+              }, // replace with your icon
+              backgroundColor: Colors.red[800],
+              tooltip: 'Use favorite meals',
+              child: const Icon(Icons.favorite),
+            ),
+          ],
+        ),
       ),
     );
   }
