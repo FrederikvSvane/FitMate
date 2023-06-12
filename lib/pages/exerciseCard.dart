@@ -76,8 +76,37 @@ class _ExerciseCardState extends State<ExerciseCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Set ${exercise.sets![i]}:"),
-              Text("reps ${exercise.reps![i]} "),
-              Text("${exercise.weight![i]} kg"),
+              //Text("reps ${exercise.reps![i]} "),
+              //Text("${exercise.weight![i]} kg"),
+              Flexible(
+                flex: 1,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: "Reps"),
+                  onChanged: (value) {
+                    // You can update the reps array based on user input.
+                    int? newValue = int.tryParse(value);
+                    if (newValue != null) {
+                      exercise.reps![i] = newValue;
+                    }
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+              Flexible(
+                flex: 1,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: "Weight (kg)"),
+                  onChanged: (value) {
+                    // You can update the weight array based on user input.
+                    double? newValue = double.tryParse(value);
+                    if (newValue != null) {
+                      exercise.weight![i] = newValue;
+                    }
+                  },
+                ),
+              ),
             ],
           ),
         ),
