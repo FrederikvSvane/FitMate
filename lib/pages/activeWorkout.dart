@@ -53,34 +53,36 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
             bottom: 0,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Cancel Workout Button
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        activeWeightExercises.clear();
-                        Navigator.pop(context);
-                      });
-                    },
-                    icon: Icon(Icons.cancel_outlined),
-                    label: Text("Cancel Workout"),
-                  ),
-                  // Add Exercise Button
-                  ElevatedButton.icon(
-                    onPressed: () async{
-                      dynamic result = await Navigator.pushNamed(context, '/addExercise');
-                      if (result != null) {
+              child: SafeArea(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Cancel Workout Button
+                    ElevatedButton.icon(
+                      onPressed: () {
                         setState(() {
-                          activeWeightExercises.add(result);
+                          activeWeightExercises.clear();
+                          Navigator.pop(context);
                         });
-                      }
-                    },
-                    icon: Icon(Icons.add),
-                    label: Text("Add Exercise"),
-                  ),
-                ],
+                      },
+                      icon: Icon(Icons.cancel_outlined),
+                      label: Text("Cancel Workout"),
+                    ),
+                    // Add Exercise Button
+                    ElevatedButton.icon(
+                      onPressed: () async{
+                        dynamic result = await Navigator.pushNamed(context, '/addExercise');
+                        if (result != null) {
+                          setState(() {
+                            activeWeightExercises.add(result);
+                          });
+                        }
+                      },
+                      icon: Icon(Icons.add),
+                      label: Text("Add Exercise"),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
