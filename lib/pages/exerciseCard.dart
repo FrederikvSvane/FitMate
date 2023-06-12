@@ -1,10 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
 
-class ExerciseCard extends StatelessWidget {
+class ExerciseCard extends StatefulWidget {
   final Exercise exercise;
 
   ExerciseCard({required this.exercise});
+
+  @override
+  _ExerciseCardState createState() => _ExerciseCardState();
+}
+
+class _ExerciseCardState extends State<ExerciseCard> {
+  List<Widget> _setRows = [];
+
+  void _addSetRow() {
+    setState(() {
+      int nextSetNumber = widget.exercise.sets!.length + 1;
+      widget.exercise.sets!.add(nextSetNumber);
+      widget.exercise.reps!.add(0); // Example: add default values for the new set
+      widget.exercise.weight!.add(0);
+      _setRows = _buildStrengthExerciseRows(widget.exercise);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.exercise.sets != null) {
+      _setRows = _buildStrengthExerciseRows(widget.exercise);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +41,25 @@ class ExerciseCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              exercise.name,
+              widget.exercise.name,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            if (exercise.sets != null && exercise.reps != null && exercise.weight != null)
-              ..._buildStrengthExerciseRows(exercise),
-            if (exercise.distance != null && exercise.time != null)
-              ..._buildCardioExerciseRows(exercise),
-            // Add more cases if there are more types of exercises
+            ..._setRows,
+            if (widget.exercise.distance != null && widget.exercise.time != null)
+              ..._buildCardioExerciseRows(widget.exercise),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextButton.icon(
+                    onPressed: _addSetRow,
+                    icon: Icon(Icons.add),
+                    label: Text("Add Set"),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -31,31 +67,22 @@ class ExerciseCard extends StatelessWidget {
   }
 
   List<Widget> _buildStrengthExerciseRows(Exercise exercise) {
-    List<Widget> setRow = [];
-    List<Widget> addRow = [];
-    List<Widget> allRow = [];
-
+    List<Widget> rows = [];
     for (int i = 0; i < exercise.sets!.length; i++) {
-      setRow.add(
+      rows.add(
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Set ${exercise.sets![i]}:"),
-              Text("reps + ${exercise.reps![i]} "),
+              Text("reps ${exercise.reps![i]} "),
               Text("${exercise.weight![i]} kg"),
             ],
           ),
         ),
       );
     }
-    addRow.add(
-      TextButton.icon(onPressed: (){
-
-      }, icon: Icons.add, label: Text("ja")),
-    );
-
     return rows;
   }
 
