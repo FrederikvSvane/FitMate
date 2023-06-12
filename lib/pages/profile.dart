@@ -4,6 +4,8 @@ import 'package:health/health.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
+import '../main.dart';
+
 class Profile extends StatefulWidget {
   @override
   _ProfileState createState() => _ProfileState();
@@ -68,8 +70,11 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> initializeData() async {
-    await authorize();
-    await fetchStepData();
+    //Check if we are running in debug mode
+    if(!isInDebugMode) {
+      await authorize();
+      await fetchStepData();
+    }
   }
 
   static final types = [

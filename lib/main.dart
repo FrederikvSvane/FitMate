@@ -8,7 +8,14 @@ import 'package:flutter_fitness_app/pages/profileSettings.dart';
 
 var database;
 
+bool isInDebugMode = false;
+
 Future<void> main() async {
+  assert(() {
+    // During development, this flag is true
+    isInDebugMode = true;
+    return true;
+  }());
 // Avoid errors caused by flutter upgrade.
   // Importing 'package:flutter/widgets.dart' is required.
   WidgetsFlutterBinding.ensureInitialized();
