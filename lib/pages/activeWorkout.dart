@@ -21,7 +21,11 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
           stream: timerService.timerStream,
           builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
             if (snapshot.hasData) {
-              return Text('Active Workout: ${snapshot.data} seconds');
+              final int totalSeconds = snapshot.data!;
+              final int hours = totalSeconds ~/ 3600;
+              final int minutes = (totalSeconds % 3600) ~/ 60;
+              final int seconds = totalSeconds % 60;
+              return Text('Active Workout: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
             } else {
               return Text('Active Workout');
             }
