@@ -10,7 +10,7 @@ class ActiveWorkout extends StatefulWidget {
 }
 
 class _ActiveWorkoutState extends State<ActiveWorkout> {
-  List<Exercise> activeWeightExercises = [];
+  List<Exercise> activeExercises = [];
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +24,10 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         children: [
           // List of exercises
           ListView.builder(
-            itemCount: activeWeightExercises.length,
+            itemCount: activeExercises.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(activeWeightExercises[index].name),
+                title: Text(activeExercises[index].name),
                 // add other fields of Exercise class as needed
               );
             },
@@ -46,7 +46,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                   ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
-                        activeWeightExercises.clear();
+                        activeExercises.clear();
                         Navigator.pop(context);
                       });
                     },
@@ -59,7 +59,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                       dynamic result = await Navigator.pushNamed(context, '/addExercise');
                       if (result != null) {
                         setState(() {
-                          activeWeightExercises.add(result);
+                          activeExercises.add(result);
                         });
                       }
                     },
