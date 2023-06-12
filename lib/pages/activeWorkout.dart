@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
-import 'package:flutter_fitness_app/classes/cardioExercise.dart';
 import 'package:flutter_fitness_app/classes/timerService.dart';
 
 class ActiveWorkout extends StatefulWidget {
@@ -57,35 +56,37 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
 
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Cancel Workout Button
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        activeExercises.clear();
-                        Navigator.pop(context);
-                      });
-                    },
-                    icon: Icon(Icons.cancel_outlined),
-                    label: Text("Cancel Workout"),
-                  ),
-                  // Add Exercise Button
-                  ElevatedButton.icon(
-                    onPressed: () async{
-                      dynamic result = await Navigator.pushNamed(context, '/addExercise');
-                      if (result != null) {
+              child: SafeArea(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Cancel Workout Button
+                    ElevatedButton.icon(
+                      onPressed: () {
                         setState(() {
-                          activeExercises.add(result);
+                          activeExercises.clear();
+                          Navigator.pop(context);
                         });
-                      }
-                    },
-                      icon: Icon(Icons.add),
-                      label: Text("Add Exercise"),
-                      ),
-                  ],
-                ),
+                      },
+                      icon: Icon(Icons.cancel_outlined),
+                      label: Text("Cancel Workout"),
+                    ),
+                    // Add Exercise Button
+                    ElevatedButton.icon(
+                      onPressed: () async{
+                        dynamic result = await Navigator.pushNamed(context, '/addExercise');
+                        if (result != null) {
+                          setState(() {
+                            activeExercises.add(result);
+                          });
+                        }
+                      },
+                        icon: Icon(Icons.add),
+                        label: Text("Add Exercise"),
+                        ),
+                    ],
+                  ),
+              ),
               ),
             ),
         ],
