@@ -104,6 +104,7 @@ class AddFoodState extends State<AddFood> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -182,8 +183,7 @@ class AddFoodState extends State<AddFood> {
                                 ),
                               );
                             }
-                            if (validNumbers &&
-                                barcodeController.text.isNotEmpty) {
+                            if (validNumbers && barcodeController.text.isNotEmpty) {
                               setState(() {
                                 foodApiFuture =
                                     fetchFood(barcodeController.text);
@@ -234,12 +234,12 @@ class AddFoodState extends State<AddFood> {
                             setState(() {
                               if (res is String) {
                                 var result = res;
-                                if (result != -1 && result.length > 13) {
+                                if(result != -1 && result.length > 13){
                                   result = res.substring(0, 13);
                                 }
                               }
                             });
-                          },
+                          } ,
                           icon: const Icon(
                             Icons.qr_code_scanner,
                             color: Colors.white,
@@ -289,8 +289,6 @@ class AddFoodState extends State<AddFood> {
           ),
         ),
       ),
-
-
     );
   }
 
