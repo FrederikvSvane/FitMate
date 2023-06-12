@@ -11,13 +11,13 @@ class Food extends StatefulWidget {
 }
 
 int whereDidIComeFrom = 0;
+DateTime selectedDate = DateTime.now();
 
 class _FoodState extends State<Food> {
   List<Map<String, dynamic>> breakfastMeals = [];
   List<Map<String, dynamic>> lunchMeals = [];
   List<Map<String, dynamic>> dinnerMeals = [];
   List<Map<String, dynamic>> snacksMeals = [];
-  DateTime selectedDate = DateTime.now();
   double totalCalories = 0;
   double totalProteins = 0;
   GlobalKey<RefreshIndicatorState> refreshKey = GlobalKey<RefreshIndicatorState>();
@@ -74,8 +74,6 @@ class _FoodState extends State<Food> {
       }
     }
   }
-
-
 
   Future<void> _showDeleteConfirmationDialog(int mealId, String mealType) async {
     List<Map<String, dynamic>> mealData = await DBHelper.getMealById(mealId);
@@ -151,7 +149,8 @@ class _FoodState extends State<Food> {
                 setState(() {
                   selectedDate = picked;
                 });
-                loadMealsFromDatabase(); // Add this line to reload the meals from the database for the selected date
+                await loadMealsFromDatabase();
+                setState(() {});
               }
             },
           )

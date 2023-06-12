@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/pages/food.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 import '../DB/DBHelper.dart';
 import '../classes/FoodApi.dart';
+
 
 class AddFood extends StatefulWidget {
   const AddFood({super.key});
@@ -18,8 +20,12 @@ class AddFoodState extends State<AddFood> {
   final nameController = TextEditingController();
   final caloriesController = TextEditingController();
   final proteinsController = TextEditingController();
-  String howMuch = '100';
   Future<FoodApi>? foodApiFuture;
+
+  void init() {
+    super.initState();
+    howMuchController.text = '100';
+  }
 
   Future<FoodApi> fetchFood(String barcode) {
     try {
@@ -66,18 +72,24 @@ class AddFoodState extends State<AddFood> {
     }
 
     try {
-      String date = DateTime.now().toString();
+      DateTime date = selectedDate;
 
       Map<String, dynamic> mealData = {
         'barcode': barcodeController.text,
         'nameComponent': nameController.text,
-        'calories': caloriesController.text,
-        'proteins': proteinsController.text,
+        'calories': ((double.tryParse(caloriesController.text) ?? 0.0) *
+                num.parse(howMuchController.text) /
+                100)
+            .toStringAsFixed(2),
+        'proteins': ((double.tryParse(proteinsController.text) ?? 0.0) *
+                num.parse(howMuchController.text) /
+                100)
+            .toStringAsFixed(2),
         'mealType': mealType,
-        'date': date,
+        'date': date.toString(),
       };
 
-      await DBHelper.insertMeal(mealData);
+      DBHelper.insertMeal(mealData);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -90,11 +102,19 @@ class AddFoodState extends State<AddFood> {
       Navigator.pop(localContext, {
         'barcode': int.tryParse(barcodeController.text) ?? 0,
         'nameComponent': nameController.text,
-        'calories': double.tryParse(caloriesController.text) ?? 0.0,
-        'proteins': double.tryParse(proteinsController.text) ?? 0.0,
+        'calories': ((double.tryParse(caloriesController.text) ?? 0.0) *
+                num.parse(howMuchController.text) /
+                100)
+            .toStringAsFixed(2),
+        'proteins': ((double.tryParse(proteinsController.text) ?? 0.0) *
+                num.parse(howMuchController.text) /
+                100)
+            .toStringAsFixed(2),
       });
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Failed to add meal'),
@@ -103,7 +123,6 @@ class AddFoodState extends State<AddFood> {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -115,180 +134,185 @@ class AddFoodState extends State<AddFood> {
       ),
       body: SafeArea(
         child: Column(
-            children: [
-        Expanded(
-        child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("Name:"),
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter name',
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          const Text("Name:"),
+                          TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter name',
+                            ),
+                          ),
+                          const Text("Calories:"),
+                          TextField(
+                            controller: caloriesController,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter calories',
+                            ),
+                          ),
+                          const Text("Proteins:"),
+                          TextField(
+                            controller: proteinsController,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter proteins',
+                            ),
+                          ),
+                          const Text("How much did you eat? (in grams)"),
+                          TextField(
+                            controller: howMuchController,
+                            decoration: const InputDecoration(
+                              hintText: 'how many grams',
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const Text("Calories:"),
-                    TextField(
-                      controller: caloriesController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter calories',
+                      const Padding(padding: EdgeInsets.all(20.0)),
+                      TextField(
+                        controller: barcodeController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter barcode',
+                        ),
                       ),
-                    ),
-                    const Text("Proteins:"),
-                    TextField(
-                      controller: proteinsController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter proteins',
-                      ),
-                    ),
-                    const Text("How much did you eat? (in grams)"),
-                    TextField(
-                      controller: howMuchController,
-                      decoration: const InputDecoration(
-                        hintText: 'how many grams',
-                      ),
-                    ),
-                  ],
-                ),
-                const Padding(padding: EdgeInsets.all(40.0)),
-                TextField(
-                  controller: barcodeController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter barcode',
-                  ),
-                ),
-                const SizedBox(height: 10.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            bool validNumbers = true;
-                            // Check if they both can be parsed to int
-                            try {
-                              int.parse(barcodeController.text);
-                            } catch (e) {
-                              validNumbers = false;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Please enter a valid barcode number'),
-                                  duration: Duration(seconds: 1),
-                                ),
-                              );
-                            }
-                            if (validNumbers && barcodeController.text.isNotEmpty) {
-                              setState(() {
-                                foodApiFuture =
-                                    fetchFood(barcodeController.text);
-
-                                foodApiFuture!.then((foodApi) async {
-                                  double caloriesPerGram =
-                                      foodApi.calories.toDouble();
-                                  double proteinsPerGram =
-                                      foodApi.proteins.toDouble();
-
-                                  if (mounted) {
+                      const SizedBox(height: 10.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  bool validNumbers = true;
+                                  // Check if they both can be parsed to int
+                                  try {
+                                    int.parse(barcodeController.text);
+                                  } catch (e) {
+                                    validNumbers = false;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Please enter a valid barcode number'),
+                                        duration: Duration(seconds: 1),
+                                      ),
+                                    );
+                                  }
+                                  if (validNumbers &&
+                                      barcodeController.text.isNotEmpty) {
                                     setState(() {
-                                      nameController.text =
-                                          foodApi.nameComponent;
-                                      caloriesController.text =
-                                          caloriesPerGram.toStringAsFixed(2);
-                                      proteinsController.text =
-                                          proteinsPerGram.toStringAsFixed(2);
+                                      foodApiFuture =
+                                          fetchFood(barcodeController.text);
+
+                                      foodApiFuture!.then((foodApi) async {
+                                        double caloriesPerGram =
+                                            foodApi.calories.toDouble();
+                                        double proteinsPerGram =
+                                            foodApi.proteins.toDouble();
+
+                                        if (mounted) {
+                                          setState(() {
+                                            nameController.text =
+                                                foodApi.nameComponent;
+                                            caloriesController.text =
+                                                caloriesPerGram
+                                                    .toStringAsFixed(2);
+                                            proteinsController.text =
+                                                proteinsPerGram
+                                                    .toStringAsFixed(2);
+                                          });
+                                        }
+                                      });
                                     });
                                   }
-                                });
-                              });
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.red[800],
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.red[800],
+                                ),
+                                icon: const Icon(
+                                  Icons.download_sharp,
+                                  color: Colors.white,
+                                ),
+                                label: const Text('Fetch Food'),
+                              ),
+                            ),
                           ),
-                          icon: const Icon(
-                            Icons.download_sharp,
-                            color: Colors.white,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: ElevatedButton.icon(
+                                onPressed: () async {
+                                  var res = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SimpleBarcodeScannerPage(),
+                                      ));
+                                  setState(() {
+                                    if (res is String) {
+                                      var result = res;
+                                      if (result != '-1') {
+                                        result = res.substring(0, 13);
+                                      }
+                                    }
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.qr_code_scanner,
+                                  color: Colors.white,
+                                ),
+                                label: const Text('Open Scanner'),
+                              ),
+                            ),
                           ),
-                          label: const Text('Fetch Food'),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: ElevatedButton.icon(
-                          onPressed: () async {
-                            var res = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SimpleBarcodeScannerPage(),
-                                ));
-                            setState(() {
-                              if (res is String) {
-                                var result = res;
-                                if(result != -1 && result.length > 13){
-                                  result = res.substring(0, 13);
-                                }
-                              }
-                            });
-                          } ,
-                          icon: const Icon(
-                            Icons.qr_code_scanner,
-                            color: Colors.white,
-                          ),
-                          label: const Text('Open Scanner'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-              if (MediaQuery.of(context).viewInsets.bottom == 0)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      FloatingActionButton(
-                        onPressed: () {
-                          // Handle your onPressed here
-                        },
-                        backgroundColor: Colors.red[800],
-                        tooltip: 'Use favorite meals',
-                        child: const Icon(Icons.favorite),
-                      ),
-                      FloatingActionButton(
-                        onPressed: () {
-                          addMeal();
-                        },
-                        backgroundColor: Colors.red[800],
-                        tooltip: 'Add Meal',
-                        child: const Icon(Icons.add),
+                        ],
                       ),
                     ],
                   ),
                 ),
-            ],
+              ),
+            ),
+            if (MediaQuery.of(context).viewInsets.bottom == 0)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FloatingActionButton(
+                      heroTag: 'favMealButton',
+                      onPressed: () async {
+                        var result = await Navigator.pushNamed(
+                            context, "/addFavoriteMeal");
+                      },
+                      backgroundColor: Colors.red[800],
+                      tooltip: 'Use favorite meals',
+                      child: const Icon(Icons.favorite),
+                    ),
+                    FloatingActionButton(
+                      heroTag: 'AddMealButton',
+                      onPressed: () {
+                        addMeal();
+                      },
+                      backgroundColor: Colors.red[800],
+                      tooltip: 'Add Meal',
+                      child: const Icon(Icons.add),
+                    ),
+                  ],
+                ),
+              ),
+          ],
         ),
       ),
     );
   }
-
 
   @override
   void dispose() {
