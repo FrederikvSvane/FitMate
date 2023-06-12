@@ -34,16 +34,18 @@ class AddFoodState extends State<AddFood> {
   String mealType = '';
 
   Future<void> addMeal() async {
+    // Check if all fields are filled in and they are numbers
     if (nameController.text.isEmpty ||
-        caloriesController.text.isEmpty ||
-        proteinsController.text.isEmpty) {
+        double.tryParse(caloriesController.text) == null ||
+        double.tryParse(proteinsController.text) == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please fill in all fields'),
+          content: Text('Please fill in the fields with numbers'),
         ),
       );
       return;
     }
+
     // Make a switch statement here to check where the user came from
     // 0 = breakfast, 1 = lunch, 2 = dinner, 3 = snacks
     switch (whereDidIComeFrom) {
@@ -101,6 +103,7 @@ class AddFoodState extends State<AddFood> {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
