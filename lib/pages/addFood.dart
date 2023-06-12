@@ -236,7 +236,7 @@ class AddFoodState extends State<AddFood> {
                                 }
                               }
                             });
-                          } ,
+                          },
                           icon: const Icon(
                             Icons.qr_code_scanner,
                             color: Colors.white,
