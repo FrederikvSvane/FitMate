@@ -1,55 +1,76 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/classes/Exercise.dart';
 
-import '../classes/Exercise.dart';
-
-class ExerciseCard extends StatefulWidget {
-  final Function(Exercise) exercise;
+class ExerciseCard extends StatelessWidget {
+  final Exercise exercise;
 
   ExerciseCard({required this.exercise});
 
   @override
-  _ExerciseCardState createState() => _ExerciseCardState();
-}
-
-class _ExerciseCardState extends State<ExerciseCard> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController setsController = TextEditingController();
-  TextEditingController repsController = TextEditingController();
-
-  void _submitForm(){
-    String name = nameController.text.trim();
-    int sets = int.parse(setsController.text.trim());
-    int reps = int.parse(repsController.text.trim());
-
-    Exercise newExercise = Exercise(name: name, sets: [sets], reps: [reps]);
-
-    widget.exercise(newExercise);
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              exercise.name,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            if (exercise.sets != null && exercise.reps != null && exercise.weight != null)
+              ..._buildStrengthExerciseRows(exercise),
+            if (exercise.distance != null && exercise.time != null)
+              ..._buildCardioExerciseRows(exercise),
+            // Add more cases if there are more types of exercises
+          ],
+        ),
+      ),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: nameController,
-          decoration: InputDecoration(
-            labelText: "Exercise Name",
+  List<Widget> _buildStrengthExerciseRows(Exercise exercise) {
+    List<Widget> setRow = [];
+    List<Widget> addRow = [];
+    List<Widget> allRow = [];
+
+    for (int i = 0; i < exercise.sets!.length; i++) {
+      setRow.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Set ${exercise.sets![i]}:"),
+              Text("reps + ${exercise.reps![i]} "),
+              Text("${exercise.weight![i]} kg"),
+            ],
           ),
         ),
-        TextField(
-          controller: setsController,
-          decoration: InputDecoration(
-            labelText: "Number of Sets",
-          ),
-        ),
-        TextField(
-          controller: repsController,
-          decoration: InputDecoration(
-            labelText: "Number of Reps",
-          ),
-        ),
-      ]
+      );
+    }
+    addRow.add(
+      TextButton.icon(onPressed: (){
+
+      }, icon: Icons.add, label: Text("ja")),
     );
+
+    return rows;
+  }
+
+  List<Widget> _buildCardioExerciseRows(Exercise exercise) {
+    return [
+      Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Distance: ${exercise.distance!} km"),
+            Text("Time: ${exercise.time!} min"),
+          ],
+        ),
+      ),
+    ];
   }
 }

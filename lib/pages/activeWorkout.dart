@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/cardioExercise.dart';
 import 'package:flutter_fitness_app/classes/timerService.dart';
+import 'package:flutter_fitness_app/pages/exerciseCard.dart';
 
 class ActiveWorkout extends StatefulWidget {
   const ActiveWorkout({Key? key}) : super(key: key);
@@ -43,10 +44,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
           ListView.builder(
             itemCount: activeExercises.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(activeExercises[index].name),
+              return ExerciseCard(exercise: activeExercises[index]);
+                //title: Text(activeExercises[index].name),
                 // add other fields of Exercise class as needed
-              );
             },
           ),
           // Buttons to cancel workout and add exercise
