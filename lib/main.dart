@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:flutter_fitness_app/pages/activeWorkout.dart';
 import 'package:flutter_fitness_app/pages/addExercise.dart';
+import 'package:flutter_fitness_app/pages/addFavoriteMeal.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:flutter_fitness_app/pages/addFood.dart';
 import 'package:flutter_fitness_app/pages/profileSettings.dart';
@@ -45,6 +46,7 @@ Future<void> main() async {
       "/": (context) => const Navigation(),
       "/activeWorkout": (context) => const ActiveWorkout(),
       "/addExercise": (context) => const AddExercise(),
+      "/addFavoriteMeal": (context) => const AddFavoriteMeal(),
 
       "/addFood": (context) => const AddFood(),
 
