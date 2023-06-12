@@ -114,9 +114,12 @@ class AddFoodState extends State<AddFood> {
         backgroundColor: Colors.red[800],
       ),
       body: SafeArea(
+        child: Column(
+            children: [
+        Expanded(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
@@ -255,42 +258,37 @@ class AddFoodState extends State<AddFood> {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: MediaQuery.of(context).viewInsets.bottom > 0
-          ? Container()
-          : SafeArea(
-          child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                left: 0,
-                bottom: 0,
-                child: FloatingActionButton(
-                  onPressed: () {},
-                  backgroundColor: Colors.red[800],
-                  tooltip: 'Use favorite meals',
-                  child: const Icon(Icons.favorite),
+              if (MediaQuery.of(context).viewInsets.bottom == 0)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      FloatingActionButton(
+                        onPressed: () {
+                          // Handle your onPressed here
+                        },
+                        backgroundColor: Colors.red[800],
+                        tooltip: 'Use favorite meals',
+                        child: const Icon(Icons.favorite),
+                      ),
+                      FloatingActionButton(
+                        onPressed: () {
+                          addMeal();
+                        },
+                        backgroundColor: Colors.red[800],
+                        tooltip: 'Add Meal',
+                        child: const Icon(Icons.add),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Positioned(
-                right: 0,
-                bottom: 0,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    addMeal();
-                  },
-                  backgroundColor: Colors.red[800],
-                  tooltip: 'Add Meal',
-                  child: const Icon(Icons.add),
-                ),
-              ),
             ],
-          ),
         ),
       ),
     );
   }
+
 
   @override
   void dispose() {
