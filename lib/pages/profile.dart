@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../main.dart';
 
 class Profile extends StatefulWidget {
+  const Profile({Key? key}) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -264,7 +265,7 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             Expanded(
-              flex: 12,
+              flex: 14,
               child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: current.length,
