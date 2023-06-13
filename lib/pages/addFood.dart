@@ -6,7 +6,6 @@ import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import '../DB/DBHelper.dart';
 import '../classes/FoodApi.dart';
 
-
 class AddFood extends StatefulWidget {
   const AddFood({super.key});
 
@@ -289,7 +288,7 @@ class AddFoodState extends State<AddFood> {
                     FloatingActionButton(
                       heroTag: 'favMealButton',
                       onPressed: () async {
-                        var result = await Navigator.pushNamed(
+                        await Navigator.pushNamed(
                             context, "/addFavoriteMeal");
                       },
                       backgroundColor: Colors.red[800],

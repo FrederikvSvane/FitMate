@@ -5,7 +5,6 @@ import 'package:flutter_fitness_app/pages/profile.dart';
 import 'package:flutter_fitness_app/pages/history.dart';
 import 'package:flutter_fitness_app/pages/measure.dart';
 
-
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
 
@@ -66,4 +65,3 @@ class _NavigationState extends State<Navigation> {
     );
   }
 }
-

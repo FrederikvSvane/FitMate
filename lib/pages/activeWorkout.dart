@@ -9,12 +9,11 @@ class ActiveWorkout extends StatefulWidget {
   @override
   State<ActiveWorkout> createState() => _ActiveWorkoutState();
 }
-class _ActiveWorkoutState extends State<ActiveWorkout> {
 
+class _ActiveWorkoutState extends State<ActiveWorkout> {
   List<Exercise> activeExercises = [];
 
   TimerService timerService = TimerService();
-
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
               final int hours = totalSeconds ~/ 3600;
               final int minutes = (totalSeconds % 3600) ~/ 60;
               final int seconds = totalSeconds % 60;
-              return Text('Active Workout: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
+              return Text(
+                  'Active Workout: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
             } else {
               return Text('Active Workout');
             }
@@ -44,8 +44,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
             itemCount: activeExercises.length,
             itemBuilder: (context, index) {
               return ExerciseCard(exercise: activeExercises[index]);
-                //title: Text(activeExercises[index].name),
-                // add other fields of Exercise class as needed
+              //title: Text(activeExercises[index].name),
+              // add other fields of Exercise class as needed
             },
           ),
           // Buttons to cancel workout and add exercise
@@ -55,7 +55,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
             bottom: 0,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-
               child: SafeArea(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,30 +72,31 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                     ),
                     // Add Exercise Button
                     ElevatedButton.icon(
-                      onPressed: () async{
-                        dynamic result = await Navigator.pushNamed(context, '/addExercise');
+                      onPressed: () async {
+                        dynamic result =
+                            await Navigator.pushNamed(context, '/addExercise');
                         if (result != null) {
                           setState(() {
                             activeExercises.add(result);
                           });
                         }
                       },
-                        icon: Icon(Icons.add),
-                        label: Text("Add Exercise"),
-                        ),
-                    ],
-                  ),
-              ),
+                      icon: Icon(Icons.add),
+                      label: Text("Add Exercise"),
+                    ),
+                  ],
+                ),
               ),
             ),
+          ),
         ],
       ),
     );
   }
+
   @override
   void dispose() {
     timerService.dispose();
     super.dispose();
   }
 }
-

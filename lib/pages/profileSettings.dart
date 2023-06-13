@@ -8,8 +8,6 @@ class ProfileSettings extends StatefulWidget {
   ProfileSettingsState createState() => ProfileSettingsState();
 }
 
-
-
 class ProfileSettingsState extends State<ProfileSettings> {
   final nameController = TextEditingController();
 

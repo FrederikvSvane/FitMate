@@ -31,6 +31,11 @@ class DBHelper {
 
   static Future<void> insertMockData() async {
     if (kDebugMode) {
+      final db = await getDatabase();
+
+      // Clear existing data from the 'meals' table
+      await db.delete('meals');
+
       // Insert some mock data for testing.
       for (var i = 0; i < 30; i++) {
         for (var j = 0; j < 4; j++) {
@@ -42,10 +47,10 @@ class DBHelper {
             'mealType': j == 0
                 ? 'Breakfast'
                 : j == 1
-                ? 'Lunch'
-                : j == 2
-                ? 'Dinner'
-                : 'Snacks',
+                    ? 'Lunch'
+                    : j == 2
+                        ? 'Dinner'
+                        : 'Snacks',
             'date': DateTime.now().subtract(Duration(days: i)).toString(),
           };
           await insertMeal(mealData);
@@ -53,9 +58,6 @@ class DBHelper {
       }
     }
   }
-
-
-
 
   static Future<List<Map<String, dynamic>>> getAllMeals() async {
     final db = await getDatabase();
@@ -82,9 +84,7 @@ class DBHelper {
       whereArgs: [id],
     );
     return maps;
-
   }
-
 
   static Future<FoodApi?> getLatestMeal() async {
     final db = await getDatabase();
@@ -107,10 +107,42 @@ class DBHelper {
     return null; // Returns null if there are no entries in the database.
   }
 
-  getDB(){
-  return getDatabase();
+  getDB() {
+    return getDatabase();
   }
 
+  static Future<List<Map<String, dynamic>>> getCaloriesForDateRange(
+      DateTime before, DateTime after) async {
+    final db = await getDatabase();
 
+    List<Map<String, dynamic>> meals = await db.rawQuery('''
+      SELECT date, SUM(calories) as totalCalories 
+      FROM meals 
+      WHERE date(date) BETWEEN date(?) AND date(?)
+      GROUP BY date(date)
+    ''', [
+      before.toIso8601String(),
+      after.toIso8601String(),
+    ]);
 
+    return meals;
+  }
+
+  static Future<List<Map<String, dynamic>>> getProteinsForDateRange(
+      DateTime before, DateTime after) async {
+    final db = await getDatabase();
+
+    List<Map<String, dynamic>> meals = await db.rawQuery('''
+    SELECT date(date) as date, SUM(proteins) as totalProteins
+    FROM meals 
+    WHERE date(date) BETWEEN date(?) AND date(?)
+    GROUP BY date(date)
+
+  ''', [
+      before.toIso8601String(),
+      after.toIso8601String(),
+    ]);
+
+    return meals;
+  }
 }
