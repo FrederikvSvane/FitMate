@@ -78,8 +78,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
               Text("Set ${exercise.sets![i]}:"),
               //Text("reps ${exercise.reps![i]} "),
               //Text("${exercise.weight![i]} kg"),
-              Flexible(
-                flex: 1,
+              Container(
+                width: 100,
                 child: TextField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: "Reps"),
@@ -93,8 +93,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
                 ),
               ),
               SizedBox(width: 20),
-              Flexible(
-                flex: 1,
+              Container(
+                width: 100,
                 child: TextField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: "Weight (kg)"),
