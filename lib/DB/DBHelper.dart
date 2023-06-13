@@ -116,7 +116,7 @@ class DBHelper {
     final db = await getDatabase();
 
     List<Map<String, dynamic>> meals = await db.rawQuery('''
-      SELECT date, SUM(calories) as totalCalories 
+      SELECT date(date) as date, SUM(calories) as totalCalories 
       FROM meals 
       WHERE date(date) BETWEEN date(?) AND date(?)
       GROUP BY date(date)
