@@ -11,8 +11,9 @@ class TemplateCard extends StatefulWidget {
 }
 
 class _TemplateCardState extends State<TemplateCard>{
-    List<Widget> _setRows = [];
-  void _addExerciseRow() {
+  List<Widget> _setRows = [];
+
+  void _addSetRow() {
     setState(() {
       int nextSetNumber = widget.exercise.sets!.length + 1;
       widget.exercise.sets!.add(nextSetNumber);
@@ -21,6 +22,7 @@ class _TemplateCardState extends State<TemplateCard>{
       _setRows = _buildStrengthExerciseRows(widget.exercise);
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +30,7 @@ class _TemplateCardState extends State<TemplateCard>{
       _setRows = _buildStrengthExerciseRows(widget.exercise);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -35,50 +38,66 @@ class _TemplateCardState extends State<TemplateCard>{
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Text(
               widget.exercise.name,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             ..._setRows,
-        if (widget.exercise.distance != null && widget.exercise.time != null)
-          ..._buildCardioExerciseRows(widget.exercise),
-      Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TextButton.icon(
-              onPressed: _addSetRow,
-              icon: Icon(Icons.add),
-              label: Text("Add Set"),
+            if (widget.exercise.distance != null && widget.exercise.time != null)
+              ..._buildCardioExerciseRows(widget.exercise),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextButton.icon(
+                    onPressed: _addSetRow,
+                    icon: Icon(Icons.add),
+                    label: Text("Add Set"),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
-      ],
-        )
-      )
     );
   }
 
-    List<Widget> _buildStrengthExerciseRows(Exercise exercise) {
-      List<Widget> rows = [];
-      for (int i = 0; i < exercise.sets!.length; i++) {
-        rows.add(
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Set ${exercise.sets![i]}:"),
-                Text("reps ${exercise.reps![i]} "),
-                Text("${exercise.weight![i]} kg"),
-              ],
-            ),
+  List<Widget> _buildStrengthExerciseRows(Exercise exercise) {
+    List<Widget> rows = [];
+    for (int i = 0; i < exercise.sets!.length; i++) {
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Set ${exercise.sets![i]}:"),
+              Text("reps ${exercise.reps![i]} "),
+              Text("${exercise.weight![i]} kg"),
+            ],
           ),
-        );
-      }
-      return rows;
+        ),
+      );
     }
+    return rows;
+  }
 
+  List<Widget> _buildCardioExerciseRows(Exercise exercise) {
+    return [
+      Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Distance: ${exercise.distance!} km"),
+            Text("Time: ${exercise.time!} min"),
+          ],
+        ),
+      ),
+    ];
+  }
 }
