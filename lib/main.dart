@@ -5,6 +5,7 @@ import 'package:flutter_fitness_app/pages/addExercise.dart';
 import 'package:flutter_fitness_app/pages/addFavoriteMeal.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:flutter_fitness_app/pages/addFood.dart';
+import 'package:flutter_fitness_app/pages/profileSettings.dart';
 import 'package:sqflite/sqflite.dart';
 
 Database? database;
