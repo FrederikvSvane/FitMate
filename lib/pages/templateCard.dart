@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
+import 'package:flutter_fitness_app/classes/WorkoutTemplate.dart';
 
 class TemplateCard extends StatefulWidget {
-  final Exercise exercise;
+  WorkoutTemplate template;
 
-  TemplateCard({required this.exercise});
+  TemplateCard({required this.template});
 
   @override
   _TemplateCardState createState() => _TemplateCardState();
@@ -13,21 +14,18 @@ class TemplateCard extends StatefulWidget {
 class _TemplateCardState extends State<TemplateCard>{
   List<Widget> _setRows = [];
 
-  void _addSetRow() {
+  void _addExerciseRow() {
     setState(() {
-      int nextSetNumber = widget.exercise.sets!.length + 1;
-      widget.exercise.sets!.add(nextSetNumber);
-      widget.exercise.reps!.add(0); // Example: add default values for the new set
-      widget.exercise.weight!.add(0);
-      _setRows = _buildStrengthExerciseRows(widget.exercise);
+
+      _setRows = _buildWorkoutRows(widget.template);
     });
   }
 
   @override
   void initState() {
     super.initState();
-    if (widget.exercise.sets != null) {
-      _setRows = _buildStrengthExerciseRows(widget.exercise);
+    if (widget.template.workoutExercises != null) {
+      _setRows = _buildWorkoutRows(widget.template);
     }
   }
 
@@ -41,21 +39,19 @@ class _TemplateCardState extends State<TemplateCard>{
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.exercise.name,
+              widget.template.workoutName,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             ..._setRows,
-            if (widget.exercise.distance != null && widget.exercise.time != null)
-              ..._buildCardioExerciseRows(widget.exercise),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TextButton.icon(
-                    onPressed: _addSetRow,
+                    onPressed: _addExerciseRow,
                     icon: Icon(Icons.add),
-                    label: Text("Add Set"),
+                    label: Text("Add Exercise"),
                   ),
                 ],
               ),
@@ -66,38 +62,23 @@ class _TemplateCardState extends State<TemplateCard>{
     );
   }
 
-  List<Widget> _buildStrengthExerciseRows(Exercise exercise) {
+  List<Widget> _buildWorkoutRows(WorkoutTemplate workout) {
     List<Widget> rows = [];
-    for (int i = 0; i < exercise.sets!.length; i++) {
+    for (int i = 0; i < workout.workoutExercises!.length; i++) {
+      Exercise exercise = workout.workoutExercises![i];
       rows.add(
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Set ${exercise.sets![i]}:"),
-              Text("reps ${exercise.reps![i]} "),
-              Text("${exercise.weight![i]} kg"),
+              Text("${exercise.sets![i]} X sets:"),
+              Text("${exercise.name![i]} "),
             ],
           ),
         ),
       );
     }
     return rows;
-  }
-
-  List<Widget> _buildCardioExerciseRows(Exercise exercise) {
-    return [
-      Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Distance: ${exercise.distance!} km"),
-            Text("Time: ${exercise.time!} min"),
-          ],
-        ),
-      ),
-    ];
   }
 }
