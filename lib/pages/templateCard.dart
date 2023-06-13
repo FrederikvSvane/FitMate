@@ -16,7 +16,6 @@ class _TemplateCardState extends State<TemplateCard>{
 
   void _addExerciseRow() {
     setState(() {
-
       _setRows = _buildWorkoutRows(widget.template);
     });
   }

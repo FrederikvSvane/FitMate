@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/pages/templateCard.dart';
 
+import '../classes/Exercise.dart';
 import '../classes/WorkoutTemplate.dart';
 
 class Workout extends StatefulWidget {
@@ -11,6 +12,10 @@ class Workout extends StatefulWidget {
 class _WorkoutState extends State<Workout> {
   Map<String, dynamic> data = {};
   List<WorkoutTemplate> workoutTemplates = [];
+  List<Exercise> workoutExercises = [
+    Exercise(name: "Bench Press", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
+    Exercise(name: "Deadlift", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
+    Exercise(name: "Overhead Press", sets: [3], reps: [0,0,0], weight: [0,0,0]),];
 
   @override
   Widget build(BuildContext context) {
@@ -64,4 +69,16 @@ class _WorkoutState extends State<Workout> {
       ),
     );
   }
+
+  void addWorkoutTemplates(){
+    List<Exercise> workoutExercises = [
+      Exercise(name: "Bench Press", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
+      Exercise(name: "Deadlift", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
+      Exercise(name: "Overhead Press", sets: [3], reps: [0,0,0], weight: [0,0,0]),];
+   workoutTemplates.add(WorkoutTemplate(
+      workoutName: "Test",
+      workoutExercises: workoutExercises,
+    ));
+  }
 }
+
