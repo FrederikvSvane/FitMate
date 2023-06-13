@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:intl/intl.dart';
 
-
 class Food extends StatefulWidget {
   const Food({Key? key}) : super(key: key);
 
@@ -20,7 +19,8 @@ class _FoodState extends State<Food> {
   List<Map<String, dynamic>> snacksMeals = [];
   double totalCalories = 0;
   double totalProteins = 0;
-  GlobalKey<RefreshIndicatorState> refreshKey = GlobalKey<RefreshIndicatorState>();
+  GlobalKey<RefreshIndicatorState> refreshKey =
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -75,7 +75,8 @@ class _FoodState extends State<Food> {
     }
   }
 
-  Future<void> _showDeleteConfirmationDialog(int mealId, String mealType) async {
+  Future<void> _showDeleteConfirmationDialog(
+      int mealId, String mealType) async {
     List<Map<String, dynamic>> mealData = await DBHelper.getMealById(mealId);
 
     // This is to prevent the dialog from being shown after the page is disposed
@@ -85,14 +86,14 @@ class _FoodState extends State<Food> {
     double mealCalories = mealData[0]['calories'];
     double mealProteins = mealData[0]['proteins'];
 
-
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Delete Meal'),
-          content: Text('Are you sure you want to delete this meal:\n\nName: $mealName\nCalories: $mealCalories\nProteins: $mealProteins\n\nThis action cannot be undone!'),
+          content: Text(
+              'Are you sure you want to delete this meal:\n\nName: $mealName\nCalories: $mealCalories\nProteins: $mealProteins\n\nThis action cannot be undone!'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -106,7 +107,8 @@ class _FoodState extends State<Food> {
                 setState(() {
                   switch (mealType) {
                     case 'Breakfast':
-                      breakfastMeals.removeWhere((meal) => meal['id'] == mealId);
+                      breakfastMeals
+                          .removeWhere((meal) => meal['id'] == mealId);
                       break;
                     case 'Lunch':
                       lunchMeals.removeWhere((meal) => meal['id'] == mealId);
@@ -162,51 +164,65 @@ class _FoodState extends State<Food> {
           children: [
             //Design for the selected day is made with assistance from chatGPT
             Container(
-              padding: const EdgeInsets.all(10.0),
-              margin: const EdgeInsets.only(bottom: 10.0, top: 15.0),
+              height: MediaQuery.of(context).size.height / 13,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: Colors.red[100],
+                color: Colors.red[800],
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: const Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
-              child: Column(
-                
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    'Chosen Date',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red[900],
-                    ),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () async {
+                      setState(() {
+                        selectedDate = selectedDate.subtract(Duration(days: 1));
+                      });
+                      await loadMealsFromDatabase();
+                      setState(() {});
+                    },
                   ),
-                  const SizedBox(height: 20.0),
-
                   Text(
                     DateFormat('EEEE, MMMM d, y').format(selectedDate),
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red[900]
+                    style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
                     ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_forward, color: Colors.white),
+                    onPressed: selectedDate.isBefore(DateTime(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day))
+                        ? () async {
+                      setState(() {
+                        selectedDate =
+                            selectedDate.add(Duration(days: 1));
+                      });
+                      await loadMealsFromDatabase();
+                      setState(() {});
+                    }
+                        : null, // Disable the button if the selected date is today or in the future
                   ),
                 ],
               ),
             ),
+
 
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
                   const SizedBox(height: 10),
                   const Text('Breakfast:',
                       style:

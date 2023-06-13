@@ -104,12 +104,8 @@ class AddFoodState extends State<AddFood> {
         'nameComponent': nameController.text,
         'calories': ((double.tryParse(caloriesController.text) ?? 0.0) *
                 num.parse(howMuchController.text) /
-                100)
-            .toStringAsFixed(2),
-        'proteins': ((double.tryParse(proteinsController.text) ?? 0.0) *
-                num.parse(howMuchController.text) /
-                100)
-            .toStringAsFixed(2),
+                100).toStringAsFixed(2),
+        'proteins': ((double.tryParse(proteinsController.text) ?? 0.0) * num.parse(howMuchController.text) / 100).toStringAsFixed(2),
       });
     } catch (e) {
       if (kDebugMode) {
