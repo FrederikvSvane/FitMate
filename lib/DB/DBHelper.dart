@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -27,6 +28,33 @@ class DBHelper {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+
+  static Future<void> insertMockData() async {
+    if (kDebugMode) {
+      // Insert some mock data for testing.
+      for (var i = 0; i < 30; i++) {
+        for (var j = 0; j < 4; j++) {
+          final mealData = {
+            'barcode': 1234567890 + i * 10 + j,
+            'nameComponent': 'Mock Meal ${i * 4 + j}',
+            'calories': 500.0 + (i * 10 + j),
+            'proteins': 20.0 + (i + j),
+            'mealType': j == 0
+                ? 'Breakfast'
+                : j == 1
+                ? 'Lunch'
+                : j == 2
+                ? 'Dinner'
+                : 'Snacks',
+            'date': DateTime.now().subtract(Duration(days: i)).toString(),
+          };
+          await insertMeal(mealData);
+        }
+      }
+    }
+  }
+
+
 
 
   static Future<List<Map<String, dynamic>>> getAllMeals() async {
