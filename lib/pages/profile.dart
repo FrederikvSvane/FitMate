@@ -544,8 +544,21 @@ class _ProfileState extends State<Profile> {
                                         ),
                                       ],
                                     ),
+
+                                  const Align(
+                                    alignment: Alignment.center,
+                                    child: Text("Day ended with a protein deficit of 14 grams"),
+                                  ),
+
+
+                                    const Align(
+                                      alignment: Alignment.center,
+                                      child: Text("Day ended with a calorie deficit of 150 calories"),
+                                    )
+
+
                                   ],
-                                ),
+                            ),
                               );
                             } else if (snapshot.hasError) {
                               return Text("Error: ${snapshot.error}");
