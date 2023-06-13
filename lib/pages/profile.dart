@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sliding_switch/sliding_switch.dart';
 import 'package:health/health.dart';
 
@@ -72,6 +73,7 @@ class _ProfileState extends State<Profile> {
     initializeData();
   }
 
+
   Future<void> initializeData() async {
     //Check if we are running in debug mode
     if (!isInDebugMode) {
@@ -136,6 +138,28 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  Future fetchStepDataFromDate(DateTime date) async {
+    final midnight = DateTime(date.year, date.month, date.day);
+
+    bool requested = await health.requestAuthorization([HealthDataType.STEPS]);
+
+    if (requested) {
+      try {
+        steps = await health.getTotalStepsInInterval(midnight, date);
+      } catch (error) {
+        print("Caught exception in getTotalStepsInInterval: $error");
+      }
+
+      print('Total number of steps: $steps');
+
+      setState(() {
+        steps = (steps == null) ? 0 : steps;
+      });
+    } else {
+      print("Authorization not granted - error in authorization");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -143,9 +167,8 @@ class _ProfileState extends State<Profile> {
       home: Scaffold(
         body: Column(
           children: [
-            Expanded(
-                flex: 5,
-                child: Container(
+             Container(
+                  height: 150,
                   color: Colors.red[800],
                   padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
                   child: Stack(
@@ -237,19 +260,16 @@ class _ProfileState extends State<Profile> {
                       ),
                     ],
                   ),
-                )),
+                ),
 
-            Expanded(
-              flex: 2,
-              child: Padding(
+            Padding(
                 padding: const EdgeInsets.all(20),
                 child: SlidingSwitch(
                   onDoubleTap: () {},
                   onSwipe: () {},
                   onTap: () {},
                   value: false,
-                  height: 100,
-                  width: 350,
+                  height: 50,
                   textOff: "Workouts",
                   textOn: "Meals",
                   onChanged: (bool value) {
@@ -269,13 +289,10 @@ class _ProfileState extends State<Profile> {
                   contentSize: 20,
                 ),
               ),
-            ),
             Expanded(
-              flex: 14,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: current.length,
-                itemBuilder: (context, index) {
+            child: ListView.builder(
+                itemCount: 30,
+                itemBuilder: (BuildContext context, index) {
                   return Container(
                     height: 300,
                     margin: const EdgeInsets.all(8),
@@ -290,7 +307,7 @@ class _ProfileState extends State<Profile> {
                        Padding(
                         padding: const EdgeInsets.only(left: 8),
                           child:
-                        Text("Date: June 13th",
+                        Text("Date: ${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: index)))}",
                         style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 20,
@@ -302,7 +319,7 @@ class _ProfileState extends State<Profile> {
                       Padding(
                         padding: const EdgeInsets.all(8),
                         child:
-                        Text("5302 Steps taken",
+                        Text('Steps taken: + ${fetchStepDataFromDate(DateTime.now().subtract(Duration(days: index)))}',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 16,
@@ -536,10 +553,10 @@ class _ProfileState extends State<Profile> {
                   );
                 },
               ),
-            ),
-          ],
         ),
+        ],
       ),
+      )
     );
   }
 }
