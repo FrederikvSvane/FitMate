@@ -66,8 +66,6 @@ class _ExerciseCardState extends State<ExerciseCard> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             ..._setRows,
-            if (widget.exercise.distance != null && widget.exercise.time != null)
-              ..._buildCardioExerciseRows(widget.exercise),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Row(
