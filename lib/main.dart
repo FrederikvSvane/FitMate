@@ -5,8 +5,10 @@ import 'package:flutter_fitness_app/pages/addExercise.dart';
 import 'package:flutter_fitness_app/pages/addFavoriteMeal.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:flutter_fitness_app/pages/addFood.dart';
+import 'package:sqflite/sqflite.dart';
 
-var database;
+Database? database;
+
 
 Future<void> main() async {
 // Avoid errors caused by flutter upgrade.
@@ -16,6 +18,9 @@ Future<void> main() async {
   // Open the database and store the reference.
   database = await DBHelper().getDB();
 
+  // Insert mock data if in debug mode.
+  await DBHelper.insertMockData();
+
   runApp(MaterialApp(
     // theme: ThemeData(
     //   brightness: Brightness.light,
@@ -24,7 +29,7 @@ Future<void> main() async {
     // darkTheme: ThemeData(
     //   brightness: Brightness.dark,
     //   /* dark theme settings */
-    // ),
+      // ),
     // themeMode: ThemeMode.dark,
     // /* ThemeMode.system to follow system theme,
     //      ThemeMode.light for light theme,
