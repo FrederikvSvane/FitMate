@@ -72,7 +72,7 @@ class _ProfileState extends State<Profile> {
 
   Future<void> initializeData() async {
     //Check if we are running in debug mode
-    if(!isInDebugMode) {
+    if (!isInDebugMode) {
       await authorize();
       await fetchStepData();
     }
@@ -97,7 +97,7 @@ class _ProfileState extends State<Profile> {
 
     // Check if we have permission
     bool? hasPermissions =
-        await health.hasPermissions(types, permissions: permissions);
+    await health.hasPermissions(types, permissions: permissions);
 
     // hasPermissions = false because the hasPermission cannot disclose if WRITE access exists.
     // Hence, we have to request with WRITE as well.
@@ -155,10 +155,14 @@ class _ProfileState extends State<Profile> {
                           child: GestureDetector(
                             onTap: () async {
                               var result =
-                                  await Navigator.pushNamed(context, "/profileSettings");
+                              await Navigator.pushNamed(
+                                  context, "/profileSettings");
 
                               if (result != null) {
-                                Map<String, dynamic> profileData = result as Map<String, dynamic>;
+                                Map<String,
+                                    dynamic> profileData = result as Map<
+                                    String,
+                                    dynamic>;
                                 setState(() {
                                   //TODO: Update profile data
 
@@ -267,13 +271,81 @@ class _ProfileState extends State<Profile> {
             Expanded(
               flex: 14,
               child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: current.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(current[index]),
-                    );
-                  }),
+                shrinkWrap: true,
+                itemCount: current.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 300,
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                       Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                          child:
+                        Text("Date: June 13th",
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold
+
+                        )
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child:
+                        Text("5302 Steps taken",
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                          ),
+                      ),
+                          ),
+                        Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: 187,
+                            height: 150,
+                            color: Colors.grey[100],
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Din mor 1',
+                              style: TextStyle(
+                                color: Colors.grey[400],
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 187,
+                            height: 150,
+                            color: Colors.grey[100],
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Din mor 2',
+                              style: TextStyle(
+                                color: Colors.grey[400],
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ]
+                    ),
+                   ],
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
