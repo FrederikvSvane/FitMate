@@ -142,10 +142,10 @@ class _ProfileState extends State<Profile> {
         body: Column(
           children: [
             Expanded(
-                flex: 6,
+                flex: 5,
                 child: Container(
                   color: Colors.red[800],
-                  padding: const EdgeInsets.fromLTRB(20, 70, 20, 20),
+                  padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
                   child: Stack(
                     children: [
                       Align(
