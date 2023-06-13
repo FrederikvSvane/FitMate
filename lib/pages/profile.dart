@@ -178,28 +178,37 @@ class _ProfileState extends State<Profile> {
                         padding: const EdgeInsets.all(16),
                         child: GestureDetector(
                           onTap: () async {
-                            var result = await Navigator.pushNamed(
-                                context, "/profileSettings");
-
-                            if (result != null) {
-                              Map<String, dynamic> profileData =
-                              result as Map<String, dynamic>;
-                              setState(() {
-                                //TODO: Update profile data
-
-                                weight = profileData["weight"];
-                              });
-                            }
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  alignment: Alignment.center,
+                                  title: Text('Update your weight'),
+                                  content: Text('This do be a popup'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('close'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           },
-                          child: const Text(
-                            'Update weight',
-                            style: TextStyle(
-                              color: Colors.white,
-                              decoration: TextDecoration.underline,
+
+                            child:
+                            const Text(
+                              'Update weight',
+                              style: TextStyle(
+                                color: Colors.white,
+                                decoration: TextDecoration.underline,
+
+                              ),
                             ),
-                          ),
-                        ),
                       ),
+                    ),
                     ),
 
                     const Align(
