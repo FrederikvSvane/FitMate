@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:intl/intl.dart';
 
-
 class Food extends StatefulWidget {
   const Food({Key? key}) : super(key: key);
 
@@ -20,7 +19,8 @@ class _FoodState extends State<Food> {
   List<Map<String, dynamic>> snacksMeals = [];
   double totalCalories = 0;
   double totalProteins = 0;
-  GlobalKey<RefreshIndicatorState> refreshKey = GlobalKey<RefreshIndicatorState>();
+  GlobalKey<RefreshIndicatorState> refreshKey =
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -75,7 +75,8 @@ class _FoodState extends State<Food> {
     }
   }
 
-  Future<void> _showDeleteConfirmationDialog(int mealId, String mealType) async {
+  Future<void> _showDeleteConfirmationDialog(
+      int mealId, String mealType) async {
     List<Map<String, dynamic>> mealData = await DBHelper.getMealById(mealId);
 
     // This is to prevent the dialog from being shown after the page is disposed
@@ -85,14 +86,14 @@ class _FoodState extends State<Food> {
     double mealCalories = mealData[0]['calories'];
     double mealProteins = mealData[0]['proteins'];
 
-
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Delete Meal'),
-          content: Text('Are you sure you want to delete this meal:\n\nName: $mealName\nCalories: $mealCalories\nProteins: $mealProteins\n\nThis action cannot be undone!'),
+          content: Text(
+              'Are you sure you want to delete this meal:\n\nName: $mealName\nCalories: $mealCalories\nProteins: $mealProteins\n\nThis action cannot be undone!'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -106,7 +107,8 @@ class _FoodState extends State<Food> {
                 setState(() {
                   switch (mealType) {
                     case 'Breakfast':
-                      breakfastMeals.removeWhere((meal) => meal['id'] == mealId);
+                      breakfastMeals
+                          .removeWhere((meal) => meal['id'] == mealId);
                       break;
                     case 'Lunch':
                       lunchMeals.removeWhere((meal) => meal['id'] == mealId);
@@ -177,7 +179,6 @@ class _FoodState extends State<Food> {
                 ],
               ),
               child: Column(
-                
                 children: <Widget>[
                   Text(
                     'Chosen Date',
@@ -188,14 +189,12 @@ class _FoodState extends State<Food> {
                     ),
                   ),
                   const SizedBox(height: 20.0),
-
                   Text(
                     DateFormat('EEEE, MMMM d, y').format(selectedDate),
                     style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red[900]
-                    ),
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red[900]),
                   ),
                 ],
               ),
@@ -206,7 +205,6 @@ class _FoodState extends State<Food> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
                   const SizedBox(height: 10),
                   const Text('Breakfast:',
                       style:

@@ -30,7 +30,6 @@ class _WorkoutState extends State<Workout> {
               onPressed: () {
                 dynamic result = Navigator.pushNamed(context, "/activeWorkout");
                 setState(() {
-
                   // Her skal dataen fra den aktive workout videresendes til næste skærm
                   // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
                   // eller hvad dataen er endnu.
@@ -40,9 +39,8 @@ class _WorkoutState extends State<Workout> {
                   // data = {
                   //   "weightExercises": result["weightExercises"],
                   //   "cardioExercises": result["cardioExercises"],
-                  
                 });
-                },
+              },
               child: Text('Start Emtpy Workout'),
             ),
           ),

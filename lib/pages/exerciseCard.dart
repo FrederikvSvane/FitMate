@@ -17,7 +17,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
     setState(() {
       int nextSetNumber = widget.exercise.sets!.length + 1;
       widget.exercise.sets!.add(nextSetNumber);
-      widget.exercise.reps!.add(0); // Example: add default values for the new set
+      widget.exercise.reps!
+          .add(0); // Example: add default values for the new set
       widget.exercise.weight!.add(0);
       _setRows = _buildStrengthExerciseRows(widget.exercise);
     });
@@ -45,7 +46,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             ..._setRows,
-            if (widget.exercise.distance != null && widget.exercise.time != null)
+            if (widget.exercise.distance != null &&
+                widget.exercise.time != null)
               ..._buildCardioExerciseRows(widget.exercise),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),

@@ -72,7 +72,7 @@ class _ProfileState extends State<Profile> {
 
   Future<void> initializeData() async {
     //Check if we are running in debug mode
-    if(!isInDebugMode) {
+    if (!isInDebugMode) {
       await authorize();
       await fetchStepData();
     }
@@ -154,11 +154,12 @@ class _ProfileState extends State<Profile> {
                           padding: const EdgeInsets.all(16),
                           child: GestureDetector(
                             onTap: () async {
-                              var result =
-                                  await Navigator.pushNamed(context, "/profileSettings");
+                              var result = await Navigator.pushNamed(
+                                  context, "/profileSettings");
 
                               if (result != null) {
-                                Map<String, dynamic> profileData = result as Map<String, dynamic>;
+                                Map<String, dynamic> profileData =
+                                    result as Map<String, dynamic>;
                                 setState(() {
                                   //TODO: Update profile data
 
@@ -227,12 +228,10 @@ class _ProfileState extends State<Profile> {
                                 fontWeight: FontWeight.w500),
                           ),
                         ),
-
                       ),
                     ],
                   ),
                 )),
-
             Expanded(
               flex: 2,
               child: Padding(

@@ -8,7 +8,6 @@ class AddExercise extends StatefulWidget {
 
   @override
   State<AddExercise> createState() => _AddExerciseState();
-
 }
 
 class _AddExerciseState extends State<AddExercise> {
@@ -23,7 +22,11 @@ class _AddExerciseState extends State<AddExercise> {
     Exercise(name: "Bench Press", sets: [], reps: [], weight: []),
     Exercise(name: "Deadlift", sets: [], reps: [], weight: []),
     Exercise(name: "Overhead Press", sets: [], reps: [], weight: []),
-    Exercise(name: "Barbell Row", sets: [1,2,3], reps: [4,4,4], weight: [10,40,30]),
+    Exercise(
+        name: "Barbell Row",
+        sets: [1, 2, 3],
+        reps: [4, 4, 4],
+        weight: [10, 40, 30]),
     Exercise(name: "Pull Ups", sets: [], reps: [], weight: []),
     Exercise(name: "Push Ups", sets: [], reps: [], weight: []),
     Exercise(name: "Dips", sets: [], reps: [], weight: []),
@@ -79,11 +82,15 @@ class _AddExerciseState extends State<AddExercise> {
     Exercise(name: "High Knees", time: [], reps: []),
   ];
 
-  sortExercises() { //Sorterer øvelserne alfabetisk
+  sortExercises() {
+    //Sorterer øvelserne alfabetisk
     for (int i = 0; i < Exercises.length; i++) {
       for (int j = i + 1; j < Exercises.length; j++) {
-        if (Exercises[i].name.toLowerCase().compareTo(
-            Exercises[j].name.toLowerCase()) > 0) {
+        if (Exercises[i]
+                .name
+                .toLowerCase()
+                .compareTo(Exercises[j].name.toLowerCase()) >
+            0) {
           Exercise temp = Exercises[i];
           Exercises[i] = Exercises[j];
           Exercises[j] = temp;
@@ -113,39 +120,37 @@ class _AddExerciseState extends State<AddExercise> {
     int amountOfNewRecords = 0;
   }
 
-    @override
-    Widget build(BuildContext context) {
-      sortExercises();
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Active Workout'),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () => _showExerciseSearch(context),
-            ),
-          ],
-        ),
-        body: ListView.builder(
-          itemCount: Exercises.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding:
-              const EdgeInsets.symmetric(vertical: 3.0, horizontal: 4.0),
-              child: Card(
-                child: ListTile(
-                  onTap: () {
-                    setState(() {
-                      Navigator.pop(context,
-                          Exercises[index]);
-                    });
-                  },
-                  title: Text(Exercises[index].name),
-                ),
+  @override
+  Widget build(BuildContext context) {
+    sortExercises();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Active Workout'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () => _showExerciseSearch(context),
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: Exercises.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 4.0),
+            child: Card(
+              child: ListTile(
+                onTap: () {
+                  setState(() {
+                    Navigator.pop(context, Exercises[index]);
+                  });
+                },
+                title: Text(Exercises[index].name),
               ),
-            );
-          },
-        ),
-      );
-    }
+            ),
+          );
+        },
+      ),
+    );
   }
+}

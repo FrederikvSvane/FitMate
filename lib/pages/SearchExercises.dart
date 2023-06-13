@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
 
-class SearchExercises extends SearchDelegate<Exercise>{
+class SearchExercises extends SearchDelegate<Exercise> {
   final List<Exercise> exerciseList; // Replace with your exercise list
 
   SearchExercises(this.exerciseList);
@@ -32,7 +32,8 @@ class SearchExercises extends SearchDelegate<Exercise>{
   Widget buildResults(BuildContext context) {
     // Perform the search logic here
     List<Exercise> searchResults = exerciseList
-        .where((exercise) => exercise.name.toLowerCase().contains(query.toLowerCase()))
+        .where((exercise) =>
+            exercise.name.toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     // Display the search results

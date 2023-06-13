@@ -11,7 +11,6 @@ import 'package:sqflite/sqflite.dart';
 
 Database? database;
 
-
 bool isInDebugMode = false;
 
 Future<void> main() async {
@@ -46,11 +45,9 @@ Future<void> main() async {
     //   */
 
     theme: ThemeData(
-      colorScheme: ColorScheme.fromSwatch().copyWith(
-
-        primary: Colors.red[800],
-      )
-    ),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+      primary: Colors.red[800],
+    )),
 
     debugShowCheckedModeBanner: false,
 
@@ -62,9 +59,7 @@ Future<void> main() async {
       "/addFavoriteMeal": (context) => const AddFavoriteMeal(),
       "/addFood": (context) => const AddFood(),
       "/profileSettings": (context) => const ProfileSettings(),
-
-      "/profile" : (context) => const Profile()
+      "/profile": (context) => const Profile()
     },
   ));
 }
-
