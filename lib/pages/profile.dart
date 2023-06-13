@@ -77,7 +77,7 @@ class _ProfileState extends State<Profile> {
 
     // Check if we have permission
     bool? hasPermissions =
-        await health.hasPermissions(types, permissions: permissions);
+    await health.hasPermissions(types, permissions: permissions);
 
     // hasPermissions = false because the hasPermission cannot disclose if WRITE access exists.
     // Hence, we have to request with WRITE as well.
@@ -130,179 +130,184 @@ class _ProfileState extends State<Profile> {
   }
 
   @override
-  Widget build (BuildContext context) {
+  Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter demo',
-        home: Scaffold(
-          body: Column(
-            children: [
-              Container(
-                height: 200,
-                color: Colors.red[800],
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: GestureDetector(
-                          onTap: () async {
-                            var result = await Navigator.pushNamed(
-                                context, "/profileSettings");
+      title: 'Flutter demo',
+      home: Scaffold(
+        body: Column(
+          children: [
+            Container(
+              height: 200,
+              color: Colors.red[800],
+              padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: GestureDetector(
+                        onTap: () async {
+                          var result = await Navigator.pushNamed(
+                              context, "/profileSettings");
 
-                            if (result != null) {
-                              Map<String, dynamic> profileData =
-                                  result as Map<String, dynamic>;
-                              setState(() {
-                                //TODO: Update profile data
+                          if (result != null) {
+                            Map<String, dynamic> profileData =
+                            result as Map<String, dynamic>;
+                            setState(() {
+                              //TODO: Update profile data
 
-                                weight = profileData["weight"];
-                              });
-                            }
-                          },
-                          child: const Text(
-                            'Settings',
-                            style: TextStyle(
-                              color: Colors.white,
-                              decoration: TextDecoration.underline,
-                            ),
+                              weight = profileData["weight"];
+                            });
+                          }
+                        },
+                        child: const Text(
+                          'Settings',
+                          style: TextStyle(
+                            color: Colors.white,
+                            decoration: TextDecoration.underline,
                           ),
                         ),
                       ),
                     ),
+                  ),
 
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: GestureDetector(
-                          onTap: () async {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  alignment: Alignment.center,
-                                  title: Text('Update your weight'),
-                                  content: Text('This do be a popup'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('close'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: GestureDetector(
+                        onTap: () async {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                alignment: Alignment.center,
+                                title: Text('Update your weight'),
+                                content: const TextField (
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter your new weight',
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('close'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
 
-                            child:
-                            const Text(
-                              'Update weight',
-                              style: TextStyle(
-                                color: Colors.white,
-                                decoration: TextDecoration.underline,
-
-                              ),
-                            ),
-                      ),
-                    ),
-                    ),
-
-                    const Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Text(
-                          "Profile",
+                        child:
+                        const Text(
+                          'Update weight',
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w500),
+                            color: Colors.white,
+                            decoration: TextDecoration.underline,
+
+                          ),
                         ),
                       ),
                     ),
-                    const Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          'Litty master',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w700),
-                        ),
+                  ),
+
+                  const Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        "Profile",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text(
-                          "Weight: $weight kg",
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500),
-                        ),
+                  ),
+                  const Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Litty master',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w700),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text(
-                          "Steps today: ${steps ?? 0}",
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500),
-                        ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        "Weight: $weight kg",
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        "Steps today: ${steps ?? 0}",
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: SlidingSwitch(
-                  onDoubleTap: () {},
-                  onSwipe: () {},
-                  onTap: () {},
-                  value: false,
-                  height: 50,
-                  textOff: "Workouts",
-                  textOn: "Daily stats",
-                  onChanged: (bool value) {
-                    setState(() {showList1 = !showList1;
-                      print(showList1);
-                    });
-                  },
-                  colorOn: Colors.red,
-                  colorOff: Colors.red,
-                  background: const Color(0xFFEEEEEE),
-                  buttonColor: Colors.white70,
-                  inactiveColor: Colors.grey,
-                  contentSize: 20,
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: SlidingSwitch(
+                onDoubleTap: () {},
+                onSwipe: () {},
+                onTap: () {},
+                value: false,
+                height: 50,
+                textOff: "Workouts",
+                textOn: "Daily stats",
+                onChanged: (bool value) {
+                  setState(() {
+                    showList1 = !showList1;
+                    print(showList1);
+                  });
+                },
+                colorOn: Colors.red,
+                colorOff: Colors.red,
+                background: const Color(0xFFEEEEEE),
+                buttonColor: Colors.white70,
+                inactiveColor: Colors.grey,
+                contentSize: 20,
               ),
-              Expanded(
+            ),
+            Expanded(
                 child: Visibility(
                   visible: showList1,
                   replacement: listBuilder1(),
                   child: listBuilder2(),
-              )
-              ),
-            ],
-          ),
+                )
+            ),
+          ],
         ),
+      ),
     );
-
   }
-  Widget listBuilder1 () {
+
+  Widget listBuilder1() {
     return ListView.builder(
         itemCount: 30,
         itemBuilder: (BuildContext context, index) {
@@ -327,7 +332,8 @@ class _ProfileState extends State<Profile> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(
-                            "Date: ${DateFormat('yyyy-MM-dd').format(currentDate)}",
+                            DateFormat('EEEE, MMMM d yyyy').format(
+                                currentDate),
                             style: TextStyle(
                               color: Colors.grey[700],
                               fontSize: 20,
@@ -576,7 +582,8 @@ class _ProfileState extends State<Profile> {
                           padding: const EdgeInsets.only(top: 10),
                           child: Align(
                             alignment: Alignment.center,
-                            child: Text("Day ended with a protein deficit of 14 grams",
+                            child: Text(
+                              "Day ended with a protein deficit of 14 grams",
                               style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: 16,
@@ -591,7 +598,8 @@ class _ProfileState extends State<Profile> {
                           padding: const EdgeInsets.only(top: 10),
                           child: Align(
                             alignment: Alignment.center,
-                            child: Text("Day ended with a deficit of 150 calories",
+                            child: Text(
+                              "Day ended with a deficit of 150 calories",
                               style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: 16,
@@ -613,15 +621,78 @@ class _ProfileState extends State<Profile> {
         });
   }
 
-  Widget listBuilder2 () {
+  Widget listBuilder2() {
     return ListView.builder(
-      itemCount: workouts.length,
-      itemBuilder: (BuildContext context, index) {
-        return ListTile(
-        title: Text('Workout $index'),
-        );
+        itemCount: 30,
+        itemBuilder: (BuildContext context, index) {
+          DateTime currentDate =
+          DateTime.now().subtract(Duration(days: index));
+          return FutureBuilder<int>(
+              future: fetchStepDataFromDate(currentDate),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Container(
+                    height: 285,
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
-    },
-    );
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(
+                            'Back desctruction',
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                const SizedBox(
+                height: 8,
+                ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(
+                            DateFormat('EEEE, MMMM d yyyy ').format(
+                                currentDate),
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(
+                          height: 8,
+                        ),
+
+                         const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text('1 h 3 min'),
+                            Text('13058 kg'),
+                            Text('28 sets'),
+                            Text('4 pr\'s')
+                            ],
+                        ),
+                        ],
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                }
+                return const CircularProgressIndicator();
+              });
+        });
   }
 }
