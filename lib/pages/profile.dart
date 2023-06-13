@@ -152,7 +152,7 @@ class _ProfileState extends State<Profile> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build (BuildContext context) {
     return MaterialApp(
         title: 'Flutter demo',
         home: Scaffold(
@@ -287,7 +287,7 @@ class _ProfileState extends State<Profile> {
                             if (snapshot.hasData) {
                               int stepsTaken = snapshot.data!;
                               return Container(
-                                height: 300,
+                                height: 285,
                                 margin: const EdgeInsets.all(8),
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
@@ -545,20 +545,32 @@ class _ProfileState extends State<Profile> {
                                       ],
                                     ),
 
-                                    const Padding(
-                                      padding: EdgeInsets.all(8),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
                                       child: Align(
                                         alignment: Alignment.center,
-                                        child: Text("Day ended with a protein deficit of 14 grams"),
+                                        child: Text("Day ended with a protein deficit of 14 grams",
+                                          style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ),
                                       ),
                                     ),
 
 
-                                    const Padding(
-                                      padding: EdgeInsets.all(8),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
                                       child: Align(
                                         alignment: Alignment.center,
-                                        child: Text("Day ended with a protein deficit of 14 grams"),
+                                        child: Text("Day ended with a deficit of 150 calories",
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                        ),
                                       ),
                                     ),
 
