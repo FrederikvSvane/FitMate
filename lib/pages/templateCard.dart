@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/WorkoutTemplate.dart';
 
 class TemplateCard extends StatefulWidget {
-  WorkoutTemplate template;
+  final WorkoutTemplate template;
 
   TemplateCard({required this.template});
 
@@ -11,12 +10,12 @@ class TemplateCard extends StatefulWidget {
   _TemplateCardState createState() => _TemplateCardState();
 }
 
-class _TemplateCardState extends State<TemplateCard>{
+class _TemplateCardState extends State<TemplateCard> {
   List<Widget> _setRows = [];
 
   void _addExerciseRow() {
     setState(() {
-      _setRows = _buildWorkoutRows(widget.template);
+
     });
   }
 
@@ -24,7 +23,7 @@ class _TemplateCardState extends State<TemplateCard>{
   void initState() {
     super.initState();
     if (widget.template.workoutExercises != null) {
-      _setRows = _buildWorkoutRows(widget.template);
+      _setRows = _buildExerciseRows(widget.template);
     }
   }
 
@@ -42,7 +41,7 @@ class _TemplateCardState extends State<TemplateCard>{
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             ..._setRows,
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -50,29 +49,27 @@ class _TemplateCardState extends State<TemplateCard>{
                   TextButton.icon(
                     onPressed: _addExerciseRow,
                     icon: Icon(Icons.add),
-                    label: Text("Add Exercise"),
+                    label: Text("Add Set"),
                   ),
                 ],
               ),
-            ),
+            ),*/
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _buildWorkoutRows(WorkoutTemplate workout) {
+  List<Widget> _buildExerciseRows(WorkoutTemplate template) {
     List<Widget> rows = [];
-    for (int i = 0; i < workout.workoutExercises!.length; i++) {
-      Exercise exercise = workout.workoutExercises![i];
+    for (int i = 0; i < template.workoutExercises.length; i++) {
       rows.add(
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("${exercise.sets![i]} X sets:"),
-              Text("${exercise.name![i]} "),
+              Text("${template.workoutExercises[i].sets![0]}X ${template.workoutExercises[i].name}"),
             ],
           ),
         ),

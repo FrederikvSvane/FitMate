@@ -11,11 +11,15 @@ class Workout extends StatefulWidget {
 
 class _WorkoutState extends State<Workout> {
   Map<String, dynamic> data = {};
-  List<WorkoutTemplate> workoutTemplates = [];
-  List<Exercise> workoutExercises = [
-    Exercise(name: "Bench Press", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
-    Exercise(name: "Deadlift", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
-    Exercise(name: "Overhead Press", sets: [3], reps: [0,0,0], weight: [0,0,0]),];
+  List<WorkoutTemplate> workoutTemplates = [
+    WorkoutTemplate(
+        workoutName: 'test',
+        workoutExercises: [
+          Exercise(name: "Bench Press", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
+          Exercise(name: "Deadlift", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
+          Exercise(name: "Overhead Press", sets: [3], reps: [0,0,0], weight: [0,0,0])]
+    )
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +35,7 @@ class _WorkoutState extends State<Workout> {
           ListView.builder(
             itemCount: workoutTemplates.length,
             itemBuilder: (context, index) {
-              return TemplateCard(template: workoutTemplates[index]);
+              return TemplateCard(template: workoutTemplates[0]);
               //title: Text(activeExercises[index].name),
               // add other fields of Exercise class as needed
             },
@@ -62,23 +66,10 @@ class _WorkoutState extends State<Workout> {
                 child: Text('Start Emtpy Workout'),
               ),
             )
-
-
           ),
         ],
       ),
     );
-  }
-
-  void addWorkoutTemplates(){
-    List<Exercise> workoutExercises = [
-      Exercise(name: "Bench Press", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
-      Exercise(name: "Deadlift", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
-      Exercise(name: "Overhead Press", sets: [3], reps: [0,0,0], weight: [0,0,0]),];
-   workoutTemplates.add(WorkoutTemplate(
-      workoutName: "Test",
-      workoutExercises: workoutExercises,
-    ));
   }
 }
 

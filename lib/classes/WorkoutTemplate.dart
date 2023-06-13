@@ -4,5 +4,5 @@ class WorkoutTemplate{
   String workoutName = '';
   List<Exercise> workoutExercises = [];
 
-  WorkoutTemplate({required this.workoutName, workoutExercises});
+  WorkoutTemplate({required this.workoutName, required this.workoutExercises});
 }
