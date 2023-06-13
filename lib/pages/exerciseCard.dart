@@ -17,9 +17,21 @@ class _ExerciseCardState extends State<ExerciseCard> {
     setState(() {
       int nextSetNumber = widget.exercise.sets!.length + 1;
       widget.exercise.sets!.add(nextSetNumber);
-      widget.exercise.reps!.add(0); // Example: add default values for the new set
-      widget.exercise.weight!.add(0);
-      _setRows = _buildStrengthExerciseRows(widget.exercise);
+      if (widget.exercise.weight != null){
+        widget.exercise.reps!.add(0); // Example: add default values for the new set
+        widget.exercise.weight!.add(0);
+        _setRows = _buildStrengthExerciseRows(widget.exercise);
+      } else if(widget.exercise.distance != null){
+        widget.exercise.distance!.add(0);
+        widget.exercise.time!.add(0);
+        _setRows = _buildCardioExerciseRows(widget.exercise);
+      } else if (widget.exercise.time != null){
+        widget.exercise.time!.add(0);
+        _setRows = _buildTimeExerciseRows(widget.exercise);
+      } else{
+        widget.exercise.reps!.add(0);
+        _setRows = _buildRepExerciseRows(widget.exercise);
+      }
     });
   }
 
@@ -27,7 +39,16 @@ class _ExerciseCardState extends State<ExerciseCard> {
   void initState() {
     super.initState();
     if (widget.exercise.sets != null) {
-      _setRows = _buildStrengthExerciseRows(widget.exercise);
+      if (widget.exercise.weight != null){
+        _setRows = _buildStrengthExerciseRows(widget.exercise);
+      } else if(widget.exercise.distance != null){
+        _setRows = _buildCardioExerciseRows(widget.exercise);
+      } else if (widget.exercise.time != null){
+        _setRows = _buildTimeExerciseRows(widget.exercise);
+      } else{
+        _setRows = _buildRepExerciseRows(widget.exercise);
+      }
+
     }
   }
 
@@ -116,17 +137,118 @@ class _ExerciseCardState extends State<ExerciseCard> {
   }
 
   List<Widget> _buildCardioExerciseRows(Exercise exercise) {
-    return [
-      Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Distance: ${exercise.distance!} km"),
-            Text("Time: ${exercise.time!} min"),
-          ],
+    List<Widget> rows = [];
+    for (int i = 0; i < exercise.sets!.length; i++) {
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Set ${exercise.sets![i]}:"),
+              //Text("reps ${exercise.reps![i]} "),
+              //Text("${exercise.weight![i]} kg"),
+              Container(
+                width: 100,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: "Time"),
+                  onChanged: (value) {
+                    // You can update the reps array based on user input.
+                    int? newValue = int.tryParse(value);
+                    if (newValue != null) {
+                      exercise.time![i] = newValue;
+                    }
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+              Container(
+                width: 100,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: "Distance"),
+                  onChanged: (value) {
+                    // You can update the weight array based on user input.
+                    double? newValue = double.tryParse(value);
+                    if (newValue != null) {
+                      exercise.distance![i] = newValue;
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    ];
+      );
+    }
+    return rows;
+  }
+
+  List<Widget> _buildTimeExerciseRows(Exercise exercise) {
+    List<Widget> rows = [];
+    for (int i = 0; i < exercise.sets!.length; i++) {
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Set ${exercise.sets![i]}:"),
+              //Text("reps ${exercise.reps![i]} "),
+              //Text("${exercise.weight![i]} kg"),
+              Container(
+                width: 200,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: "Time"),
+                  onChanged: (value) {
+                    // You can update the reps array based on user input.
+                    int? newValue = int.tryParse(value);
+                    if (newValue != null) {
+                      exercise.time![i] = newValue;
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return rows;
+  }
+  List<Widget> _buildRepExerciseRows(Exercise exercise) {
+    List<Widget> rows = [];
+    for (int i = 0; i < exercise.sets!.length; i++) {
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Set ${exercise.sets![i]}:"),
+              //Text("reps ${exercise.reps![i]} "),
+              //Text("${exercise.weight![i]} kg"),
+              Container(
+                width: 200,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: "Reps"),
+                  onChanged: (value) {
+                    // You can update the reps array based on user input.
+                    int? newValue = int.tryParse(value);
+                    if (newValue != null) {
+                      exercise.reps![i] = newValue;
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return rows;
   }
 }
