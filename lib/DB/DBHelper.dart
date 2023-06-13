@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -42,8 +44,8 @@ class DBHelper {
           final mealData = {
             'barcode': 1234567890 + i * 10 + j,
             'nameComponent': 'Mock Meal ${i * 4 + j}',
-            'calories': 500.0 + (i * 10 + j),
-            'proteins': 20.0 + (i + j),
+            'calories': 500.0 + (i * 10 + j) + Random().nextInt(100),
+            'proteins': 20.0 + (i + j) + Random().nextInt(10),
             'mealType': j == 0
                 ? 'Breakfast'
                 : j == 1
