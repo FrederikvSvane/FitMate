@@ -33,6 +33,7 @@ class _WorkoutState extends State<Workout> {
     return MaterialApp(
         title: 'Flutter demo',
         home: Scaffold(
+          backgroundColor: Colors.grey[200],
           body: Column(
             children: [
               Container(
@@ -119,7 +120,11 @@ class _WorkoutState extends State<Workout> {
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
                     child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[100],
+                        ),
                       onPressed: () {
+
                         dynamic result =
                             Navigator.pushNamed(context, "/activeWorkout");
                         setState(() {
@@ -134,7 +139,12 @@ class _WorkoutState extends State<Workout> {
                           //   "cardioExercises": result["cardioExercises"],
                         });
                       },
-                      child: Text('Start Emtpy Workout'),
+                      child: Text('Start Emtpy Workout',
+                        style: TextStyle(
+                          color: Colors.red[800],
+                          fontWeight: FontWeight.bold
+                        ),
+                        ),
                     ),
                   )
               ),
@@ -143,6 +153,9 @@ class _WorkoutState extends State<Workout> {
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[100],
+                      ),
                       onPressed: () {
                         dynamic result =
                         Navigator.pushNamed(context, "/activeWorkout");
@@ -158,7 +171,11 @@ class _WorkoutState extends State<Workout> {
                           //   "cardioExercises": result["cardioExercises"],
                         });
                       },
-                      child: const Text('Start existing template'),
+                      child: Text('Start existing template',
+                      style: TextStyle(
+                        color: Colors.red[800],
+                        fontWeight: FontWeight.bold
+                      ),),
                     ),
                   )),
             ],

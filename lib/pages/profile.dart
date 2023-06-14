@@ -139,6 +139,7 @@ class _ProfileState extends State<Profile> {
     return MaterialApp(
       title: 'Flutter demo',
       home: Scaffold(
+        backgroundColor: Colors.grey[200],
         body: Column(
           children: [
             Container(
@@ -294,7 +295,7 @@ class _ProfileState extends State<Profile> {
                 },
                 colorOn: Colors.red,
                 colorOff: Colors.red,
-                background: const Color(0xFFEEEEEE),
+                background: Colors.white,
                 buttonColor: Colors.white70,
                 inactiveColor: Colors.grey,
                 contentSize: 20,
@@ -329,7 +330,7 @@ class _ProfileState extends State<Profile> {
                     margin: const EdgeInsets.all(8),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Colors.white70,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -642,7 +643,7 @@ class _ProfileState extends State<Profile> {
                     margin: const EdgeInsets.all(8),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Colors.white70,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
