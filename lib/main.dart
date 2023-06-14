@@ -60,6 +60,7 @@ Future<void> main() async {
       "/addFood": (context) => const AddFood(),
       "/profileSettings": (context) => const ProfileSettings(),
       "/profile": (context) => const Profile()
+
     },
   ));
 }
