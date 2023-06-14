@@ -33,6 +33,7 @@ class _WorkoutState extends State<Workout> {
     return MaterialApp(
         title: 'Flutter demo',
         home: Scaffold(
+          backgroundColor: Colors.grey[200],
           body: Column(
             children: [
               Container(
@@ -113,13 +114,14 @@ class _WorkoutState extends State<Workout> {
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-              Align(
-                alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: ElevatedButton(
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                        ),
                       onPressed: () {
+
                         dynamic result =
                             Navigator.pushNamed(context, "/activeWorkout");
                         setState(() {
@@ -134,15 +136,18 @@ class _WorkoutState extends State<Workout> {
                           //   "cardioExercises": result["cardioExercises"],
                         });
                       },
-                      child: Text('Start Emtpy Workout'),
+                      child: Text('Start Emtpy Workout',
+                        style: TextStyle(
+                          color: Colors.red[800],
+                          fontWeight: FontWeight.bold
+                        ),
+                        ),
                     ),
-                  )
-              ),
-              Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: ElevatedButton(
+
+              ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
                       onPressed: () {
                         dynamic result =
                         Navigator.pushNamed(context, "/activeWorkout");
@@ -158,13 +163,35 @@ class _WorkoutState extends State<Workout> {
                           //   "cardioExercises": result["cardioExercises"],
                         });
                       },
-                      child: const Text('Start existing template'),
+                      child: Text('Start existing template',
+                      style: TextStyle(
+                        color: Colors.red[800],
+                        fontWeight: FontWeight.bold
+                      ),),
                     ),
-                  )),
             ],
+              ),
+              Expanded(
+                child: listBuilder2()
               )
                 ],
           ),
         ));
+  }
+  Widget listBuilder2() {
+    return ListView.builder(
+        itemCount: 30,
+        itemBuilder: (BuildContext context, index) {
+          DateTime.now().subtract(Duration(days: index));
+                  return Container(
+                    height: 285,
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  );
+        });
   }
 }
