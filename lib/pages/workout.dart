@@ -111,7 +111,7 @@ class _WorkoutState extends State<Workout> {
               Align(
                 alignment: Alignment.topLeft,
                   child: Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
