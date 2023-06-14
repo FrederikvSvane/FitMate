@@ -12,64 +12,130 @@ class Workout extends StatefulWidget {
 class _WorkoutState extends State<Workout> {
   Map<String, dynamic> data = {};
   List<WorkoutTemplate> workoutTemplates = [
-    WorkoutTemplate(
-        workoutName: 'test',
-        workoutExercises: [
-          Exercise(name: "Bench Press", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
-          Exercise(name: "Deadlift", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
-          Exercise(name: "Overhead Press", sets: [3], reps: [0,0,0], weight: [0,0,0])]
-    )
+    WorkoutTemplate(workoutName: 'test', workoutExercises: [
+      Exercise(
+          name: "Bench Press",
+          sets: [4],
+          reps: [0, 0, 0, 0],
+          weight: [0, 0, 0, 0]),
+      Exercise(
+          name: "Deadlift",
+          sets: [4],
+          reps: [0, 0, 0, 0],
+          weight: [0, 0, 0, 0]),
+      Exercise(
+          name: "Overhead Press", sets: [3], reps: [0, 0, 0], weight: [0, 0, 0])
+    ])
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Workout Page'),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.red[800],
-      ),
-      body: Stack(
-        children: [
-          // List of exercises
-          ListView.builder(
-            itemCount: workoutTemplates.length,
-            itemBuilder: (context, index) {
-              return TemplateCard(template: workoutTemplates[0]);
-              //title: Text(activeExercises[index].name),
-              // add other fields of Exercise class as needed
-            },
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  dynamic result = Navigator.pushNamed(context, "/activeWorkout");
-                  setState(() {
+    return MaterialApp(
+        title: 'Flutter demo',
+        home: Scaffold(
+          body: Column(
+            children: [
+              Container(
+                height: 200,
+                color: Colors.red[800],
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+                child: const Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Text(
+                          "Workouts",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                      child: Text(
+                          'Avg weekly time: 17 hrs',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
 
-                    // Her skal dataen fra den aktive workout videresendes til næste skærm
-                    // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
-                    // eller hvad dataen er endnu.
-                    // Vi må se hvad der sker når vi kommer så langt :p
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 30),
+                        child: Text(
+                          'Total time spent: 1000 hrs',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
 
-                    // Den kommer i hvert fald til at være noget i retning af:
-                    // data = {
-                    //   "weightExercises": result["weightExercises"],
-                    //   "cardioExercises": result["cardioExercises"],
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 30),
+                        child: Text(
+                          'Total workouts: 73',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
 
-                  });
-                },
-                child: Text('Start Emtpy Workout'),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          'Avg weekly workouts: 4',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500),
+                        ),
+                    ),
+                    ),
+                  ],
+                ),
               ),
-            )
+              Align(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        dynamic result =
+                            Navigator.pushNamed(context, "/activeWorkout");
+                        setState(() {
+                          // Her skal dataen fra den aktive workout videresendes til næste skærm
+                          // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
+                          // eller hvad dataen er endnu.
+                          // Vi må se hvad der sker når vi kommer så langt :p
+
+                          // Den kommer i hvert fald til at være noget i retning af:
+                          // data = {
+                          //   "weightExercises": result["weightExercises"],
+                          //   "cardioExercises": result["cardioExercises"],
+                        });
+                      },
+                      child: Text('Start Emtpy Workout'),
+                    ),
+                  )),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
-
