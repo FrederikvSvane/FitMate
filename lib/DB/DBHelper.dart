@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-import '../classes/FoodApi.dart';
+import '../main.dart';
+
 
 class DBHelper {
   static Future<Database> getDatabase() async {
@@ -32,7 +32,7 @@ class DBHelper {
   }
 
   static Future<void> insertMockData() async {
-    if (kDebugMode) {
+    if (isInDebugMode) {
       final db = await getDatabase();
 
       // Clear existing data from the 'meals' table
@@ -58,6 +58,7 @@ class DBHelper {
           await insertMeal(mealData);
         }
       }
+      print("Done inserting mock data.");
     }
   }
 
@@ -88,7 +89,7 @@ class DBHelper {
     return maps;
   }
 
-  static Future<FoodApi?> getLatestMeal() async {
+  static Future<Map<String, dynamic>?> getLatestMeal() async {
     final db = await getDatabase();
     final List<Map<String, dynamic>> maps = await db.query(
       'meals',
@@ -96,15 +97,7 @@ class DBHelper {
       limit: 1,
     );
     if (maps.isNotEmpty) {
-      return FoodApi(
-        id: maps[0]['id'],
-        barcode: maps[0]['barcode'],
-        nameComponent: maps[0]['nameComponent'],
-        calories: maps[0]['calories'],
-        proteins: maps[0]['proteins'],
-        mealType: maps[0]['mealType'],
-        date: maps[0]['date'],
-      );
+      return maps[0];
     }
     return null; // Returns null if there are no entries in the database.
   }
