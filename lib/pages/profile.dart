@@ -49,6 +49,7 @@ class ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
+    showList1 = true;
     initializeData();
   }
 
@@ -102,8 +103,6 @@ class ProfileState extends State<Profile> {
       } catch (error) {
         print("Caught exception in getTotalStepsInInterval: $error");
       }
-
-
       setState(() {
         steps = (steps == null) ? 0 : steps;
       });
