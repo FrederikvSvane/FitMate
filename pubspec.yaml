@@ -45,6 +45,7 @@ dependencies:
   permission_handler: ^10.3.0
 
   async: ^2.11.0
+  mockito: ^5.4.2
 
 
 

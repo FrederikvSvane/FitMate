@@ -5,13 +5,15 @@ import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class Profile extends StatefulWidget {
+  const Profile({super.key});
+
   @override
-  _ProfileState createState() => _ProfileState();
+  ProfileState createState() => ProfileState();
 }
 
 String weight = '0';
 
-class _ProfileState extends State<Profile> {
+class ProfileState extends State<Profile> {
   int? steps;
 
   final List<String> workouts = [
