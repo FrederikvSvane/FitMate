@@ -41,6 +41,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         children: [
           // List of exercises
           ListView.builder(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 100.0),
             itemCount: activeExercises.length,
             itemBuilder: (context, index) {
               return ExerciseCard(exercise: activeExercises[index]);
