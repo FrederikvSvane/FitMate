@@ -36,6 +36,36 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         ),
         foregroundColor: Colors.white,
         backgroundColor: Colors.red[800],
+        actions: [
+          TextButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SimpleDialog(
+                    title: Text('Choose an option'),
+                    children: <Widget>[
+                      SimpleDialogOption(
+                        onPressed: () {
+                          // Handle option 1
+                          Navigator.pop(context);
+                          print('Option 1 chosen');
+                        },
+                        child: Text('Option 1'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Text(
+              "Finish Workout",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Stack(
         children: [
