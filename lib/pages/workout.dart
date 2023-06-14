@@ -202,6 +202,5 @@ class _WorkoutState extends State<Workout> {
         );
       },
     );
-        });
-  }
+        }
 }
