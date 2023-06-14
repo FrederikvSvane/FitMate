@@ -12,7 +12,8 @@ class Workout extends StatefulWidget {
 class _WorkoutState extends State<Workout> {
   Map<String, dynamic> data = {};
   List<WorkoutTemplate> workoutTemplates = [
-    WorkoutTemplate(workoutName: 'test', workoutExercises: [
+    WorkoutTemplate(workoutName: 'test',
+        workoutExercises: [
       Exercise(
           name: "Bench Press",
           sets: [4],
@@ -25,7 +26,9 @@ class _WorkoutState extends State<Workout> {
           weight: [0, 0, 0, 0]),
       Exercise(
           name: "Overhead Press", sets: [3], reps: [0, 0, 0], weight: [0, 0, 0])
-    ])
+    ],
+        date: '',
+        sets: [])
   ];
 
   @override
@@ -150,7 +153,8 @@ class _WorkoutState extends State<Workout> {
                       ),
                       onPressed: () {
                         dynamic result =
-                        Navigator.pushNamed(context, "/activeWorkout");
+                        Navigator.pushNamed(context, "/activeWorkout",
+                            arguments: workoutTemplates[0].workoutExercises);
                         setState(() {
                           // Her skal dataen fra den aktive workout videresendes til næste skærm
                           // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
