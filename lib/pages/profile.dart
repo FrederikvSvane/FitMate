@@ -10,7 +10,7 @@ class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
 
   @override
-  ProfileState createState() => ProfileState();
+  _ProfileState createState() => _ProfileState();
 }
 
 String weight = '0';
@@ -19,7 +19,7 @@ bool requested = false;
 
 bool showList1 = true;
 
-class ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile> {
   int? steps;
 
   final List<String> workouts = [
@@ -49,7 +49,6 @@ class ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    showList1 = true;
     initializeData();
   }
 
@@ -103,6 +102,8 @@ class ProfileState extends State<Profile> {
       } catch (error) {
         print("Caught exception in getTotalStepsInInterval: $error");
       }
+
+
       setState(() {
         steps = (steps == null) ? 0 : steps;
       });
@@ -126,6 +127,11 @@ class ProfileState extends State<Profile> {
     } else {
       return 0;
     }
+  }
+
+  void fetchHealthData() {
+    print(health.getHealthDataFromTypes(DateTime.now(), DateTime.now(), types)
+    );
   }
 
   @override
@@ -283,6 +289,7 @@ class ProfileState extends State<Profile> {
                   setState(() {
                     showList1 = !showList1;
                     print(showList1);
+                    fetchHealthData();
                   });
                 },
                 colorOn: Colors.red,
