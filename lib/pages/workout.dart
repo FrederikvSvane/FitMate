@@ -147,7 +147,7 @@ class _WorkoutState extends State<Workout> {
               Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -192,9 +192,13 @@ class _WorkoutState extends State<Workout> {
       itemBuilder: (context, index) {
         return GestureDetector( //You need to make my child interactive
           onTap: () {
+            print('the shit was tapped');
             dynamic result =
             Navigator.pushNamed(context, "/activeWorkout",
                 arguments: workoutTemplates[index].workoutExercises);
+
+
+
           },
           child: TemplateCard(template: workoutTemplates[index]),
           //title: Text(activeExercises[index].name),
