@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sliding_switch/sliding_switch.dart';
 import 'package:health/health.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-import '../main.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
+
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 String weight = '0';
+
+String name = '';
+bool requested = false;
 
 class _ProfileState extends State<Profile> {
   int? steps;
@@ -72,10 +76,8 @@ class _ProfileState extends State<Profile> {
 
   Future<void> initializeData() async {
     //Check if we are running in debug mode
-    if (!isInDebugMode) {
-      await authorize();
-      await fetchStepData();
-    }
+    await authorize();
+    await fetchStepData();
   }
 
   static final types = [
@@ -105,6 +107,7 @@ class _ProfileState extends State<Profile> {
 
     if (!hasPermissions) {
       // requesting access to the data types before reading them
+      requested = await health.requestAuthorization([HealthDataType.STEPS]);
       try {} catch (error) {
         print("Exception in authorize: $error");
       }
@@ -115,8 +118,6 @@ class _ProfileState extends State<Profile> {
     final now = DateTime.now();
     final midnight = DateTime(now.year, now.month, now.day);
 
-    bool requested = await health.requestAuthorization([HealthDataType.STEPS]);
-
     if (requested) {
       try {
         steps = await health.getTotalStepsInInterval(midnight, now);
@@ -124,125 +125,137 @@ class _ProfileState extends State<Profile> {
         print("Caught exception in getTotalStepsInInterval: $error");
       }
 
-      print('Total number of steps: $steps');
 
       setState(() {
         steps = (steps == null) ? 0 : steps;
       });
     } else {
-      print("Authorization not granted - error in authorization");
+      return 0;
+    }
+  }
+
+  Future<int> fetchStepDataFromDate(DateTime date) async {
+    final midnight = DateTime(date.year, date.month, date.day);
+
+    int? steps;
+
+    if (requested) {
+      try {
+        steps = await health.getTotalStepsInInterval(midnight, date);
+      } catch (error) {
+        print("Caught exception in getTotalStepsInInterval: $error");
+      }
+      return steps ?? 0;
+    } else {
+      return 0;
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build (BuildContext context) {
     return MaterialApp(
-      title: 'Flutter demo',
-      home: Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-                flex: 5,
-                child: Container(
-                  color: Colors.red[800],
-                  padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: GestureDetector(
-                            onTap: () async {
-                              var result = await Navigator.pushNamed(
-                                  context, "/profileSettings");
+        title: 'Flutter demo',
+        home: Scaffold(
+          body: Column(
+            children: [
+              Container(
+                height: 150,
+                color: Colors.red[800],
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: GestureDetector(
+                          onTap: () async {
+                            var result = await Navigator.pushNamed(
+                                context, "/profileSettings");
 
-                              if (result != null) {
-                                Map<String, dynamic> profileData =
-                                    result as Map<String, dynamic>;
-                                setState(() {
-                                  //TODO: Update profile data
+                            if (result != null) {
+                              Map<String, dynamic> profileData =
+                                  result as Map<String, dynamic>;
+                              setState(() {
+                                //TODO: Update profile data
 
-                                  weight = profileData["weight"];
-                                });
-                              }
-                            },
-                            child: const Text(
-                              'Settings',
-                              style: TextStyle(
-                                color: Colors.white,
-                                decoration: TextDecoration.underline,
-                              ),
+                                weight = profileData["weight"];
+                              });
+                            }
+                          },
+                          child: const Text(
+                            'Settings',
+                            style: TextStyle(
+                              color: Colors.white,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
                         ),
                       ),
-                      const Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Text(
-                            "Profile",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w500),
-                          ),
+                    ),
+                    const Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Text(
+                          "Profile",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
-                      const Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
-                          child: Text(
-                            "Din mor",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w700),
-                          ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w700),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            "Weight: $weight kg",
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500),
-                          ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          "Weight: $weight kg",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            "Steps today: ${steps ?? 0}",
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500),
-                          ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          "Steps today: ${steps ?? 0}",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
-                    ],
-                  ),
-                )),
-            Expanded(
-              flex: 2,
-              child: Padding(
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.all(20),
                 child: SlidingSwitch(
                   onDoubleTap: () {},
                   onSwipe: () {},
                   onTap: () {},
                   value: false,
-                  height: 100,
-                  width: 350,
+                  height: 50,
                   textOff: "Workouts",
                   textOn: "Meals",
                   onChanged: (bool value) {
@@ -262,21 +275,318 @@ class _ProfileState extends State<Profile> {
                   contentSize: 20,
                 ),
               ),
-            ),
-            Expanded(
-              flex: 14,
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: current.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(current[index]),
-                    );
-                  }),
-            ),
-          ],
-        ),
-      ),
-    );
+              Expanded(
+                child: ListView.builder(
+                    itemCount: 30,
+                    itemBuilder: (BuildContext context, index) {
+                      DateTime currentDate =
+                          DateTime.now().subtract(Duration(days: index));
+                      return FutureBuilder<int>(
+                          future: fetchStepDataFromDate(currentDate),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              int stepsTaken = snapshot.data!;
+                              return Container(
+                                height: 285,
+                                margin: const EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8),
+                                      child: Text(
+                                        "Date: ${DateFormat('yyyy-MM-dd').format(currentDate)}",
+                                        style: TextStyle(
+                                          color: Colors.grey[700],
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Text(
+                                        'Steps taken: $stepsTaken',
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            height: 150,
+                                            color: Colors.grey[50],
+                                            alignment: Alignment.center,
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Stack(
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      Positioned(
+                                                        top: 10,
+                                                        child: Text(
+                                                            "Calories burned",
+                                                            style: TextStyle(
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                                color: Colors
+                                                                    .grey[600],
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 50,
+                                                        left: 10,
+                                                        child: Text(
+                                                            "Active calories:",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 80,
+                                                        left: 10,
+                                                        child: Text(
+                                                            "Basal calories:",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 110,
+                                                        left: 10,
+                                                        child: Text(
+                                                            "Total calories:",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 50,
+                                                        left: 140,
+                                                        child: Text("496",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 80,
+                                                        left: 140,
+                                                        child: Text("2395",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 110,
+                                                        left: 140,
+                                                        child: Text("2800",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 4,
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            height: 150,
+                                            color: Colors.grey[50],
+                                            alignment: Alignment.center,
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Stack(
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      Positioned(
+                                                        top: 10,
+                                                        child: Text(
+                                                            "Calories consumed ",
+                                                            style: TextStyle(
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                                color: Colors
+                                                                    .grey[600],
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 50,
+                                                        left: 10,
+                                                        child: Text(
+                                                            "Protein goal:",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 80,
+                                                        left: 10,
+                                                        child: Text(
+                                                            "Total Protein:",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 110,
+                                                        left: 10,
+                                                        child: Text(
+                                                            "Total calories:",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 50,
+                                                        left: 140,
+                                                        child: Text("200",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 80,
+                                                        left: 140,
+                                                        child: Text("186",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      Positioned(
+                                                        top: 110,
+                                                        left: 140,
+                                                        child: Text("2650",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[500],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text("Day ended with a protein deficit of 14 grams",
+                                          style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text("Day ended with a deficit of 150 calories",
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                        ),
+                                      ),
+                                    ),
+
+
+                                  ],
+                            ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text("Error: ${snapshot.error}");
+                            }
+                            return const CircularProgressIndicator();
+                          });
+                    }),
+              ),
+            ],
+          ),
+        ));
   }
 }
