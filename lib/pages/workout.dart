@@ -114,14 +114,16 @@ class _WorkoutState extends State<Workout> {
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                    ElevatedButton(
+              Align(
+                alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            )
+                                borderRadius: BorderRadius.circular(20))
                         ),
                       onPressed: () {
 
@@ -146,13 +148,18 @@ class _WorkoutState extends State<Workout> {
                         ),
                         ),
                     ),
-
-              ElevatedButton(
+                  )
+              ),
+              Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)
-                        )
+                            borderRadius: BorderRadius.circular(20))
+
                       ),
                       onPressed: () {
                         dynamic result =
@@ -175,6 +182,7 @@ class _WorkoutState extends State<Workout> {
                         fontWeight: FontWeight.bold
                       ),),
                     ),
+                  )),
             ],
               ),
               Expanded(
