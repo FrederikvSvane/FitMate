@@ -22,7 +22,7 @@ class DBHelper {
             'CREATE TABLE exercises(id INTEGER PRIMARY KEY, name TEXT, sets INTEGER, reps INTEGER, weight REAL, date TEXT)',
         );
         await db.execute(
-          'CREATE TABLE workouts(id INTEGER PRIMARY KEY, name TEXT, date TEXT)',
+          'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, name TEXT, sets INTEGER, date TEXT)',
         );
       },
     );
@@ -71,6 +71,15 @@ class DBHelper {
     await db.insert(
       'exercises',
       exerciseData,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  static Future<void> insertWorkout(Map<String, dynamic> workoutData) async {
+    final db = await getDatabase();
+    await db.insert(
+      'workouts',
+      workoutData,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
@@ -168,6 +177,15 @@ class DBHelper {
     // Execute the query
     final List<Map<String, dynamic>> maps = await db.query('exercises');
     await db.delete('exercises');
+    return maps;
+  }
+
+  static Future<List<Map<String, dynamic>>> getWorkouts() async {
+    final db = await getDatabase();
+
+    // Execute the query
+    final List<Map<String, dynamic>> maps = await db.query('workouts');
+    await db.delete('workouts');
     return maps;
   }
 }

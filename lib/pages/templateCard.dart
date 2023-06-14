@@ -15,7 +15,6 @@ class _TemplateCardState extends State<TemplateCard> {
 
   void _addExerciseRow() {
     setState(() {
-
     });
   }
 

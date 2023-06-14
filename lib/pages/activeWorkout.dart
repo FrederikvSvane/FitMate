@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
+import 'package:flutter_fitness_app/classes/WorkoutTemplate.dart';
 import 'package:flutter_fitness_app/classes/timerService.dart';
 import 'package:flutter_fitness_app/pages/exerciseCard.dart';
 
@@ -60,7 +61,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                               };
                               await DBHelper.insertExercise(exerciseData);
                             }
-
                           }
 
 
@@ -71,14 +71,27 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                         child: Container(
                           padding: EdgeInsets.all(10.0),
                           color: Colors.red[800],
-                          child: Text('Just Save Workout Data', style: TextStyle(color: Colors.white)),
+                          child: Text('Save Workout Data', style: TextStyle(color: Colors.white)),
                         ),
                       ),
                       SimpleDialogOption(
-                        onPressed: () {
+                        onPressed: () async {
+                          for(int i = 0; i < activeExercises.length; i++){
+                            for(int j = 0; j < activeExercises[i].sets!.length; j++){
+                              Map<String, dynamic> workoutData = {
+                                'workoutName': 'Template Workout',
+                                'name': activeExercises[i].name,
+                                'sets': activeExercises[i].sets?[j],
+                                'date': DateTime.now().toString(),
+                              };
+                              await DBHelper.insertWorkout(workoutData);
+                            }
+                          }
+
                           // Handle option 1
                           Navigator.pop(context);
-                          print('Option 1 chosen');
+                          List<WorkoutTemplate> savedWorkouts = await fetchWorkouts();
+                          print(savedWorkouts);
                         },
                         child: Container(
                           padding: EdgeInsets.all(10.0),
