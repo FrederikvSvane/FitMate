@@ -19,38 +19,20 @@ Future<void> main() async {
     isInDebugMode = true;
     return true;
   }());
-// Avoid errors caused by flutter upgrade.
-  // Importing 'package:flutter/widgets.dart' is required.
-  WidgetsFlutterBinding.ensureInitialized();
 
+  WidgetsFlutterBinding.ensureInitialized();
   // Open the database and store the reference.
-  database = await DBHelper().getDB();
+  database = await DBHelper.getDatabase();
 
   // Insert mock data if in debug mode.
   await DBHelper.insertMockData();
 
   runApp(MaterialApp(
-    // theme: ThemeData(
-    //   brightness: Brightness.light,
-    //   /* light theme settings */
-    // ),
-    // darkTheme: ThemeData(
-    //   brightness: Brightness.dark,
-    //   /* dark theme settings */
-    // ),
-    // themeMode: ThemeMode.dark,
-    // /* ThemeMode.system to follow system theme,
-    //      ThemeMode.light for light theme,
-    //      ThemeMode.dark for dark theme
-    //   */
-
     theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch().copyWith(
-      primary: Colors.red[800],
-    )),
-
+          primary: Colors.red[800],
+        )),
     debugShowCheckedModeBanner: false,
-
     initialRoute: "/",
     routes: {
       "/": (context) => const Navigation(),

@@ -8,9 +8,13 @@ void main() {
     sqfliteFfiInit();
     // Use sqflite in FFI mode (force native implementation).
     databaseFactory = databaseFactoryFfi;
-
     // Initialize your database
     await DBHelper.getDatabase();
+    await DBHelper.insertMockData();
+
+    // Clear the meals table
+    final db = await DBHelper.getDatabase();
+    await db.delete('meals');
   });
 
   group('DBHelper', () {
@@ -26,6 +30,7 @@ void main() {
       await DBHelper.insertMeal(mealData);
 
       final allMeals = await DBHelper.getAllMeals();
+      print(allMeals);
       expect(allMeals, isNotEmpty);
       expect(allMeals.first['nameComponent'], equals('Test Meal'));
     });
@@ -42,10 +47,10 @@ void main() {
       await DBHelper.insertMeal(mealData);
 
       final meal = await DBHelper.getLatestMeal();
-      expect(meal?.nameComponent, equals('Test Meal 2'));
+      expect(meal?['nameComponent'], equals('Test Meal 2'));
 
       if (meal != null) {
-        await DBHelper.removeMeal(meal.id!);
+        await DBHelper.removeMeal(meal['id']!);
       }
 
       final allMeals = await DBHelper.getAllMeals();
@@ -64,12 +69,10 @@ void main() {
       await DBHelper.insertMeal(mealData);
 
       final latestMeal = await DBHelper.getLatestMeal();
-      expect(latestMeal?.nameComponent, equals('Test Meal 3'));
+      expect(latestMeal!['nameComponent'], equals('Test Meal 3'));
 
-      if (latestMeal != null) {
-        final fetchedMeal = await DBHelper.getMealById(latestMeal.id!);
-        expect(fetchedMeal.first['nameComponent'], equals('Test Meal 3'));
-      }
+      final fetchedMeal = await DBHelper.getMealById(latestMeal['id']!);
+      expect(fetchedMeal.first['nameComponent'], equals('Test Meal 3'));
     });
   });
 }
