@@ -135,4 +135,76 @@ class _HistoryState extends State<History> {
       ),
     );
   }
+  Widget addFood(String meal) {
+    return ElevatedButton(
+      onPressed: () async {
+        whereDidIComeFrom = 1;
+        var result =
+        await Navigator.pushNamed(context, "/addFood");
+        Map<String, dynamic> mealData =
+        result as Map<String, dynamic>;
+        if (mealData['id'] != null &&
+            mealData['nameComponent'] != null &&
+            mealData['calories'] != null &&
+            mealData['proteins'] != null &&
+            mealData['mealType'] != null &&
+            mealData['date'] != null) {
+          setState(() {
+            if (meal == 'breakfast') {
+              breakfastMeals.add({
+                'id': mealData['id'],
+                'nameComponent': mealData['nameComponent'],
+                'calories': mealData['calories'],
+                'proteins': mealData['proteins'],
+                'mealType': mealData['mealType'],
+                'date': mealData['date'],
+              });
+            }
+          });
+        }
+
+        loadMealsFromDatabase();
+      },
+      child: const Text("Add breakfast"),
+    );
+  }
+
+  Widget foodList(String meal) {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 10),
+          const Text('Breakfast:',
+              style:
+              TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Column(
+            children: breakfastMeals.map((meal) {
+              String mealDetails =
+                  'Name: ${meal['nameComponent']}\nCalories: ${meal['calories']}\nProteins: ${meal['proteins']}';
+              int mealId = meal['id'];
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(mealDetails),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      _showDeleteConfirmationDialog(
+                          mealId, 'Breakfast');
+                    },
+                  )
+                ],
+              );
+            }
+            ).toList(),
+
+          ),
+          const SizedBox(
+
+            width: 120.0,
+
+          )
+        ]
+    );
+  }
 }
