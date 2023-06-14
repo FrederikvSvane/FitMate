@@ -18,9 +18,20 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
 
   TimerService timerService = TimerService();
 
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    activeExercises = ModalRoute.of(context)!.settings.arguments as List<Exercise>? ?? [];
+  }
+
   @override
   Widget build(BuildContext context) {
-    activeExercises = ModalRoute.of(context)!.settings.arguments as List<Exercise>? ?? [];
     return Scaffold(
       appBar: AppBar(
         title: StreamBuilder<int>(

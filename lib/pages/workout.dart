@@ -16,16 +16,16 @@ class _WorkoutState extends State<Workout> {
         workoutExercises: [
       Exercise(
           name: "Bench Press",
-          sets: [4],
+          sets: [1,2,3,4],
           reps: [0, 0, 0, 0],
           weight: [0, 0, 0, 0]),
       Exercise(
           name: "Deadlift",
-          sets: [3],
+          sets: [1,2,3],
           reps: [0, 0, 0, 0],
           weight: [0, 0, 0, 0]),
       Exercise(
-          name: "Overhead Press", sets: [3], reps: [0, 0, 0], weight: [0, 0, 0])
+          name: "Overhead Press", sets: [1,2,3], reps: [0, 0, 0], weight: [0, 0, 0])
     ],
         date: '',
         sets: [])
