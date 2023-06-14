@@ -15,9 +15,9 @@ class _WorkoutState extends State<Workout> {
     WorkoutTemplate(
         workoutName: 'test',
         workoutExercises: [
-          Exercise(name: "Bench Press", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
-          Exercise(name: "Deadlift", sets: [4], reps: [0,0,0,0], weight: [0,0,0,0]),
-          Exercise(name: "Overhead Press", sets: [3], reps: [0,0,0], weight: [0,0,0])]
+          Exercise(name: "Bench Press", sets: [1,2,3,4], reps: [10,10,9,6], weight: [40,30,50,45]),
+          Exercise(name: "Deadlift", sets: [1,2,3,4], reps: [0,0,0,0], weight: [0,0,0,0]),
+          Exercise(name: "Overhead Press", sets: [1,2,3], reps: [0,0,0], weight: [0,0,0])]
     )
   ];
 
@@ -33,11 +33,18 @@ class _WorkoutState extends State<Workout> {
         children: [
           // List of exercises
           ListView.builder(
-            itemCount: workoutTemplates.length,
+          itemCount: workoutTemplates.length,
             itemBuilder: (context, index) {
-              return TemplateCard(template: workoutTemplates[index]);
-              //title: Text(activeExercises[index].name),
-              // add other fields of Exercise class as needed
+              return GestureDetector( //You need to make my child interactive
+                onTap: () {
+                  dynamic result =
+                  Navigator.pushNamed(context, "/activeWorkout",
+                      arguments: workoutTemplates[index].workoutExercises);
+                },
+                child: TemplateCard(template: workoutTemplates[index]),
+                //title: Text(activeExercises[index].name),
+                // add other fields of Exercise class as needed
+              );
             },
           ),
           Positioned(
