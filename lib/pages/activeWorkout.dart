@@ -17,6 +17,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
 
   @override
   Widget build(BuildContext context) {
+    activeExercises = ModalRoute.of(context)!.settings.arguments as List<Exercise>? ?? [];
+    print('$activeExercises');
     return Scaffold(
       appBar: AppBar(
         title: StreamBuilder<int>(
