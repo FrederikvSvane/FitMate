@@ -3,6 +3,8 @@ import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/timerService.dart';
 import 'package:flutter_fitness_app/pages/exerciseCard.dart';
 
+import '../DB/DBHelper.dart';
+
 class ActiveWorkout extends StatefulWidget {
   const ActiveWorkout({Key? key}) : super(key: key);
 
@@ -46,10 +48,25 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                     title: Text('Choose an option'),
                     children: <Widget>[
                       SimpleDialogOption(
-                        onPressed: () {
-                          // Handle option 1
+                        onPressed: () async {
+                          for(int i = 0; i < activeExercises.length; i++){
+                            for(int j = 0; j < activeExercises[i].sets!.length; j++){
+                              Map<String, dynamic> exerciseData = {
+                                'name': activeExercises[i].name,
+                                'sets': activeExercises[i].sets?[j],
+                                'reps': activeExercises[i].reps?[j],
+                                'weight': activeExercises[i].weight?[j],
+                                'date': DateTime.now().toString(),
+                              };
+                              await DBHelper.insertExercise(exerciseData);
+                            }
+
+                          }
+
+
                           Navigator.pop(context);
-                          print('Option 1 chosen');
+                          List<Exercise> savedExercises = await fetchExercises();
+                          print(savedExercises);
                         },
                         child: Container(
                           padding: EdgeInsets.all(10.0),
