@@ -12,193 +12,203 @@ class Workout extends StatefulWidget {
 class _WorkoutState extends State<Workout> {
   Map<String, dynamic> data = {};
   List<WorkoutTemplate> workoutTemplates = [
-    WorkoutTemplate(
-        workoutName: 'test',
+    WorkoutTemplate(workoutName: 'test',
         workoutExercises: [
-          Exercise(name: "Bench Press", sets: [1,2,3,4], reps: [10,10,9,6], weight: [40,30,50,45]),
-          Exercise(name: "Deadlift", sets: [1,2,3,4], reps: [0,0,0,0], weight: [0,0,0,0]),
-          Exercise(name: "Overhead Press", sets: [1,2,3], reps: [0,0,0], weight: [0,0,0])]
-    )
+          Exercise(
+              name: "Bench Press",
+              sets: [1,2,3,4],
+              reps: [0, 0, 0, 0],
+              weight: [0, 0, 0, 0]),
+          Exercise(
+              name: "Deadlift",
+              sets: [1,2,3],
+              reps: [0, 0, 0, 0],
+              weight: [0, 0, 0, 0]),
+          Exercise(
+              name: "Overhead Press", sets: [1,2,3], reps: [0, 0, 0], weight: [0, 0, 0])
+        ],
+        date: '',
+        sets: [])
   ];
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter demo',
-        home: Scaffold(
-          backgroundColor: Colors.grey[200],
-          body: Column(
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      body: Column(
+        children: [
+          Container(
+            height: 200,
+            color: Colors.red[800],
+            padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+            child: const Stack(
+              children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      "Workouts",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      'Avg weekly time: 17 hrs',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 30),
+                    child: Text(
+                      'Total time spent: 1000 hrs',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 30),
+                    child: Text(
+                      'Total workouts: 73',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      'Avg weekly workouts: 4',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
-                height: 200,
-                color: Colors.red[800],
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-                child: const Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Text(
-                          "Workouts",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                      child: Text(
-                          'Avg weekly time: 17 hrs',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                ),
+                onPressed: () {
 
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: Text(
-                          'Total time spent: 1000 hrs',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ),
+                  dynamic result =
+                  Navigator.pushNamed(context, "/activeWorkout");
+                  setState(() {
+                    // Her skal dataen fra den aktive workout videresendes til næste skærm
+                    // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
+                    // eller hvad dataen er endnu.
+                    // Vi må se hvad der sker når vi kommer så langt :p
 
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: Text(
-                          'Total workouts: 73',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ),
-
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          'Avg weekly workouts: 4',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500),
-                        ),
-                    ),
-                    ),
-                  ],
+                    // Den kommer i hvert fald til at være noget i retning af:
+                    // data = {
+                    //   "weightExercises": result["weightExercises"],
+                    //   "cardioExercises": result["cardioExercises"],
+                  });
+                },
+                child: Text('Start Emtpy Workout',
+                  style: TextStyle(
+                      color: Colors.red[800],
+                      fontWeight: FontWeight.bold
+                  ),
                 ),
               ),
-              Row(
-                children: [
-              Align(
-                alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            )
-                        ),
-                      onPressed: () {
 
-                        dynamic result =
-                            Navigator.pushNamed(context, "/activeWorkout");
-                        setState(() {
-                          // Her skal dataen fra den aktive workout videresendes til næste skærm
-                          // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
-                          // eller hvad dataen er endnu.
-                          // Vi må se hvad der sker når vi kommer så langt :p
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                ),
+                onPressed: () {
 
-                          // Den kommer i hvert fald til at være noget i retning af:
-                          // data = {
-                          //   "weightExercises": result["weightExercises"],
-                          //   "cardioExercises": result["cardioExercises"],
-                        });
-                      },
-                      child: Text('Start Emtpy Workout',
-                        style: TextStyle(
-                          color: Colors.red[800],
-                          fontWeight: FontWeight.bold
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        alignment: Alignment.center,
+                        title: Text('Choose your workout template'),
+                        content: SizedBox(
+                          width: double.maxFinite,
+                          child: listBuilder3(),
                         ),
-                        ),
-                    ),
-                  )
+
+
+
+
+
+                      );
+                    },
+                  );
+                },
+                child: Text('Start existing template',
+                  style: TextStyle(
+                      color: Colors.red[800],
+                      fontWeight: FontWeight.bold
+                  ),),
               ),
-              Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)
-                        )
-                      ),
-                      onPressed: () {
-                        dynamic result =
-                        Navigator.pushNamed(context, "/activeWorkout");
-                        setState(() {
-                          // Her skal dataen fra den aktive workout videresendes til næste skærm
-                          // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
-                          // eller hvad dataen er endnu.
-                          // Vi må se hvad der sker når vi kommer så langt :p
-
-                          // Den kommer i hvert fald til at være noget i retning af:
-                          // data = {
-                          //   "weightExercises": result["weightExercises"],
-                          //   "cardioExercises": result["cardioExercises"],
-                        });
-                      },
-                      child: Text('Start existing template',
-                      style: TextStyle(
-                        color: Colors.red[800],
-                        fontWeight: FontWeight.bold
-                      ),),
-                    ),
-                  )),
             ],
-              ),
-              Expanded(
-                child: listBuilder2()
-              )
-                ],
           ),
-        ));
+           Align(
+            alignment: Alignment.centerLeft,
+          child: Text('  Templates',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+              color: Colors.grey[700]
+          ),
+          ),
+          ),
+
+          Expanded(
+
+              child: listBuilder2()
+          )
+        ],
+      ),
+    );
   }
   Widget listBuilder2() {
+
     return ListView.builder(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
       itemCount: workoutTemplates.length,
       itemBuilder: (context, index) {
         return GestureDetector( //You need to make my child interactive
           onTap: () {
-            print('the shit was tapped');
             dynamic result =
             Navigator.pushNamed(context, "/activeWorkout",
                 arguments: workoutTemplates[index].workoutExercises);
-
-
-
           },
           child: TemplateCard(template: workoutTemplates[index]),
           //title: Text(activeExercises[index].name),
@@ -206,5 +216,19 @@ class _WorkoutState extends State<Workout> {
         );
       },
     );
-        }
+  }
+  Widget listBuilder3() {
+
+    return ListView.builder(
+        itemCount: workoutTemplates.length,
+        itemBuilder: (context, index) {
+          return Text(workoutTemplates[index].workoutName);
+
+        //title: Text(activeExercises[index].name),
+        // add other fields of Exercise class as needed
+    },
+    );
+  }
+
+
 }

@@ -350,6 +350,7 @@ class _ProfileState extends State<Profile> {
 
   Widget listBuilder1() {
     return ListView.builder(
+      padding: EdgeInsets.zero,
         itemCount: 30,
         itemBuilder: (BuildContext context, index) {
           DateTime currentDate =
@@ -664,6 +665,7 @@ class _ProfileState extends State<Profile> {
 
   Widget listBuilder2() {
     return ListView.builder(
+      padding: EdgeInsets.zero,
         itemCount: 30,
         itemBuilder: (BuildContext context, index) {
           DateTime currentDate =
