@@ -115,6 +115,9 @@ class _WorkoutState extends State<Workout> {
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)
+                            )
                         ),
                       onPressed: () {
 
@@ -148,6 +151,9 @@ class _WorkoutState extends State<Workout> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)
+                        )
                       ),
                       onPressed: () {
                         dynamic result =
