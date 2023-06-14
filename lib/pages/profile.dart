@@ -10,7 +10,7 @@ class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
 
   @override
-  _ProfileState createState() => _ProfileState();
+  ProfileState createState() => ProfileState();
 }
 
 String weight = '0';
@@ -19,7 +19,7 @@ bool requested = false;
 
 bool showList1 = true;
 
-class _ProfileState extends State<Profile> {
+class ProfileState extends State<Profile> {
   int? steps;
 
   final List<String> workouts = [
