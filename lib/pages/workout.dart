@@ -121,7 +121,7 @@ class _WorkoutState extends State<Workout> {
                     padding: EdgeInsets.all(16.0),
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[100],
+                          backgroundColor: Colors.white,
                         ),
                       onPressed: () {
 
@@ -154,7 +154,7 @@ class _WorkoutState extends State<Workout> {
                     padding: EdgeInsets.all(16.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[100],
+                        backgroundColor: Colors.white,
                       ),
                       onPressed: () {
                         dynamic result =
@@ -179,9 +179,28 @@ class _WorkoutState extends State<Workout> {
                     ),
                   )),
             ],
+              ),
+              Expanded(
+                child: listBuilder2()
               )
                 ],
           ),
         ));
+  }
+  Widget listBuilder2() {
+    return ListView.builder(
+        itemCount: 30,
+        itemBuilder: (BuildContext context, index) {
+          DateTime.now().subtract(Duration(days: index));
+                  return Container(
+                    height: 285,
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  );
+        });
   }
 }
