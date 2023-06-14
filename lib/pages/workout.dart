@@ -112,7 +112,10 @@ class _WorkoutState extends State<Workout> {
                   ],
                 ),
               ),
+              Row(
+                children: [
               Align(
+                alignment: Alignment.topLeft,
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
                     child: ElevatedButton(
@@ -133,8 +136,34 @@ class _WorkoutState extends State<Workout> {
                       },
                       child: Text('Start Emtpy Workout'),
                     ),
+                  )
+              ),
+              Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        dynamic result =
+                        Navigator.pushNamed(context, "/activeWorkout");
+                        setState(() {
+                          // Her skal dataen fra den aktive workout videresendes til næste skærm
+                          // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
+                          // eller hvad dataen er endnu.
+                          // Vi må se hvad der sker når vi kommer så langt :p
+
+                          // Den kommer i hvert fald til at være noget i retning af:
+                          // data = {
+                          //   "weightExercises": result["weightExercises"],
+                          //   "cardioExercises": result["cardioExercises"],
+                        });
+                      },
+                      child: const Text('Start existing template'),
+                    ),
                   )),
             ],
+              )
+                ],
           ),
         ));
   }
