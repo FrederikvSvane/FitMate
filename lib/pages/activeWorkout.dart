@@ -51,7 +51,35 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                           Navigator.pop(context);
                           print('Option 1 chosen');
                         },
-                        child: Text('Option 1'),
+                        child: Container(
+                          padding: EdgeInsets.all(10.0),
+                          color: Colors.red[800],
+                          child: Text('Just Save Workout Data', style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                      SimpleDialogOption(
+                        onPressed: () {
+                          // Handle option 1
+                          Navigator.pop(context);
+                          print('Option 1 chosen');
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10.0),
+                          color: Colors.red[800],
+                          child: Text('Save Workout as Template', style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                      SimpleDialogOption(
+                        onPressed: () {
+                          // Handle option 1
+                          Navigator.pop(context);
+                          print('Option 1 chosen');
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10.0),
+                          color: Colors.red[800],
+                          child: Text('Finish without saving', style: TextStyle(color: Colors.white)),
+                        ),
                       ),
                     ],
                   );
