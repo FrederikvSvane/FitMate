@@ -59,7 +59,14 @@ class _ProfileState extends State<Profile> {
   }
 
   static final types = [
+    HealthDataType.WEIGHT,
     HealthDataType.STEPS,
+    HealthDataType.HEIGHT,
+    HealthDataType.BLOOD_GLUCOSE,
+    HealthDataType.WORKOUT,
+    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+
   ];
 
   HealthFactory health = HealthFactory(useHealthConnectIfAvailable: true);
@@ -85,8 +92,14 @@ class _ProfileState extends State<Profile> {
 
     if (!hasPermissions) {
       // requesting access to the data types before reading them
-      requested = await health.requestAuthorization([HealthDataType.STEPS]);
-      try {} catch (error) {
+      requested = await health.requestAuthorization([HealthDataType.WEIGHT,
+        HealthDataType.STEPS,
+        HealthDataType.HEIGHT,
+        HealthDataType.BLOOD_GLUCOSE,
+        HealthDataType.WORKOUT,
+        HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+        HealthDataType.BLOOD_PRESSURE_SYSTOLIC,]);
+      try {requested;} catch (error) {
         print("Exception in authorize: $error");
       }
     }
@@ -129,9 +142,30 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  void fetchHealthData() {
-    print(health.getHealthDataFromTypes(DateTime.now(), DateTime.now(), types)
+  Future<void> fetchHealthData() async {
+    List<HealthDataPoint> dataPoints = await health.getHealthDataFromTypes(
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        DateTime.now(),
+        types
     );
+
+    int totalCalories = calculateTotalCalories(dataPoints);
+    print('Total Calories per Day: $totalCalories');
+  }
+
+  int calculateTotalCalories(List<HealthDataPoint> healthDataList) {
+    int totalCalories = 0;
+
+    for (var healthData in healthDataList) {
+      if (healthData.type == HealthDataType.WORKOUT) {
+        WorkoutHealthValue? workoutValue = healthData.value as WorkoutHealthValue?;
+        int calories = workoutValue?.totalEnergyBurned?.toInt() ?? 0;
+
+        totalCalories += calories;
+      }
+    }
+
+    return totalCalories;
   }
 
   @override
