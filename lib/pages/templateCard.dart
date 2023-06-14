@@ -4,7 +4,7 @@ import 'package:flutter_fitness_app/classes/WorkoutTemplate.dart';
 class TemplateCard extends StatefulWidget {
   final WorkoutTemplate template;
 
-  TemplateCard({required this.template});
+  const TemplateCard({super.key, required this.template});
 
   @override
   _TemplateCardState createState() => _TemplateCardState();
@@ -30,7 +30,7 @@ class _TemplateCardState extends State<TemplateCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8.0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -38,7 +38,7 @@ class _TemplateCardState extends State<TemplateCard> {
           children: [
             Text(
               widget.template.workoutName,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             ..._setRows,
             /*Padding(
