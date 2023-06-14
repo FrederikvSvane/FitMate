@@ -114,12 +114,9 @@ class _WorkoutState extends State<Workout> {
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-              Align(
-                alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: ElevatedButton(
+                    ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                         ),
@@ -146,13 +143,8 @@ class _WorkoutState extends State<Workout> {
                         ),
                         ),
                     ),
-                  )
-              ),
-              Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: ElevatedButton(
+
+              ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                       ),
@@ -177,7 +169,6 @@ class _WorkoutState extends State<Workout> {
                         fontWeight: FontWeight.bold
                       ),),
                     ),
-                  )),
             ],
               ),
               Expanded(
