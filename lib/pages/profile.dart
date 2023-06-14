@@ -311,13 +311,13 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(10),
               child: SlidingSwitch(
                 onDoubleTap: () {},
                 onSwipe: () {},
                 onTap: () {},
                 value: false,
-                height: 50,
+                height: 40,
                 textOff: "Workouts",
                 textOn: "Daily stats",
                 onChanged: (bool value) {
