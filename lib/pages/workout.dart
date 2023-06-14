@@ -21,7 +21,7 @@ class _WorkoutState extends State<Workout> {
           weight: [0, 0, 0, 0]),
       Exercise(
           name: "Deadlift",
-          sets: [4],
+          sets: [3],
           reps: [0, 0, 0, 0],
           weight: [0, 0, 0, 0]),
       Exercise(
@@ -33,9 +33,7 @@ class _WorkoutState extends State<Workout> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter demo',
-        home: Scaffold(
+    return Scaffold(
           backgroundColor: Colors.grey[200],
           body: Column(
             children: [
@@ -180,22 +178,23 @@ class _WorkoutState extends State<Workout> {
               )
                 ],
           ),
-        ));
+        );
   }
   Widget listBuilder2() {
     return ListView.builder(
-        itemCount: 30,
-        itemBuilder: (BuildContext context, index) {
-          DateTime.now().subtract(Duration(days: index));
-                  return Container(
-                    height: 285,
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  );
-        });
+      itemCount: workoutTemplates.length,
+      itemBuilder: (context, index) {
+        return GestureDetector( //You need to make my child interactive
+          onTap: () {
+            dynamic result =
+            Navigator.pushNamed(context, "/activeWorkout",
+                arguments: workoutTemplates[index].workoutExercises);
+          },
+          child: TemplateCard(template: workoutTemplates[index]),
+          //title: Text(activeExercises[index].name),
+          // add other fields of Exercise class as needed
+        );
+      },
+    );
   }
 }
