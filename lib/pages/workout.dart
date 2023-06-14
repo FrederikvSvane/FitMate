@@ -35,7 +35,7 @@ class _WorkoutState extends State<Workout> {
           ListView.builder(
             itemCount: workoutTemplates.length,
             itemBuilder: (context, index) {
-              return TemplateCard(template: workoutTemplates[0]);
+              return TemplateCard(template: workoutTemplates[index]);
               //title: Text(activeExercises[index].name),
               // add other fields of Exercise class as needed
             },
