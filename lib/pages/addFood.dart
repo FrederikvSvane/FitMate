@@ -100,13 +100,7 @@ class AddFoodState extends State<AddFood> {
 
       final localContext = context;
       Navigator.pop(localContext, {
-        'barcode': int.tryParse(barcodeController.text) ?? 0,
-        'nameComponent': nameController.text,
-        'calories': ((double.tryParse(caloriesController.text) ?? 0.0) *
-                num.parse(howMuchController.text) /
-                100).toStringAsFixed(2),
-        'proteins': ((double.tryParse(proteinsController.text) ?? 0.0) * num.parse(howMuchController.text) / 100).toStringAsFixed(2),
-      });
+        'nameComponent': nameController.text});
     } catch (e) {
       if (kDebugMode) {
         print(e);
