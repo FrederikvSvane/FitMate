@@ -195,8 +195,6 @@ class _ProfileState extends State<Profile> {
     } else {
       print('gg not ez');
     }
-    }
-
   }
 
   @override
@@ -303,7 +301,39 @@ class _ProfileState extends State<Profile> {
                                 backgroundColor: Colors.red[900],
                               ),
                               onPressed: () {
-                                print(fetchHealthData().toString());
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      alignment: Alignment.center,
+                                      title: Text('Update your weight'),
+                                      content: SizedBox(
+                                          child: TextField (
+                                            keyboardType: TextInputType.number,
+                                            controller: _textEditingController,
+                                            decoration: const InputDecoration(
+                                              hintText: 'Enter your new weight',
+                                            ),
+                                          ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                    _addWeightToDB;
+                                    Navigator.of(context).pop();
+                                    },
+                                        child:
+                                        Text('Update weight')),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('return'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               },
                               child: Text(
                               "Weight: $weight kg",
@@ -349,7 +379,6 @@ class _ProfileState extends State<Profile> {
                 onChanged: (bool value) {
                   setState(() {
                     showList1 = !showList1;
-                    print(showList1);
                     fetchHealthData();
                   });
                 },
