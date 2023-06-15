@@ -310,7 +310,7 @@ class _FoodState extends State<Food> {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  _showDeleteConfirmationDialog(mealId, 'Breakfast');
+                  _showDeleteConfirmationDialog(mealId, 'Lunch');
                 },
               )
             ],
@@ -337,7 +337,7 @@ class _FoodState extends State<Food> {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  _showDeleteConfirmationDialog(mealId, 'Breakfast');
+                  _showDeleteConfirmationDialog(mealId, 'Dinner');
                 },
               )
             ],
@@ -364,7 +364,7 @@ class _FoodState extends State<Food> {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  _showDeleteConfirmationDialog(mealId, 'Breakfast');
+                  _showDeleteConfirmationDialog(mealId, 'Snack');
                 },
               )
             ],
