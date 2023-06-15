@@ -176,7 +176,6 @@ class DBHelper {
 
     // Execute the query
     final List<Map<String, dynamic>> maps = await db.query('exercises');
-    await db.delete('exercises');
     return maps;
   }
 
@@ -185,7 +184,6 @@ class DBHelper {
 
     // Execute the query
     final List<Map<String, dynamic>> maps = await db.query('workouts');
-    await db.delete('workouts');
     return maps;
   }
 }
