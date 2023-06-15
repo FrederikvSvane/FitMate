@@ -5,7 +5,6 @@ import 'package:path/path.dart';
 
 import '../main.dart';
 
-
 class DBHelper {
   static Future<Database> getDatabase() async {
     final dbPath = await getDatabasesPath();
@@ -139,5 +138,48 @@ class DBHelper {
     ]);
 
     return meals;
+  }
+
+  static Future<void> weightDB(Database db) async {
+    await db.execute('''
+        Create Table weight(
+        id INTEGER PRIMARTY KEY,
+        weight REAL,
+        date TEXT
+        ''');
+  }
+
+  static Future<void> insertWeight(double weight, DateTime date) async {
+    final db = await getDatabase();
+    await db.insert(
+      'weight',
+      {
+        'weight': weight,
+        'date': date.toIso8601String(),
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getAllWeights() async {
+    final db = await getDatabase();
+    final List<Map<String, dynamic>> maps = await db.query('weight');
+    return maps;
+  }
+
+  static Future<List<Map<String, dynamic>>> getWeightsForDateRange(
+      DateTime before, DateTime after) async {
+    final db = await getDatabase();
+
+    List<Map<String, dynamic>> weights = await db.rawQuery('''
+      SELECT date, weight 
+      FROM weight 
+      WHERE date(date) BETWEEN date(?) AND date(?)
+    ''', [
+      before.toIso8601String(),
+      after.toIso8601String(),
+    ]);
+
+    return weights;
   }
 }

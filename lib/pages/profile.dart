@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_switch/sliding_switch.dart';
 import 'package:health/health.dart';
@@ -13,7 +14,21 @@ class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
-String weight = '0';
+String weight = '';
+
+class dataStore  {
+  String dayWeight;
+  DateTime day;
+
+  dataStore({required this.dayWeight, required this.day});
+}
+
+class dataStoreManager {
+
+}
+
+TextEditingController _textEditingController = TextEditingController();
+String textValue = _textEditingController.text;
 
 bool requested = false;
 
@@ -21,6 +36,7 @@ bool showList1 = true;
 
 class _ProfileState extends State<Profile> {
   int? steps;
+
 
   final List<String> workouts = [
     'Workout 1',
@@ -214,29 +230,17 @@ class _ProfileState extends State<Profile> {
 
 
 
-                  const Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        "Profile",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ),
+
                   const Align(
                     alignment: Alignment.center,
                     child: Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        'Litty master',
+                        'Adolf Hitler',
                         style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w700),
+                            color: Colors.white,
+                            fontSize: 50,
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -252,10 +256,14 @@ class _ProfileState extends State<Profile> {
                               return AlertDialog(
                                 alignment: Alignment.center,
                                 title: Text('Update your weight'),
-                                content: const TextField (
-                                  decoration: InputDecoration(
+                                content: Column(
+                              children: [TextField (
+                                controller: _textEditingController,
+                                  decoration: const InputDecoration(
                                     hintText: 'Enter your new weight',
                                   ),
+                                ),
+                                ]
                                 ),
                                 actions: [
                                   TextButton(
@@ -269,14 +277,25 @@ class _ProfileState extends State<Profile> {
                             },
                           );
                         },
-
+    ),
+                      ),
+                  ),
+                      Align(
+                         alignment: Alignment.bottomRight,
                         child:
-                        Text("Weight: $weight kg",
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red[900],
+                              ),
+                              onPressed: () {
+                                print(fetchHealthData().toString());
+                              },
+                              child: Text(
+                              "Weight: $weight kg",
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          decoration: TextDecoration.underline,),
+                            fontWeight: FontWeight.w500),
 
                         ),
 
@@ -285,7 +304,6 @@ class _ProfileState extends State<Profile> {
 
                       ),
 
-                    ),
 
                   Align(
                     alignment: Alignment.bottomLeft,
@@ -342,7 +360,9 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget listBuilder1() {
+
     return ListView.builder(
+
       padding: EdgeInsets.zero,
         itemCount: 30,
         itemBuilder: (BuildContext context, index) {
@@ -483,7 +503,7 @@ class _ProfileState extends State<Profile> {
                                           Positioned(
                                             top: 110,
                                             left: 140,
-                                            child: Text("2800",
+                                            child: Text(fetchHealthData().toString(),
                                                 style: TextStyle(
                                                     color: Colors
                                                         .grey[500],
