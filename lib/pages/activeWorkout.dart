@@ -15,6 +15,7 @@ class ActiveWorkout extends StatefulWidget {
 
 class _ActiveWorkoutState extends State<ActiveWorkout> {
   List<Exercise> activeExercises = [];
+  WorkoutTemplate template = WorkoutTemplate(workoutName: 'No name', workoutExercises: [], sets: [], date: '');
 
   TimerService timerService = TimerService();
 
@@ -27,7 +28,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    activeExercises = ModalRoute.of(context)!.settings.arguments as List<Exercise>? ?? [];
+    template = ModalRoute.of(context)!.settings.arguments as WorkoutTemplate? ?? WorkoutTemplate(workoutName: 'No name', workoutExercises: [], sets: [], date: '');
+    activeExercises = template.workoutExercises;
   }
 
   @override
@@ -43,9 +45,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
               final int minutes = (totalSeconds % 3600) ~/ 60;
               final int seconds = totalSeconds % 60;
               return Text(
-                  'Active Workout: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
+                  '${template.workoutName}: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
             } else {
-              return Text('Active Workout');
+              return Text(template.workoutName);
             }
           },
         ),
@@ -78,7 +80,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
 
                           Navigator.pop(context);
                           List<Exercise> savedExercises = await fetchExercises();
-                          print(savedExercises);
+                          print('wdawdawdawdwaliwHFwauiflawihfuwhifhIFhwlaifwaifiwafiuawfihsidhwuidhwaHDWAHDiwhdihawdhwhddwddhwadwhdiuwhdiwadhawdhawihdwaiudwui');
                         },
                         child: Container(
                           padding: EdgeInsets.all(10.0),
