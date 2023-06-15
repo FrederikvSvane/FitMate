@@ -212,48 +212,7 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
 
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: GestureDetector(
-                        onTap: () async {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                alignment: Alignment.center,
-                                title: Text('Update your weight'),
-                                content: const TextField (
-                                  decoration: InputDecoration(
-                                    hintText: 'Enter your new weight',
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('close'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
 
-                        child:
-                        const Text(
-                          'Update weight',
-                          style: TextStyle(
-                            color: Colors.white,
-                            decoration: TextDecoration.underline,
-
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
 
                   const Align(
                     alignment: Alignment.topCenter,
@@ -285,15 +244,49 @@ class _ProfileState extends State<Profile> {
                     alignment: Alignment.bottomRight,
                     child: Padding(
                       padding: const EdgeInsets.all(10),
-                      child: Text(
-                        "Weight: $weight kg",
+                      child: GestureDetector(
+                        onTap: () async {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                alignment: Alignment.center,
+                                title: Text('Update your weight'),
+                                content: const TextField (
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter your new weight',
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('close'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+
+                        child:
+                        Text("Weight: $weight kg",
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
-                            fontWeight: FontWeight.w500),
+                            fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.underline,),
+
+                        ),
+
+                          ),
+
+
                       ),
+
                     ),
-                  ),
+
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Padding(
