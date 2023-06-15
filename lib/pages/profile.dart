@@ -15,6 +15,8 @@ class Profile extends StatefulWidget {
 
 String weight = '';
 
+double height = 180.0;
+
 TextEditingController _textEditingController = TextEditingController();
 String textValue = _textEditingController.text;
 
