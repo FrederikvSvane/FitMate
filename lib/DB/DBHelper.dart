@@ -22,7 +22,7 @@ class DBHelper {
           'CREATE TABLE exercises(id INTEGER PRIMARY KEY, name TEXT, sets INTEGER, reps INTEGER, weight REAL, date TEXT)',
         );
         await db.execute(
-          'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, sets TEXT, date TEXT)',
+          'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, type TEXT, sets TEXT, date TEXT)',
         );
       },
     );
@@ -83,6 +83,7 @@ class DBHelper {
       workoutData,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    print('WWDWDAWDAD: $workoutData');
   }
 
   static Future<List<Map<String, dynamic>>> getAllMeals() async {

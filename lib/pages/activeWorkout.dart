@@ -19,7 +19,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   List<Exercise> activeExercises = [];
 
   TimerService timerService = TimerService();
-
+  WorkoutTemplate template = WorkoutTemplate(workoutName: 'No name', workoutExercises: [], sets: [], date: '');
 
   @override
   void initState() {
@@ -29,7 +29,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    activeExercises = ModalRoute.of(context)!.settings.arguments as List<Exercise>? ?? [];
+    template = ModalRoute.of(context)!.settings.arguments as WorkoutTemplate? ?? WorkoutTemplate(workoutName: 'No name', workoutExercises: [], sets: [], date: '');
+    activeExercises = template.workoutExercises;
   }
 
   @override
@@ -102,22 +103,42 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                         ),
                         SimpleDialogOption(
                           onPressed: () async {
-                            for(int i = 0; i < activeExercises.length; i++){
-                              for(int j = 0; j < activeExercises[i].sets!.length; j++){
-                                Map<String, dynamic> workoutData = {
-                                  'workoutName': 'Template Workout',
-                                  'name': activeExercises[i].name,
-                                  'sets': activeExercises[i].sets?[j],
-                                  'date': DateTime.now().toString(),
-                                };
-                                await DBHelper.insertWorkout(workoutData);
+                            Map<String, dynamic> workoutData = {
+                              'workoutName': template.workoutName,
+                              'exercises': '',
+                              'type': '',
+                              'sets': '',
+                              'date': DateTime.now().toString(),
+                            };
+                            for(int i = 0; i < activeWorkoutState.activeExercises.length; i++){
+                              workoutData['exercises'] += '${activeWorkoutState.activeExercises[i].name},';
+                              workoutData['sets'] += '${activeWorkoutState.activeExercises[i].sets!.length},';
+                              if (activeWorkoutState.activeExercises[i].weight != null){
+                                workoutData['type'] += '1,';
+                              } else if (activeWorkoutState.activeExercises[i].distance != null){
+                                workoutData['type'] += '2,';
+                              } else if (activeWorkoutState.activeExercises[i].time != null){
+                                workoutData['type'] += '3,';
+                              } else {
+                                workoutData['type'] += '4,';
                               }
                             }
-
+                            print('HALOOOOO: $workoutData');
+                            await DBHelper.insertWorkout(workoutData);
+                            print(workoutData);
+                            List<Map<String, dynamic>> workoutMaps = await DBHelper.getWorkouts();
+                            print(workoutMaps[0]);
                             // Handle option 1
-                            Navigator.pop(context);
-                            List<WorkoutTemplate> savedWorkouts = await fetchWorkouts();
-                            print(savedWorkouts);
+                            //List<WorkoutTemplate> savedWorkouts = await convertToWorkoutTemplates();
+                            var activeWorkoutState1 = Provider.of<ActiveWorkoutState>(context, listen: false);
+                            activeWorkoutState1.endWorkout();
+
+                            setState(() {
+                              activeExercises.clear();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            });
+                            //print(savedWorkouts[0].workoutName);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10.0),
