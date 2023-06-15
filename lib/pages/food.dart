@@ -520,7 +520,7 @@ class _FoodState extends State<Food> {
               ),
               child: SizedBox(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
+                  padding: EdgeInsets.only(bottom: 10.0),
                   // Add padding at the bottom
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -627,7 +627,7 @@ class _FoodState extends State<Food> {
               ),
               child: SizedBox(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
+                  padding: EdgeInsets.only(bottom: 10.0),
                   // Add padding at the bottom
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -733,7 +733,7 @@ class _FoodState extends State<Food> {
               ),
               child: SizedBox(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
+                  padding: EdgeInsets.only(bottom: 10.0),
                   // Add padding at the bottom
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
