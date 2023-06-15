@@ -10,48 +10,6 @@ class WorkoutTemplate{
   WorkoutTemplate({required this.workoutName, required this.workoutExercises, required this.sets, required this.date});
 }
 
-Future<List<WorkoutTemplate>> fetchWorkouts() async {
-  final exerciseMaps = await DBHelper.getWorkouts();
-
-  Map<String, List<Map<String, dynamic>>> groupedWorkouts = {};
-
-  for (var map in exerciseMaps) {
-    String key = "${map['workoutName']}_${map['date']}";
-    if (!groupedWorkouts.containsKey(key)) {
-      groupedWorkouts[key] = [map];
-    } else {
-      groupedWorkouts[key]?.add(map);
-    }
-  }
-
-  List<WorkoutTemplate> workouts = [];
-
-  for (var key in groupedWorkouts.keys) {
-    List<int> sets = [];
-    List<Exercise> workoutExercises = [];
-    String workoutName = '';
-    String date = '';
-
-    for (var map in groupedWorkouts[key]!) {
-      workoutName = map['workoutName'];
-      Exercise exercise = Exercise(name: map['name']);
-      workoutExercises.add(exercise);
-      date = map['date'];
-      sets.add(map['sets']);
-    }
-
-    workouts.add(
-      WorkoutTemplate(
-        workoutName: workoutName,
-        workoutExercises: workoutExercises,
-        sets: sets,
-        date: date,
-      ),
-    );
-  }
-  print('HALOOOO: ${workouts[0].workoutExercises}');
-  return workouts;
-}
 Future<List<WorkoutTemplate>> convertToWorkoutTemplates() async {
   List<Map<String, dynamic>> workoutMaps = await DBHelper.getWorkouts();
   List<WorkoutTemplate> workoutTemplates = [];
