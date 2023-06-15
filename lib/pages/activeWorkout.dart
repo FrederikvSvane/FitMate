@@ -79,6 +79,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
 
 
                           Navigator.pop(context);
+                          Navigator.pop(context);
                           List<Exercise> savedExercises = await fetchExercises();
                           print('wdawdawdawdwaliwHFwauiflawihfuwhifhIFhwlaifwaifiwafiuawfihsidhwuidhwaHDWAHDiwhdihawdhwhddwddhwadwhdiuwhdiwadhawdhawihdwaiudwui');
                         },
@@ -105,6 +106,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                           // Handle option 1
                           List<WorkoutTemplate> savedWorkouts = await convertToWorkoutTemplates();
                           Navigator.pop(context);
+                          Navigator.pop(context);
                           print(savedWorkouts);
                         },
                         child: Container(
@@ -116,6 +118,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                       SimpleDialogOption(
                         onPressed: () {
                           // Handle option 1
+                          Navigator.pop(context);
                           Navigator.pop(context);
                           print('Option 1 chosen');
                         },
