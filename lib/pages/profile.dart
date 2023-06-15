@@ -11,21 +11,11 @@ class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
 
   @override
-  _ProfileState createState() => _ProfileState();
+  ProfileState createState() => ProfileState();
 }
 
 String weight = '';
 
-class dataStore  {
-  String dayWeight;
-  DateTime day;
-
-  dataStore({required this.dayWeight, required this.day});
-}
-
-class dataStoreManager {
-
-}
 
 TextEditingController _textEditingController = TextEditingController();
 String textValue = _textEditingController.text;
@@ -34,32 +24,8 @@ bool requested = false;
 
 bool showList1 = true;
 
-class _ProfileState extends State<Profile> {
+class ProfileState extends State<Profile> {
   int? steps;
-
-
-  final List<String> workouts = [
-    'Workout 1',
-    'Workout 2',
-    'Workout 3',
-    'Workout 4',
-    'Workout 5',
-    'Workout 6',
-    'Workout 7',
-    'Workout 8',
-    'Workout 9',
-    'Workout 10',
-    'Workout 11',
-    'Workout 12',
-    'Workout 13',
-    'Workout 14',
-    'Workout 15',
-    'Workout 16',
-    'Workout 17',
-    'Workout 18',
-    'Workout 19',
-    'Workout 20'
-  ];
 
 
   @override
@@ -75,14 +41,7 @@ class _ProfileState extends State<Profile> {
   }
 
   static final types = [
-    HealthDataType.WEIGHT,
     HealthDataType.STEPS,
-    HealthDataType.HEIGHT,
-    HealthDataType.BLOOD_GLUCOSE,
-    HealthDataType.WORKOUT,
-    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-
   ];
 
   HealthFactory health = HealthFactory(useHealthConnectIfAvailable: true);
@@ -108,13 +67,8 @@ class _ProfileState extends State<Profile> {
 
     if (!hasPermissions) {
       // requesting access to the data types before reading them
-      requested = await health.requestAuthorization([HealthDataType.WEIGHT,
-        HealthDataType.STEPS,
-        HealthDataType.HEIGHT,
-        HealthDataType.BLOOD_GLUCOSE,
-        HealthDataType.WORKOUT,
-        HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-        HealthDataType.BLOOD_PRESSURE_SYSTOLIC,]);
+      requested = await health.requestAuthorization([
+        HealthDataType.STEPS,]);
       try {requested;} catch (error) {
         print("Exception in authorize: $error");
       }
@@ -131,7 +85,6 @@ class _ProfileState extends State<Profile> {
       } catch (error) {
         print("Caught exception in getTotalStepsInInterval: $error");
       }
-
 
       setState(() {
         steps = (steps == null) ? 0 : steps;
@@ -159,29 +112,6 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> fetchHealthData() async {
-    List<HealthDataPoint> dataPoints = await health.getHealthDataFromTypes(
-        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-        DateTime.now(),
-        types
-    );
-
-    int totalCalories = calculateTotalCalories(dataPoints);
-    print('Total Calories per Day: $totalCalories');
-  }
-
-  int calculateTotalCalories(List<HealthDataPoint> healthDataList) {
-    int totalCalories = 0;
-
-    for (var healthData in healthDataList) {
-      if (healthData.type == HealthDataType.WORKOUT) {
-        WorkoutHealthValue? workoutValue = healthData.value as WorkoutHealthValue?;
-        int calories = workoutValue?.totalEnergyBurned?.toInt() ?? 0;
-
-        totalCalories += calories;
-      }
-    }
-
-    return totalCalories;
   }
 
   void _addWeightToDB () {
