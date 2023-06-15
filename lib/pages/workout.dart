@@ -11,7 +11,27 @@ class Workout extends StatefulWidget {
 
 class _WorkoutState extends State<Workout> {
   Map<String, dynamic> data = {};
-  List<WorkoutTemplate> workoutTemplates = convertToWorkoutTemplates() as List<WorkoutTemplate>;
+  List<WorkoutTemplate> workoutTemplates = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    fetchWorkoutTemplates();
+  }
+
+  void fetchWorkoutTemplates() async {
+    var templates = await convertToWorkoutTemplates();
+    setState(() {
+      workoutTemplates = templates ?? [];
+    });
+    print('${workoutTemplates[0].workoutExercises} hey');
+  }
+
 
   @override
   Widget build(BuildContext context) {

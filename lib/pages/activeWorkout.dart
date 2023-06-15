@@ -107,7 +107,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                           List<WorkoutTemplate> savedWorkouts = await convertToWorkoutTemplates();
                           Navigator.pop(context);
                           Navigator.pop(context);
-                          print(savedWorkouts);
+                          print(savedWorkouts[0].workoutName);
                         },
                         child: Container(
                           padding: EdgeInsets.all(10.0),
