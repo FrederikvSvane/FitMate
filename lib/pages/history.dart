@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/DB/DBHelper.dart';
+import 'package:intl/intl.dart';
 
-class History extends StatelessWidget {
+class History extends StatefulWidget {
+  const History({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text("History Page"),
-    );
+  _HistoryState createState() => _HistoryState();
+}
+class _HistoryState extends State<History> {
+
+  @override
+  initState() {
+    super.initState();
   }
+
+
+  Widget build(BuildContext context) {
+    return Container();
+
+  }
+
 }

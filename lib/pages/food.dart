@@ -20,7 +20,7 @@ class _FoodState extends State<Food> {
   double totalCalories = 0;
   double totalProteins = 0;
   GlobalKey<RefreshIndicatorState> refreshKey =
-      GlobalKey<RefreshIndicatorState>();
+  GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -164,41 +164,59 @@ class _FoodState extends State<Food> {
           children: [
             //Design for the selected day is made with assistance from chatGPT
             Container(
-              padding: const EdgeInsets.all(10.0),
-              margin: const EdgeInsets.only(bottom: 10.0, top: 15.0),
+              height: MediaQuery.of(context).size.height / 13,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: Colors.red[100],
+                color: Colors.red[800],
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: const Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    'Chosen Date',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red[900],
-                    ),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () async {
+                      setState(() {
+                        selectedDate = selectedDate.subtract(Duration(days: 1));
+                      });
+                      await loadMealsFromDatabase();
+                      setState(() {});
+                    },
                   ),
-                  const SizedBox(height: 20.0),
                   Text(
                     DateFormat('EEEE, MMMM d, y').format(selectedDate),
-                    style: TextStyle(
-                        fontSize: 24,
+                    style: const TextStyle(
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.red[900]),
+                        color: Colors.white
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_forward, color: Colors.white),
+                    onPressed: selectedDate.isBefore(DateTime(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day))
+                        ? () async {
+                      setState(() {
+                        selectedDate =
+                            selectedDate.add(Duration(days: 1));
+                      });
+                      await loadMealsFromDatabase();
+                      setState(() {});
+                    }
+                        : null, // Disable the button if the selected date is today or in the future
                   ),
                 ],
               ),
             ),
+
 
             Padding(
               padding: const EdgeInsets.all(20),
@@ -208,7 +226,7 @@ class _FoodState extends State<Food> {
                   const SizedBox(height: 10),
                   const Text('Breakfast:',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Column(
                     children: breakfastMeals.map((meal) {
                       String mealDetails =
@@ -237,10 +255,10 @@ class _FoodState extends State<Food> {
                       onPressed: () async {
                         whereDidIComeFrom = 0;
                         var result =
-                            await Navigator.pushNamed(context, "/addFood");
+                        await Navigator.pushNamed(context, "/addFood");
                         if (result != null) {
                           Map<String, dynamic> mealData =
-                              result as Map<String, dynamic>;
+                          result as Map<String, dynamic>;
                           if (mealData['id'] != null &&
                               mealData['nameComponent'] != null &&
                               mealData['calories'] != null &&
@@ -275,7 +293,7 @@ class _FoodState extends State<Food> {
                   const SizedBox(height: 10),
                   const Text('Lunch:',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Column(
                     children: lunchMeals.map((meal) {
                       String mealDetails =
@@ -283,17 +301,17 @@ class _FoodState extends State<Food> {
                       int mealId = meal['id'];
                       return Center(
                           child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(mealDetails),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              _showDeleteConfirmationDialog(mealId, 'Lunch');
-                            },
-                          )
-                        ],
-                      ));
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(mealDetails),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _showDeleteConfirmationDialog(mealId, 'Lunch');
+                                },
+                              )
+                            ],
+                          ));
                     }).toList(),
                   ),
                   SizedBox(
@@ -302,9 +320,9 @@ class _FoodState extends State<Food> {
                       onPressed: () async {
                         whereDidIComeFrom = 1;
                         var result =
-                            await Navigator.pushNamed(context, "/addFood");
+                        await Navigator.pushNamed(context, "/addFood");
                         Map<String, dynamic> mealData =
-                            result as Map<String, dynamic>;
+                        result as Map<String, dynamic>;
                         if (mealData['id'] != null &&
                             mealData['nameComponent'] != null &&
                             mealData['calories'] != null &&
@@ -338,7 +356,7 @@ class _FoodState extends State<Food> {
                   const SizedBox(height: 10),
                   const Text('Dinner:',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Column(
                     children: dinnerMeals.map((meal) {
                       String mealDetails =
@@ -346,17 +364,17 @@ class _FoodState extends State<Food> {
                       int mealId = meal['id'];
                       return Center(
                           child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(mealDetails),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              _showDeleteConfirmationDialog(mealId, 'Dinner');
-                            },
-                          )
-                        ],
-                      ));
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(mealDetails),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _showDeleteConfirmationDialog(mealId, 'Dinner');
+                                },
+                              )
+                            ],
+                          ));
                     }).toList(),
                   ),
                   SizedBox(
@@ -365,9 +383,9 @@ class _FoodState extends State<Food> {
                       onPressed: () async {
                         whereDidIComeFrom = 2;
                         var result =
-                            await Navigator.pushNamed(context, "/addFood");
+                        await Navigator.pushNamed(context, "/addFood");
                         Map<String, dynamic> mealData =
-                            result as Map<String, dynamic>;
+                        result as Map<String, dynamic>;
                         if (mealData['id'] != null &&
                             mealData['nameComponent'] != null &&
                             mealData['calories'] != null &&
@@ -401,7 +419,7 @@ class _FoodState extends State<Food> {
                   const SizedBox(height: 10),
                   const Text('Snacks:',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Column(
                     children: snacksMeals.map((meal) {
                       String mealDetails =
@@ -409,17 +427,17 @@ class _FoodState extends State<Food> {
                       int mealId = meal['id'];
                       return Center(
                           child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(mealDetails),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              _showDeleteConfirmationDialog(mealId, 'Snack');
-                            },
-                          )
-                        ],
-                      ));
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(mealDetails),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _showDeleteConfirmationDialog(mealId, 'Snack');
+                                },
+                              )
+                            ],
+                          ));
                     }).toList(),
                   ),
                   SizedBox(
@@ -428,9 +446,9 @@ class _FoodState extends State<Food> {
                       onPressed: () async {
                         whereDidIComeFrom = 3;
                         var result =
-                            await Navigator.pushNamed(context, "/addFood");
+                        await Navigator.pushNamed(context, "/addFood");
                         Map<String, dynamic> mealData =
-                            result as Map<String, dynamic>;
+                        result as Map<String, dynamic>;
                         if (mealData['id'] != null &&
                             mealData['nameComponent'] != null &&
                             mealData['calories'] != null &&

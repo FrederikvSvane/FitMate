@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/classes/activeWorkoutState.dart';
 import 'package:flutter_fitness_app/pages/templateCard.dart';
+import 'package:provider/provider.dart';
 
 import '../classes/Exercise.dart';
 import '../classes/WorkoutTemplate.dart';
+import '../pages/activeWorkout.dart';
 
 class Workout extends StatefulWidget {
   @override
@@ -124,20 +127,11 @@ class _WorkoutState extends State<Workout> {
                           backgroundColor: Colors.white,
                         ),
                       onPressed: () {
+                        var activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
 
-                        dynamic result =
-                            Navigator.pushNamed(context, "/activeWorkout");
-                        setState(() {
-                          // Her skal dataen fra den aktive workout videresendes til næste skærm
-                          // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
-                          // eller hvad dataen er endnu.
-                          // Vi må se hvad der sker når vi kommer så langt :p
+                        activeWorkoutState.startWorkout();
 
-                          // Den kommer i hvert fald til at være noget i retning af:
-                          // data = {
-                          //   "weightExercises": result["weightExercises"],
-                          //   "cardioExercises": result["cardioExercises"],
-                        });
+                        Navigator.pushNamed(context, "/activeWorkout");
                       },
                       child: Text('Start Emtpy Workout',
                         style: TextStyle(
@@ -152,6 +146,7 @@ class _WorkoutState extends State<Workout> {
                         backgroundColor: Colors.white,
                       ),
                       onPressed: () {
+                        ActiveWorkoutState().startWorkout();
                         dynamic result =
                         Navigator.pushNamed(context, "/activeWorkout",
                             arguments: workoutTemplates[0]);
