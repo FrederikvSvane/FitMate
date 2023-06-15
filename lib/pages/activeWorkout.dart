@@ -3,6 +3,7 @@ import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/WorkoutTemplate.dart';
 import 'package:flutter_fitness_app/classes/timerService.dart';
 import 'package:flutter_fitness_app/pages/exerciseCard.dart';
+import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:provider/provider.dart';
 
 import '../DB/DBHelper.dart';
@@ -91,6 +92,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
 
 
                             Navigator.pop(context);
+                            Navigator.pop(context);
                             List<Exercise> savedExercises = await fetchExercises();
                             print(savedExercises);
                           },
@@ -116,7 +118,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
 
                             // Handle option 1
                             Navigator.pop(context);
-                            List<WorkoutTemplate> savedWorkouts = await fetchWorkouts();
+                            Navigator.pop(context);
+                            List<WorkoutTemplate> savedWorkouts = await convertToWorkoutTemplates();
                             print(savedWorkouts);
                           },
                           child: Container(
@@ -128,6 +131,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                         SimpleDialogOption(
                           onPressed: () {
                             // Handle option 1
+                            Navigator.pop(context);
                             Navigator.pop(context);
                             print('Option 1 chosen');
                           },
