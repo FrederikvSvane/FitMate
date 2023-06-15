@@ -21,6 +21,7 @@ Future<List<WorkoutTemplate>> convertToWorkoutTemplates() async {
     String date = workoutMap['date'];
 
     List<String> exerciseNames = exercisesString.split(',');
+    exerciseNames.removeLast();
     List<int> sets = setsString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
 
     List<Exercise> exercises = [];

@@ -154,7 +154,7 @@ class _WorkoutState extends State<Workout> {
                       onPressed: () {
                         dynamic result =
                         Navigator.pushNamed(context, "/activeWorkout",
-                            arguments: workoutTemplates[0].workoutExercises);
+                            arguments: workoutTemplates[0]);
                         setState(() {
                           // Her skal dataen fra den aktive workout videresendes til næste skærm
                           // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
