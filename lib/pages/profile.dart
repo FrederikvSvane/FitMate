@@ -236,7 +236,7 @@ class _ProfileState extends State<Profile> {
                     child: Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        'Adolf Hitler',
+                        'Jens Jensen',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 50,
