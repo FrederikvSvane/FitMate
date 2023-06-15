@@ -184,6 +184,21 @@ class _ProfileState extends State<Profile> {
     return totalCalories;
   }
 
+  void _addWeightToDB () {
+    String weightText = _textEditingController.text;
+    double? weightNumber = double.tryParse(weightText);
+
+    if (weightNumber!= null) {
+      DBHelper.insertWeight(weightNumber, DateTime.now());
+      _textEditingController.clear();
+      print('gg ez');
+    } else {
+      print('gg not ez');
+    }
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
