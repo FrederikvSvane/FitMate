@@ -126,6 +126,32 @@ class ProfileState extends State<Profile> {
     }
   }
 
+  double basalCalorieBurner () {
+    double weight = 90.0;
+    double height = 190.0;
+    int age = 23;
+
+    double dailyCal = (10*weight+6.25*height-5*age);
+
+    print(dailyCal);
+
+    return dailyCal;
+  }
+
+  double stepCalorieBurner () {
+    double factor = 0.0000031578947;
+    double weight = 90.0;
+    double height = 190.0;
+    int steps = 10000;
+
+    double stepCal = height*weight*factor*steps;
+
+    print(stepCal);
+
+
+    return stepCal;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -244,6 +270,8 @@ class ProfileState extends State<Profile> {
                                     onPressed:() {
                                        setState(() {weight = _textEditingController.text;});
                                        _addWeightToDB();
+                                       basalCalorieBurner();
+                                       stepCalorieBurner();
                                       Navigator.of(context).pop();
 
                                     },
@@ -337,7 +365,7 @@ class ProfileState extends State<Profile> {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.white70,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -604,7 +632,7 @@ class ProfileState extends State<Profile> {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.white70,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
