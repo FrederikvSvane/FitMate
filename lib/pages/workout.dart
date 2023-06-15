@@ -11,25 +11,7 @@ class Workout extends StatefulWidget {
 
 class _WorkoutState extends State<Workout> {
   Map<String, dynamic> data = {};
-  List<WorkoutTemplate> workoutTemplates = [
-    WorkoutTemplate(workoutName: 'test',
-        workoutExercises: [
-      Exercise(
-          name: "Bench Press",
-          sets: [1,2,3,4],
-          reps: [0, 0, 0, 0],
-          weight: [0, 0, 0, 0]),
-      Exercise(
-          name: "Deadlift",
-          sets: [1,2,3],
-          reps: [0, 0, 0, 0],
-          weight: [0, 0, 0, 0]),
-      Exercise(
-          name: "Overhead Press", sets: [1,2,3], reps: [0, 0, 0], weight: [0, 0, 0])
-    ],
-        date: '',
-        sets: [])
-  ];
+  List<WorkoutTemplate> workoutTemplates = convertToWorkoutTemplates() as List<WorkoutTemplate>;
 
   @override
   Widget build(BuildContext context) {
