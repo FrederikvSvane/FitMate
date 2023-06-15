@@ -63,7 +63,7 @@ Future<List<WorkoutTemplate>> convertToWorkoutTemplates() async {
     String date = workoutMap['date'];
 
     List<String> exerciseNames = exercisesString.split(',');
-    List<int> sets = setsString.split(',').map(int.parse).toList();
+    List<int> sets = setsString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
 
     List<Exercise> exercises = [];
     for (int i = 0; i < exerciseNames.length; i++) {
