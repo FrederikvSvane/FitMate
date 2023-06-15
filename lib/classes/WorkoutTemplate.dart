@@ -13,11 +13,10 @@ class WorkoutTemplate{
 Future<List<WorkoutTemplate>> convertToWorkoutTemplates() async {
   List<Map<String, dynamic>> workoutMaps = await DBHelper.getWorkouts();
   List<WorkoutTemplate> workoutTemplates = [];
-  print(workoutMaps[0]);
   for (var workoutMap in workoutMaps) {
     String workoutName = workoutMap['workoutName'];
     String exercisesString = workoutMap['exercises'];
-    String typesString = workoutMap['types'];
+    String typesString = workoutMap['type'];
     String setsString = workoutMap['sets'];
     String date = workoutMap['date'];
 
@@ -51,6 +50,5 @@ Future<List<WorkoutTemplate>> convertToWorkoutTemplates() async {
 
     workoutTemplates.add(workoutTemplate);
   }
-  print('HALOOOO: ${workoutTemplates[0].workoutExercises}');
   return workoutTemplates;
 }

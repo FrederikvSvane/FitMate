@@ -126,8 +126,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                             print('HALOOOOO: $workoutData');
                             await DBHelper.insertWorkout(workoutData);
                             print(workoutData);
-                            List<Map<String, dynamic>> workoutMaps = await DBHelper.getWorkouts();
-                            print(workoutMaps[0]);
+                            List<WorkoutTemplate> savedWorkouts = await convertToWorkoutTemplates();
+                            print('NEW DATA BASE DATA:     ${savedWorkouts[0]}');
                             // Handle option 1
                             //List<WorkoutTemplate> savedWorkouts = await convertToWorkoutTemplates();
                             var activeWorkoutState1 = Provider.of<ActiveWorkoutState>(context, listen: false);
