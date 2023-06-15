@@ -14,9 +14,15 @@ class DBHelper {
     return openDatabase(
       path,
       version: 1,
-      onCreate: (db, version) {
-        return db.execute(
+      onCreate: (db, version) async {
+        await db.execute(
           'CREATE TABLE meals(id INTEGER PRIMARY KEY, barcode INTEGER, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)',
+        );
+        await db.execute(
+            'CREATE TABLE exercises(id INTEGER PRIMARY KEY, name TEXT, sets INTEGER, reps INTEGER, weight REAL, date TEXT)',
+        );
+        await db.execute(
+          'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, name TEXT, sets INTEGER, date TEXT)',
         );
       },
     );
@@ -60,6 +66,23 @@ class DBHelper {
       }
       print("Done inserting mock data.");
     }
+  }
+  static Future<void> insertExercise(Map<String, dynamic> exerciseData) async {
+    final db = await getDatabase();
+    await db.insert(
+      'exercises',
+      exerciseData,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  static Future<void> insertWorkout(Map<String, dynamic> workoutData) async {
+    final db = await getDatabase();
+    await db.insert(
+      'workouts',
+      workoutData,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   static Future<List<Map<String, dynamic>>> getAllMeals() async {
@@ -139,5 +162,23 @@ class DBHelper {
     ]);
 
     return meals;
+  }
+
+  static Future<List<Map<String, dynamic>>> getExercises() async {
+    final db = await getDatabase();
+
+    // Execute the query
+    final List<Map<String, dynamic>> maps = await db.query('exercises');
+    await db.delete('exercises');
+    return maps;
+  }
+
+  static Future<List<Map<String, dynamic>>> getWorkouts() async {
+    final db = await getDatabase();
+
+    // Execute the query
+    final List<Map<String, dynamic>> maps = await db.query('workouts');
+    await db.delete('workouts');
+    return maps;
   }
 }

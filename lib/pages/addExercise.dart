@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
-import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/pages/SearchExercises.dart';
 
 class AddExercise extends StatefulWidget {

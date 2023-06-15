@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
+import 'package:flutter_fitness_app/classes/WorkoutTemplate.dart';
 import 'package:flutter_fitness_app/classes/timerService.dart';
 import 'package:flutter_fitness_app/pages/exerciseCard.dart';
+
+import '../DB/DBHelper.dart';
 
 class ActiveWorkout extends StatefulWidget {
   const ActiveWorkout({Key? key}) : super(key: key);
@@ -14,6 +17,18 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   List<Exercise> activeExercises = [];
 
   TimerService timerService = TimerService();
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    activeExercises = ModalRoute.of(context)!.settings.arguments as List<Exercise>? ?? [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +53,91 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         ),
         foregroundColor: Colors.white,
         backgroundColor: Colors.red[800],
+        actions: [
+          TextButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SimpleDialog(
+                    title: Text('Choose an option'),
+                    children: <Widget>[
+                      SimpleDialogOption(
+                        onPressed: () async {
+                          for(int i = 0; i < activeExercises.length; i++){
+                            for(int j = 0; j < activeExercises[i].sets!.length; j++){
+                              Map<String, dynamic> exerciseData = {
+                                'name': activeExercises[i].name,
+                                'sets': activeExercises[i].sets?[j],
+                                'reps': activeExercises[i].reps?[j],
+                                'weight': activeExercises[i].weight?[j],
+                                'date': DateTime.now().toString(),
+                              };
+                              await DBHelper.insertExercise(exerciseData);
+                            }
+                          }
+
+
+                          Navigator.pop(context);
+                          List<Exercise> savedExercises = await fetchExercises();
+                          print(savedExercises);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10.0),
+                          color: Colors.red[800],
+                          child: Text('Save Workout Data', style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                      SimpleDialogOption(
+                        onPressed: () async {
+                          for(int i = 0; i < activeExercises.length; i++){
+                            for(int j = 0; j < activeExercises[i].sets!.length; j++){
+                              Map<String, dynamic> workoutData = {
+                                'workoutName': 'Template Workout',
+                                'name': activeExercises[i].name,
+                                'sets': activeExercises[i].sets?[j],
+                                'date': DateTime.now().toString(),
+                              };
+                              await DBHelper.insertWorkout(workoutData);
+                            }
+                          }
+
+                          // Handle option 1
+                          Navigator.pop(context);
+                          List<WorkoutTemplate> savedWorkouts = await fetchWorkouts();
+                          print(savedWorkouts);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10.0),
+                          color: Colors.red[800],
+                          child: Text('Save Workout as Template', style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                      SimpleDialogOption(
+                        onPressed: () {
+                          // Handle option 1
+                          Navigator.pop(context);
+                          print('Option 1 chosen');
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10.0),
+                          color: Colors.red[800],
+                          child: Text('Finish without saving', style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Text(
+              "Finish Workout",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Stack(
         children: [
