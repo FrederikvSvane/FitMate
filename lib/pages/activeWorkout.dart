@@ -90,21 +90,21 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                       ),
                       SimpleDialogOption(
                         onPressed: () async {
+                          Map<String, dynamic> workoutData = {
+                            'workoutName': template.workoutName,
+                            'exercises': '',
+                            'sets': '',
+                            'date': DateTime.now().toString(),
+                          };
                           for(int i = 0; i < activeExercises.length; i++){
-                            for(int j = 0; j < activeExercises[i].sets!.length; j++){
-                              Map<String, dynamic> workoutData = {
-                                'workoutName': 'Template Workout',
-                                'name': activeExercises[i].name,
-                                'sets': activeExercises[i].sets?[j],
-                                'date': DateTime.now().toString(),
-                              };
-                              await DBHelper.insertWorkout(workoutData);
-                            }
+                            workoutData['exercises'] += activeExercises[i].name + ',';
+                            workoutData['sets'] += '${activeExercises[i].sets!.length},';
                           }
-
+                          await DBHelper.insertWorkout(workoutData);
+                          print(workoutData);
                           // Handle option 1
+                          List<WorkoutTemplate> savedWorkouts = await convertToWorkoutTemplates();
                           Navigator.pop(context);
-                          List<WorkoutTemplate> savedWorkouts = await fetchWorkouts();
                           print(savedWorkouts);
                         },
                         child: Container(
