@@ -10,12 +10,72 @@ class Measure extends StatefulWidget {
   State<Measure> createState() => MeasureState();
 }
 
+List<TimeSeriesCalories> extrapolateFutureData(List<TimeSeriesCalories> data,
+    LinearRegression regression, int futureDays) {
+  var futureData = List<TimeSeriesCalories>.from(data);
+
+  for (var i = 1; i <= futureDays; i++) {
+    var futureDate = data[data.length - 1].time.add(Duration(days: i));
+    var futureValue = regression.slope * futureDate.millisecondsSinceEpoch +
+        regression.intercept;
+    futureData.add(TimeSeriesCalories(futureDate, futureValue));
+  }
+
+  return futureData;
+}
+
+LinearRegression calculateRegression(List<TimeSeriesCalories> data) {
+  int n = data.length;
+  double sumX = 0;
+  double sumY = 0;
+  double sumXY = 0;
+  double sumXX = 0;
+
+  for (var i = 0; i < n; i++) {
+    sumX += data[i].time.millisecondsSinceEpoch;
+    sumY += data[i].calories;
+    sumXX += data[i].time.millisecondsSinceEpoch *
+        data[i].time.millisecondsSinceEpoch;
+    sumXY += data[i].time.millisecondsSinceEpoch * data[i].calories;
+  }
+
+  double slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+  double intercept = (sumY - slope * sumX) / n;
+
+  return LinearRegression(slope, intercept);
+}
+
+class LinearRegression {
+  final double slope;
+  final double intercept;
+
+  LinearRegression(this.slope, this.intercept);
+}
+
+charts.Series<TimeSeriesCalories, DateTime> createRegressionSeries(
+    List<TimeSeriesCalories> data,
+    LinearRegression regression,
+    int futureDays) {
+  var futureData = extrapolateFutureData(data, regression, futureDays);
+
+  return charts.Series<TimeSeriesCalories, DateTime>(
+    id: 'Calories Regression',
+    colorFn: (_, __) =>
+        charts.ColorUtil.fromDartColor(const Color.fromARGB(50, 255, 0, 0)),
+    // Semi-transparent color
+    domainFn: (TimeSeriesCalories calories, _) => calories.time,
+    measureFn: (TimeSeriesCalories calories, _) =>
+        regression.slope * calories.time.millisecondsSinceEpoch +
+        regression.intercept,
+    data: futureData,
+    displayName: 'Prediction for the next 7 days',
+  );
+}
+
 class MeasureState extends State<Measure> {
   final bool animate = false;
   late DateTimeRange selectedDateRange;
 
-
-  // Initialize the date range to the last 7 days
   MeasureState() {
     final now = DateTime.now();
     selectedDateRange = DateTimeRange(
@@ -24,15 +84,20 @@ class MeasureState extends State<Measure> {
     );
   }
 
-  //Fetch the data for the calories chart
   Future<List<charts.Series<TimeSeriesCalories, DateTime>>>
-  _fetchCaloriesData() async {
+      _fetchCaloriesData() async {
     final dbData = await DBHelper.getCaloriesForDateRange(
         selectedDateRange.start, selectedDateRange.end);
     final data = dbData
         .map((d) =>
-        TimeSeriesCalories(DateTime.parse(d['date']), d['totalCalories']))
+            TimeSeriesCalories(DateTime.parse(d['date']), d['totalCalories']))
         .toList();
+
+    // Calculate regression
+    var regression = calculateRegression(data);
+
+    // Create regression series
+    var regressionSeries = createRegressionSeries(data, regression, 7);
 
     return [
       charts.Series<TimeSeriesCalories, DateTime>(
@@ -42,20 +107,20 @@ class MeasureState extends State<Measure> {
         measureFn: (TimeSeriesCalories calories, _) => calories.calories,
         data: data,
         labelAccessorFn: (TimeSeriesCalories calories, _) =>
-        '${calories.calories.toInt()}',
+            '${calories.calories.toInt()}',
       ),
+      regressionSeries,
     ];
   }
 
-
   //Fetch the data for the proteins chart
   Future<List<charts.Series<TimeSeriesProteins, DateTime>>>
-  _fetchProteinsData() async {
+      _fetchProteinsData() async {
     final dbData = await DBHelper.getProteinsForDateRange(
         selectedDateRange.start, selectedDateRange.end);
     final data = dbData
         .map((d) =>
-        TimeSeriesProteins(DateTime.parse(d['date']), d['totalProteins']))
+            TimeSeriesProteins(DateTime.parse(d['date']), d['totalProteins']))
         .toList();
 
     return [
@@ -66,11 +131,10 @@ class MeasureState extends State<Measure> {
         measureFn: (TimeSeriesProteins proteins, _) => proteins.proteins,
         data: data,
         labelAccessorFn: (TimeSeriesProteins proteins, _) =>
-        '${proteins.proteins.toInt()}',
+            '${proteins.proteins.toInt()}',
       ),
     ];
   }
-
 
   void _selectDateRange(BuildContext context) async {
     final picked = await showDateRangePicker(
@@ -98,10 +162,9 @@ class MeasureState extends State<Measure> {
     }
   }
 
-  //Create a default bar chart
   Widget _buildTimeSeriesChart<T>(
-      List<charts.Series<T, DateTime>> seriesList,
-      ) {
+    List<charts.Series<T, DateTime>> seriesList,
+  ) {
     return SizedBox(
       height: 200,
       child: charts.TimeSeriesChart(
@@ -114,6 +177,7 @@ class MeasureState extends State<Measure> {
             symbolRenderer: charts.CircleSymbolRenderer(),
             defaultRadiusPx: 4,
           ),
+          charts.SeriesLegend(), // Add a series legend
         ],
         primaryMeasureAxis: charts.NumericAxisSpec(
           renderSpec: charts.GridlineRendererSpec(
@@ -128,7 +192,7 @@ class MeasureState extends State<Measure> {
             ),
           ),
           tickProviderSpec:
-          const charts.BasicNumericTickProviderSpec(desiredTickCount: 5),
+              const charts.BasicNumericTickProviderSpec(desiredTickCount: 5),
         ),
       ),
     );
