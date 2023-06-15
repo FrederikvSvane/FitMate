@@ -27,4 +27,10 @@ class ActiveWorkoutState with ChangeNotifier {
     activeExercises.add(exercise);
     notifyListeners();
   }
+
+  void updateExercise(int index, Exercise exercise) {
+    activeExercises[index] = exercise;
+    notifyListeners();
+  }
+
 }

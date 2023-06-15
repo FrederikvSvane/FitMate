@@ -15,10 +15,10 @@ class ActiveWorkoutWindow extends StatelessWidget {
           Navigator.pushNamed(context, "/activeWorkout");
         },
         child: Container(
-          height: 70.0,
-          width: MediaQuery.of(context).size.width/1.1, // Full width of the screen
-          margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/25,0.0,0.0,70.0), // Adjust this value based on the height of your navigation bar
           color: Colors.red[800],
+          height: 70.0,
+          width: MediaQuery.of(context).size.width/1.1,
+          margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/25,0.0,0.0,70.0),
           padding: EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

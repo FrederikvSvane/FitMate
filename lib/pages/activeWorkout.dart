@@ -158,9 +158,10 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 100.0),
               itemCount: activeWorkoutState.activeExercises.length,
               itemBuilder: (context, index) {
-                return ExerciseCard(exercise: activeWorkoutState.activeExercises[index]);
-                //title: Text(activeExercises[index].name),
-                // add other fields of Exercise class as needed
+                return ExerciseCard(
+                  exercise: activeWorkoutState.activeExercises[index],
+                  exerciseIndex: index, // Pass the index to ExerciseCard
+                );
               },
             ),
             // Buttons to cancel workout and add exercise

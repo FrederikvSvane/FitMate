@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/activeWorkoutState.dart';
+import 'package:provider/provider.dart';
 
 class ExerciseCard extends StatefulWidget {
   final Exercise exercise;
+  final int exerciseIndex; // Add this
 
-  ExerciseCard({required this.exercise});
+  ExerciseCard({required this.exercise, required this.exerciseIndex}); // Modify this
 
   @override
   _ExerciseCardState createState() => _ExerciseCardState();
@@ -14,25 +16,36 @@ class ExerciseCard extends StatefulWidget {
 class _ExerciseCardState extends State<ExerciseCard> {
   List<Widget> _setRows = [];
 
+  TextEditingController _buildTextEditingController(List<num> data, int index) {
+    TextEditingController controller = TextEditingController();
+    if (data[index] != 0) {
+      controller.text = data[index].toString();
+    }
+    return controller;
+  }
+
+
   void _addSetRow() {
     setState(() {
       int nextSetNumber = widget.exercise.sets!.length + 1;
       widget.exercise.sets!.add(nextSetNumber);
-      if (widget.exercise.weight != null){
-        widget.exercise.reps!.add(0); // Example: add default values for the new set
+
+      // Dynamically check which properties are not null
+      if (widget.exercise.weight != null) {
         widget.exercise.weight!.add(0);
-        _setRows = _buildStrengthExerciseRows(widget.exercise);
-      } else if(widget.exercise.distance != null){
-        widget.exercise.distance!.add(0);
-        widget.exercise.time!.add(0);
-        _setRows = _buildCardioExerciseRows(widget.exercise);
-      } else if (widget.exercise.time != null){
-        widget.exercise.time!.add(0);
-        _setRows = _buildTimeExerciseRows(widget.exercise);
-      } else{
-        widget.exercise.reps!.add(0);
-        _setRows = _buildRepExerciseRows(widget.exercise);
       }
+      if (widget.exercise.reps != null) {
+        widget.exercise.reps!.add(0);
+      }
+      if (widget.exercise.distance != null) {
+        widget.exercise.distance!.add(0);
+      }
+      if (widget.exercise.time != null) {
+        widget.exercise.time!.add(0);
+      }
+
+      // Rebuild the set rows
+      _setRows = _buildExerciseRows(widget.exercise);
     });
   }
 
@@ -40,21 +53,13 @@ class _ExerciseCardState extends State<ExerciseCard> {
   void initState() {
     super.initState();
     if (widget.exercise.sets != null) {
-      if (widget.exercise.weight != null){
-        _setRows = _buildStrengthExerciseRows(widget.exercise);
-      } else if(widget.exercise.distance != null){
-        _setRows = _buildCardioExerciseRows(widget.exercise);
-      } else if (widget.exercise.time != null){
-        _setRows = _buildTimeExerciseRows(widget.exercise);
-      } else{
-        _setRows = _buildRepExerciseRows(widget.exercise);
-      }
-
+      _setRows = _buildExerciseRows(widget.exercise);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final activeWorkoutState = Provider.of<ActiveWorkoutState>(context);
     return Card(
       margin: EdgeInsets.all(8.0),
       child: Padding(
@@ -86,169 +91,60 @@ class _ExerciseCardState extends State<ExerciseCard> {
     );
   }
 
-  List<Widget> _buildStrengthExerciseRows(Exercise exercise) {
+  List<Widget> _buildExerciseRows(Exercise exercise) {
     List<Widget> rows = [];
     for (int i = 0; i < exercise.sets!.length; i++) {
-      rows.add(
+      List<Widget> columns = [
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Set ${exercise.sets![i]}:"),
-              //Text("reps ${exercise.reps![i]} "),
-              //Text("${exercise.weight![i]} kg"),
-              Container(
-                width: 100,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: "Reps"),
-                  onChanged: (value) {
-                    // You can update the reps array based on user input.
-                    int? newValue = int.tryParse(value);
-                    if (newValue != null) {
-                      exercise.reps![i] = newValue;
-                      ActiveWorkoutState.activeExercises = exercise;
-                    }
-                  },
-                ),
-              ),
-              SizedBox(width: 20),
-              Container(
-                width: 100,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: "Weight (kg)"),
-                  onChanged: (value) {
-                    // You can update the weight array based on user input.
-                    double? newValue = double.tryParse(value);
-                    if (newValue != null) {
-                      exercise.weight![i] = newValue;
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+          child: Text("Set ${exercise.sets![i]}:"),
+        )
+      ];
+
+      // Dynamically add columns based on non-null properties
+      if (exercise.reps != null) {
+        columns.add(_buildTextField(
+            "Reps", i, exercise.reps!, (value) => exercise.reps![i] = value));
+      }
+      if (exercise.weight != null) {
+        columns.add(_buildTextField(
+            "Weight (kg)", i, exercise.weight!, (value) => exercise.weight![i] = value));
+      }
+      if (exercise.time != null) {
+        columns.add(_buildTextField(
+            "Time", i, exercise.time!, (value) => exercise.time![i] = value));
+      }
+      if (exercise.distance != null) {
+        columns.add(_buildTextField(
+            "Distance", i, exercise.distance!, (value) => exercise.distance![i] = value));
+      }
+
+      rows.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: columns,
+      ));
     }
     return rows;
   }
 
-  List<Widget> _buildCardioExerciseRows(Exercise exercise) {
-    List<Widget> rows = [];
-    for (int i = 0; i < exercise.sets!.length; i++) {
-      rows.add(
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Set ${exercise.sets![i]}:"),
-              //Text("reps ${exercise.reps![i]} "),
-              //Text("${exercise.weight![i]} kg"),
-              Container(
-                width: 100,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: "Time"),
-                  onChanged: (value) {
-                    // You can update the reps array based on user input.
-                    int? newValue = int.tryParse(value);
-                    if (newValue != null) {
-                      exercise.time![i] = newValue;
-                    }
-                  },
-                ),
-              ),
-              SizedBox(width: 20),
-              Container(
-                width: 100,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: "Distance"),
-                  onChanged: (value) {
-                    // You can update the weight array based on user input.
-                    double? newValue = double.tryParse(value);
-                    if (newValue != null) {
-                      exercise.distance![i] = newValue;
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return rows;
-  }
-
-  List<Widget> _buildTimeExerciseRows(Exercise exercise) {
-    List<Widget> rows = [];
-    for (int i = 0; i < exercise.sets!.length; i++) {
-      rows.add(
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Set ${exercise.sets![i]}:"),
-              //Text("reps ${exercise.reps![i]} "),
-              //Text("${exercise.weight![i]} kg"),
-              Container(
-                width: 200,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: "Time"),
-                  onChanged: (value) {
-                    // You can update the reps array based on user input.
-                    int? newValue = int.tryParse(value);
-                    if (newValue != null) {
-                      exercise.time![i] = newValue;
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return rows;
-  }
-  List<Widget> _buildRepExerciseRows(Exercise exercise) {
-    List<Widget> rows = [];
-    for (int i = 0; i < exercise.sets!.length; i++) {
-      rows.add(
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Set ${exercise.sets![i]}:"),
-              //Text("reps ${exercise.reps![i]} "),
-              //Text("${exercise.weight![i]} kg"),
-              Container(
-                width: 200,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: "Reps"),
-                  onChanged: (value) {
-                    // You can update the reps array based on user input.
-                    int? newValue = int.tryParse(value);
-                    if (newValue != null) {
-                      exercise.reps![i] = newValue;
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return rows;
+  Widget _buildTextField(String label, int index, List<num> data,
+      Function(num) updateFunction) {
+    TextEditingController controller = _buildTextEditingController(data, index);
+    return Container(
+      width: 100,
+      child: TextField(
+        controller: controller,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(labelText: label),
+        onChanged: (value) {
+          num? newValue = num.tryParse(value);
+          if (newValue != null) {
+            updateFunction(newValue);
+            final activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
+            activeWorkoutState.updateExercise(widget.exerciseIndex, widget.exercise);
+          }
+        },
+      ),
+    );
   }
 }
