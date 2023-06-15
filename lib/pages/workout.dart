@@ -183,7 +183,7 @@ class _WorkoutState extends State<Workout> {
           onTap: () {
             dynamic result =
             Navigator.pushNamed(context, "/activeWorkout",
-                arguments: workoutTemplates[index].workoutExercises);
+                arguments: workoutTemplates[index]);
           },
           child: TemplateCard(template: workoutTemplates[index]),
           //title: Text(activeExercises[index].name),
