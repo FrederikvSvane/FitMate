@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
+import 'package:flutter_fitness_app/classes/activeWorkoutState.dart';
 
 class ExerciseCard extends StatefulWidget {
   final Exercise exercise;
@@ -107,6 +108,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                     int? newValue = int.tryParse(value);
                     if (newValue != null) {
                       exercise.reps![i] = newValue;
+                      ActiveWorkoutState.activeExercises = exercise;
                     }
                   },
                 ),

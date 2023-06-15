@@ -158,6 +158,38 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_background_service:
+    dependency: "direct main"
+    description:
+      name: flutter_background_service
+      sha256: cd8dbba8fad41a0cd6e37be61e1edd3826358a8a03fbea9acfa2013a670cb4df
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
+  flutter_background_service_android:
+    dependency: transitive
+    description:
+      name: flutter_background_service_android
+      sha256: "16fd887d5acb8096126072f192e9cce1a359a8c28af1cee63122b1e12ffd5693"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
+  flutter_background_service_ios:
+    dependency: transitive
+    description:
+      name: flutter_background_service_ios
+      sha256: "980a8eba58ad1d8c52ab3b3dc9cebd129caa2ee0ef3d37e7efb2dcb2466a65bb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  flutter_background_service_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_background_service_platform_interface
+      sha256: "15f9cbe2f018d79a991c2468ca448f059a5a1762bf50c9cca66cefd414dcb6c1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   flutter_barcode_scanner:
     dependency: transitive
     description:
@@ -296,6 +328,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   path:
     dependency: "direct main"
     description:
@@ -352,6 +392,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.0"
+  platform:
+    dependency: transitive
+    description:
+      name: platform
+      sha256: "4a451831508d7d6ca779f7ac6e212b4023dd5a7d08a27a63da33756410e32b76"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -368,6 +416,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.7.3"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.5"
   simple_barcode_scanner:
     dependency: "direct main"
     description:
