@@ -13,11 +13,16 @@ class DBHelper {
     return openDatabase(
       path,
       version: 1,
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE meals(id INTEGER PRIMARY KEY, barcode INTEGER, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)',
-        );
-      },
+      onCreate: (db, version) async {
+
+
+
+        await db.execute(
+          'CREATE TABLE meals(id INTEGER PRIMARY KEY, barcode INTEGER, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)');
+
+        await db.execute(
+            'CREATE TABLE weight(id INTEGER PRIMARY KEY,weight REAL,date TEXT)');
+        },
     );
   }
 
@@ -57,7 +62,12 @@ class DBHelper {
           await insertMeal(mealData);
         }
       }
+      for(int i=0; i<30; i++) {
+        double tal = 100.0-i;
+        insertWeight(tal, DateTime.now().subtract(Duration(days: i)));
+      }
       print("Done inserting mock data.");
+
     }
   }
 
@@ -143,7 +153,7 @@ class DBHelper {
   static Future<void> weightDB(Database db) async {
     await db.execute('''
         Create Table weight(
-        id INTEGER PRIMARTY KEY,
+        id INTEGER KEY,
         weight REAL,
         date TEXT
         ''');
