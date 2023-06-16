@@ -5,28 +5,30 @@ import 'package:path/path.dart';
 
 import '../main.dart';
 
-
 class DBHelper {
   static Future<Database> getDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'meal_database.db');
 
     return openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute(
-          'CREATE TABLE meals(id INTEGER PRIMARY KEY, barcode INTEGER, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)',
-        );
-        await db.execute(
+        path,
+        version: 1,
+        onCreate: (db, version) async {
+          await db.execute(
+            'CREATE TABLE meals(id INTEGER PRIMARY KEY, barcode INTEGER, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)',
+          );
+          await db.execute(
             'CREATE TABLE exercises(id INTEGER PRIMARY KEY, name TEXT, sets INTEGER, reps INTEGER, weight REAL, date TEXT)',
-        );
-        await db.execute(
-          'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, name TEXT, sets INTEGER, date TEXT)',
-        );
-      },
+          );
+          await db.execute(
+            'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, name TEXT, sets INTEGER, date TEXT)',
+          );
+          await db.execute(
+              'CREATE TABLE weight(id INTEGER PRIMARY KEY,weight REAL,date TEXT)');
+        }
     );
   }
+
 
   static Future<void> insertMeal(Map<String, dynamic> mealData) async {
     final db = await getDatabase();
@@ -64,7 +66,12 @@ class DBHelper {
           await insertMeal(mealData);
         }
       }
+      for(int i=0; i<30; i++) {
+        double tal = 100.0-i;
+        insertWeight(tal, DateTime.now().subtract(Duration(days: i)));
+      }
       print("Done inserting mock data.");
+
     }
   }
   static Future<void> insertExercise(Map<String, dynamic> exerciseData) async {
@@ -164,6 +171,7 @@ class DBHelper {
     return meals;
   }
 
+
   static Future<List<Map<String, dynamic>>> getExercises() async {
     final db = await getDatabase();
 
@@ -180,5 +188,48 @@ class DBHelper {
     final List<Map<String, dynamic>> maps = await db.query('workouts');
     await db.delete('workouts');
     return maps;
+  }
+
+  static Future<void> weightDB(Database db) async {
+    await db.execute('''
+        Create Table weight(
+        id INTEGER KEY,
+        weight REAL,
+        date TEXT
+        ''');
+  }
+
+  static Future<void> insertWeight(double weight, DateTime date) async {
+    final db = await getDatabase();
+    await db.insert(
+      'weight',
+      {
+        'weight': weight,
+        'date': date.toIso8601String(),
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getAllWeights() async {
+    final db = await getDatabase();
+    final List<Map<String, dynamic>> maps = await db.query('weight');
+    return maps;
+  }
+
+  static Future<List<Map<String, dynamic>>> getWeightsForDateRange(
+      DateTime before, DateTime after) async {
+    final db = await getDatabase();
+
+    List<Map<String, dynamic>> weights = await db.rawQuery('''
+      SELECT date, weight 
+      FROM weight 
+      WHERE date(date) BETWEEN date(?) AND date(?)
+    ''', [
+      before.toIso8601String(),
+      after.toIso8601String(),
+    ]);
+
+    return weights;
   }
 }

@@ -1,50 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_switch/sliding_switch.dart';
 import 'package:health/health.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
 
   @override
-  _ProfileState createState() => _ProfileState();
+  ProfileState createState() => ProfileState();
 }
 
-String weight = '0';
+String weight = '';
+
+double height = 180.0;
+
+TextEditingController _textEditingController = TextEditingController();
+String textValue = _textEditingController.text;
 
 bool requested = false;
 
 bool showList1 = true;
 
-class _ProfileState extends State<Profile> {
+
+class ProfileState extends State<Profile> {
   int? steps;
-
-  final List<String> workouts = [
-    'Workout 1',
-    'Workout 2',
-    'Workout 3',
-    'Workout 4',
-    'Workout 5',
-    'Workout 6',
-    'Workout 7',
-    'Workout 8',
-    'Workout 9',
-    'Workout 10',
-    'Workout 11',
-    'Workout 12',
-    'Workout 13',
-    'Workout 14',
-    'Workout 15',
-    'Workout 16',
-    'Workout 17',
-    'Workout 18',
-    'Workout 19',
-    'Workout 20'
-  ];
-
 
   @override
   void initState() {
@@ -59,14 +41,7 @@ class _ProfileState extends State<Profile> {
   }
 
   static final types = [
-    HealthDataType.WEIGHT,
     HealthDataType.STEPS,
-    HealthDataType.HEIGHT,
-    HealthDataType.BLOOD_GLUCOSE,
-    HealthDataType.WORKOUT,
-    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-
   ];
 
   HealthFactory health = HealthFactory(useHealthConnectIfAvailable: true);
@@ -84,7 +59,7 @@ class _ProfileState extends State<Profile> {
 
     // Check if we have permission
     bool? hasPermissions =
-    await health.hasPermissions(types, permissions: permissions);
+        await health.hasPermissions(types, permissions: permissions);
 
     // hasPermissions = false because the hasPermission cannot disclose if WRITE access exists.
     // Hence, we have to request with WRITE as well.
@@ -92,14 +67,12 @@ class _ProfileState extends State<Profile> {
 
     if (!hasPermissions) {
       // requesting access to the data types before reading them
-      requested = await health.requestAuthorization([HealthDataType.WEIGHT,
+      requested = await health.requestAuthorization([
         HealthDataType.STEPS,
-        HealthDataType.HEIGHT,
-        HealthDataType.BLOOD_GLUCOSE,
-        HealthDataType.WORKOUT,
-        HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-        HealthDataType.BLOOD_PRESSURE_SYSTOLIC,]);
-      try {requested;} catch (error) {
+      ]);
+      try {
+        requested;
+      } catch (error) {
         print("Exception in authorize: $error");
       }
     }
@@ -116,7 +89,6 @@ class _ProfileState extends State<Profile> {
         print("Caught exception in getTotalStepsInInterval: $error");
       }
 
-
       setState(() {
         steps = (steps == null) ? 0 : steps;
       });
@@ -125,47 +97,72 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  Future<int> fetchStepDataFromDate(DateTime date) async {
+  Future<StepAndCalorieData> fetchStepDataFromDate(DateTime date) async {
     final midnight = DateTime(date.year, date.month, date.day);
 
-    int? steps;
+    int? stepsData;
 
     if (requested) {
       try {
-        steps = await health.getTotalStepsInInterval(midnight, date);
+        stepsData = await health.getTotalStepsInInterval(midnight, date);
       } catch (error) {
         print("Caught exception in getTotalStepsInInterval: $error");
       }
-      return steps ?? 0;
+
+      int steps = stepsData ?? 0;
+      double basalCalories = basalCalorieBurner();
+      double stepCalories = stepCalorieBurner(steps);
+
+      return StepAndCalorieData(
+          steps: steps,
+          basalCalories: basalCalories,
+          stepCalories: stepCalories,
+          totalCalories: basalCalories + stepCalories);
     } else {
-      return 0;
+      double basalCalories = basalCalorieBurner();
+      return StepAndCalorieData(
+          steps: 0,
+          basalCalories: basalCalories,
+          stepCalories: 0,
+          totalCalories: basalCalories + 0);
     }
   }
 
-  Future<void> fetchHealthData() async {
-    List<HealthDataPoint> dataPoints = await health.getHealthDataFromTypes(
-        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-        DateTime.now(),
-        types
-    );
+  Future<void> fetchHealthData() async {}
 
-    int totalCalories = calculateTotalCalories(dataPoints);
-    print('Total Calories per Day: $totalCalories');
+  void _addWeightToDB() {
+    String weightText = _textEditingController.text;
+    double? weightNumber = double.tryParse(weightText);
+
+    if (weightNumber != null) {
+      DBHelper.insertWeight(weightNumber, DateTime.now());
+      _textEditingController.clear();
+      print('gg ez');
+    } else {
+      print('gg not ez');
+    }
   }
 
-  int calculateTotalCalories(List<HealthDataPoint> healthDataList) {
-    int totalCalories = 0;
+  double basalCalorieBurner() {
+    double weight = 90.0;
+    int age = 23;
 
-    for (var healthData in healthDataList) {
-      if (healthData.type == HealthDataType.WORKOUT) {
-        WorkoutHealthValue? workoutValue = healthData.value as WorkoutHealthValue?;
-        int calories = workoutValue?.totalEnergyBurned?.toInt() ?? 0;
+    double dailyCal = (10 * weight + 6.25 * height - 5 * age);
 
-        totalCalories += calories;
-      }
-    }
+    print(dailyCal);
 
-    return totalCalories;
+    return dailyCal;
+  }
+
+  double stepCalorieBurner(int steps) {
+    double factor = 0.0000031578947;
+    double weight = 90.0;
+
+    double stepCal = height * weight * factor * steps;
+
+    print(stepCal);
+
+    return stepCal;
   }
 
   @override
@@ -193,7 +190,7 @@ class _ProfileState extends State<Profile> {
 
                           if (result != null) {
                             Map<String, dynamic> profileData =
-                            result as Map<String, dynamic>;
+                                result as Map<String, dynamic>;
                             setState(() {
                               //TODO: Update profile data
 
@@ -211,11 +208,23 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
-
-                  Align(
-                    alignment: Alignment.topRight,
+                  const Align(
+                    alignment: Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Jens Jensen',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 50,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
                       child: GestureDetector(
                         onTap: () async {
                           showDialog(
@@ -224,11 +233,14 @@ class _ProfileState extends State<Profile> {
                               return AlertDialog(
                                 alignment: Alignment.center,
                                 title: Text('Update your weight'),
-                                content: const TextField (
-                                  decoration: InputDecoration(
-                                    hintText: 'Enter your new weight',
+                                content: Column(children: [
+                                  TextField(
+                                    controller: _textEditingController,
+                                    decoration: const InputDecoration(
+                                      hintText: 'Enter your new weight',
+                                    ),
                                   ),
-                                ),
+                                ]),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -241,50 +253,54 @@ class _ProfileState extends State<Profile> {
                             },
                           );
                         },
-
-                        child:
-                        const Text(
-                          'Update weight',
-                          style: TextStyle(
-                            color: Colors.white,
-                            decoration: TextDecoration.underline,
-
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        "Profile",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ),
-                  const Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        'Litty master',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w700),
                       ),
                     ),
                   ),
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[900],
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              alignment: Alignment.center,
+                              title: Text('Update your weight'),
+                              content: SizedBox(
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  controller: _textEditingController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Enter your new weight',
+                                  ),
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        weight = _textEditingController.text;
+                                      });
+                                      _addWeightToDB();
+                                      //basalCalorieBurner();
+                                      //stepCalorieBurner();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Update weight')),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('return'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       child: Text(
                         "Weight: $weight kg",
                         style: const TextStyle(
@@ -323,7 +339,6 @@ class _ProfileState extends State<Profile> {
                 onChanged: (bool value) {
                   setState(() {
                     showList1 = !showList1;
-                    print(showList1);
                     fetchHealthData();
                   });
                 },
@@ -337,11 +352,10 @@ class _ProfileState extends State<Profile> {
             ),
             Expanded(
                 child: Visibility(
-                  visible: showList1,
-                  replacement: listBuilder1(),
-                  child: listBuilder2(),
-                )
-            ),
+              visible: showList1,
+              replacement: listBuilder1(),
+              child: listBuilder2(),
+            )),
           ],
         ),
       ),
@@ -350,23 +364,26 @@ class _ProfileState extends State<Profile> {
 
   Widget listBuilder1() {
     return ListView.builder(
-      padding: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
         itemCount: 30,
         itemBuilder: (BuildContext context, index) {
-          DateTime currentDate =
-          DateTime.now().subtract(Duration(days: index));
-          return FutureBuilder<int>(
+          DateTime currentDate = DateTime.now().subtract(Duration(days: index));
+          return FutureBuilder<StepAndCalorieData>(
               future: fetchStepDataFromDate(currentDate),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  int stepsTaken = snapshot.data!;
+                  StepAndCalorieData data = snapshot.data!;
+                  int stepsTaken = data.steps;
+                  double activeCalories = data.stepCalories;
+                  double basalCalories = data.basalCalories;
+                  double totalCalories = data.totalCalories;
                   return Container(
                     height: 285,
                     margin: const EdgeInsets.all(8),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.white70,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,8 +391,7 @@ class _ProfileState extends State<Profile> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(
-                            DateFormat('EEEE, MMMM d yyyy').format(
-                                currentDate),
+                            DateFormat('EEEE, MMMM d yyyy').format(currentDate),
                             style: TextStyle(
                               color: Colors.grey[700],
                               fontSize: 20,
@@ -395,8 +411,7 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Expanded(
                               child: Container(
@@ -411,93 +426,80 @@ class _ProfileState extends State<Profile> {
                                         children: [
                                           Positioned(
                                             top: 10,
-                                            child: Text(
-                                                "Calories burned",
+                                            child: Text("Calories burned ",
                                                 style: TextStyle(
-                                                    decoration:
-                                                    TextDecoration
+                                                    decoration: TextDecoration
                                                         .underline,
-                                                    color: Colors
-                                                        .grey[600],
+                                                    color: Colors.grey[600],
                                                     fontSize: 18,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 50,
                                             left: 10,
-                                            child: Text(
-                                                "Active calories:",
+                                            child: Text("Active calories: ",
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 80,
                                             left: 10,
-                                            child: Text(
-                                                "Basal calories:",
+                                            child: Text("Basal calories:",
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 110,
                                             left: 10,
-                                            child: Text(
-                                                "Total calories:",
+                                            child: Text("Total calories:",
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 50,
                                             left: 140,
-                                            child: Text("496",
+                                            child: Text(
+                                                activeCalories
+                                                    .toStringAsFixed(2),
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 80,
                                             left: 140,
-                                            child: Text("2395",
+                                            child: Text(
+                                                basalCalories
+                                                    .toStringAsFixed(2),
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 110,
                                             left: 140,
-                                            child: Text("2800",
+                                            child: Text(
+                                                totalCalories
+                                                    .toStringAsFixed(2),
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                         ],
                                       ),
@@ -522,93 +524,74 @@ class _ProfileState extends State<Profile> {
                                         children: [
                                           Positioned(
                                             top: 10,
-                                            child: Text(
-                                                "Calories consumed ",
+                                            child: Text("Calories consumed ",
                                                 style: TextStyle(
-                                                    decoration:
-                                                    TextDecoration
+                                                    decoration: TextDecoration
                                                         .underline,
-                                                    color: Colors
-                                                        .grey[600],
+                                                    color: Colors.grey[600],
                                                     fontSize: 18,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 50,
                                             left: 10,
-                                            child: Text(
-                                                "Protein goal:",
+                                            child: Text("Protein goal:",
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 80,
                                             left: 10,
-                                            child: Text(
-                                                "Total Protein:",
+                                            child: Text("Total Protein:",
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 110,
                                             left: 10,
-                                            child: Text(
-                                                "Total calories:",
+                                            child: Text("Total calories:",
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 50,
                                             left: 140,
                                             child: Text("200",
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 80,
                                             left: 140,
                                             child: Text("186",
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           Positioned(
                                             top: 110,
                                             left: 140,
                                             child: Text("2650",
                                                 style: TextStyle(
-                                                    color: Colors
-                                                        .grey[500],
+                                                    color: Colors.grey[500],
                                                     fontSize: 15,
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold)),
+                                                        FontWeight.bold)),
                                           ),
                                         ],
                                       ),
@@ -619,7 +602,6 @@ class _ProfileState extends State<Profile> {
                             ),
                           ],
                         ),
-
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Align(
@@ -629,13 +611,10 @@ class _ProfileState extends State<Profile> {
                               style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold
-                              ),
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
-
-
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Align(
@@ -645,13 +624,10 @@ class _ProfileState extends State<Profile> {
                               style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold
-                              ),
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
-
-
                       ],
                     ),
                   );
@@ -665,12 +641,11 @@ class _ProfileState extends State<Profile> {
 
   Widget listBuilder2() {
     return ListView.builder(
-      padding: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
         itemCount: 30,
         itemBuilder: (BuildContext context, index) {
-          DateTime currentDate =
-          DateTime.now().subtract(Duration(days: index));
-          return FutureBuilder<int>(
+          DateTime currentDate = DateTime.now().subtract(Duration(days: index));
+          return FutureBuilder<StepAndCalorieData>(
               future: fetchStepDataFromDate(currentDate),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -680,12 +655,11 @@ class _ProfileState extends State<Profile> {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.white70,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(
@@ -697,16 +671,14 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                         ),
-
-                const SizedBox(
-                height: 8,
-                ),
-
+                        const SizedBox(
+                          height: 8,
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(
-                            DateFormat('EEEE, MMMM d yyyy ').format(
-                                currentDate),
+                            DateFormat('EEEE, MMMM d yyyy ')
+                                .format(currentDate),
                             style: TextStyle(
                               color: Colors.grey[700],
                               fontSize: 16,
@@ -714,21 +686,19 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                         ),
-
                         const SizedBox(
                           height: 8,
                         ),
-
-                         const Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text('1 h 3 min'),
                             Text('13058 kg'),
                             Text('28 sets'),
                             Text('4 pr\'s')
-                            ],
+                          ],
                         ),
-                        ],
+                      ],
                     ),
                   );
                 } else if (snapshot.hasError) {
@@ -738,4 +708,18 @@ class _ProfileState extends State<Profile> {
               });
         });
   }
+}
+
+class StepAndCalorieData {
+  final int steps;
+  final double basalCalories;
+  final double stepCalories;
+  final double totalCalories;
+
+  StepAndCalorieData({
+    required this.steps,
+    required this.basalCalories,
+    required this.stepCalories,
+    required this.totalCalories,
+  });
 }
