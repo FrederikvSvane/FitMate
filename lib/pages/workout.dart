@@ -183,6 +183,9 @@ class _WorkoutState extends State<Workout> {
       itemBuilder: (context, index) {
         return GestureDetector( //You need to make my child interactive
           onTap: () {
+            var activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
+
+            activeWorkoutState.startWorkout();
             dynamic result =
             Navigator.pushNamed(context, "/activeWorkout",
                 arguments: workoutTemplates[index]);
