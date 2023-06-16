@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -24,7 +25,7 @@ class DBHelper {
             'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, name TEXT, sets INTEGER, date TEXT)',
           );
           await db.execute(
-              'CREATE TABLE weight(id INTEGER PRIMARY KEY,weight REAL,date TEXT)');
+              'CREATE TABLE weight(weight REAL,date TEXT PRIMARY KEY)');
         }
     );
   }
@@ -45,6 +46,7 @@ class DBHelper {
 
       // Clear existing data from the 'meals' table
       await db.delete('meals');
+      await db.delete('weight');
 
       // Insert some mock data for testing.
       for (var i = 0; i < 30; i++) {
@@ -66,14 +68,59 @@ class DBHelper {
           await insertMeal(mealData);
         }
       }
+      /*
       for(int i=0; i<30; i++) {
         double tal = 100.0-i;
-        insertWeight(tal, DateTime.now().subtract(Duration(days: i)));
-      }
+        DateTime now = DateTime.now();
+        DateTime dateOnly = DateTime(now.year, now.month, now.day).subtract(Duration(days: i));
+
+        // Format dateOnly to a string that only contains the date
+        String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
+
+        insertWeight(tal, formattedDate);
+      }*/
       print("Done inserting mock data.");
+
+      DateTime now = DateTime.now();
+      DateTime dateOnly = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 50));
+
+      // Format dateOnly to a string that only contains the date
+      String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
+
+      insertWeight(65.2, formattedDate);
 
     }
   }
+
+  // Function to get most recent weight
+  static Future<Map<String, dynamic>> getMostRecentWeight(DateTime time) async {
+    final db = await getDatabase();
+
+    // Start from today's date
+    DateTime now = time;
+    DateTime date = DateTime(now.year, now.month, now.day);
+
+    while (true) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
+      // Get the weight for this date
+      List<Map<String, dynamic>> maps = await db.query(
+        'weight',
+        where: 'date = ?',
+        whereArgs: [formattedDate],
+      );
+
+      // If a weight was found, return it
+      if (maps.isNotEmpty) {
+        return {'weight': maps[0]['weight'], 'date': maps[0]['date']};
+      }
+
+      // Subtract one day and try again
+      date = date.subtract(const Duration(days: 1));
+    }
+  }
+
+
   static Future<void> insertExercise(Map<String, dynamic> exerciseData) async {
     final db = await getDatabase();
     await db.insert(
@@ -199,17 +246,18 @@ class DBHelper {
         ''');
   }
 
-  static Future<void> insertWeight(double weight, DateTime date) async {
+  static Future<void> insertWeight(double weight, String date) async {
     final db = await getDatabase();
     await db.insert(
       'weight',
       {
         'weight': weight,
-        'date': date.toIso8601String(),
+        'date': date, // directly use the date string
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+
 
   static Future<List<Map<String, dynamic>>> getAllWeights() async {
     final db = await getDatabase();
