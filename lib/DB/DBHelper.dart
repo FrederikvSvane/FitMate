@@ -27,7 +27,10 @@ class DBHelper {
               'CREATE TABLE weight(id INTEGER PRIMARY KEY,weight REAL,date TEXT)'
           );
           await db.execute(
-              'CREATE TABLE caloricGoal(id INTEGER PRIMARY KEY, caloricGoal REAL)'
+              'CREATE TABLE nutritionGoal(id INTEGER PRIMARY KEY, caloricGoal REAL)'
+          );
+          await db.execute(
+            'CREATE TABLE proteinGoal(id INTEGER PRIMARY KEY, proteinGoal REAL)'
           );
         }
     );
@@ -36,17 +39,37 @@ class DBHelper {
   static Future<void> insertGoal(Map<String, dynamic> goal) async {
     final db = await getDatabase();
     await db.insert(
-      'caloricGoal',
+      'nutritionGoal',
       goal,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+  static Future<void> insertProteinGoal(Map<String, dynamic> goal) async {
+    final db = await getDatabase();
+    await db.insert(
+      'proteinGoal',
+      goal,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+  static Future<List<Map<String, dynamic>>?> getLatestProteinGoal() async {
+    final db = await getDatabase();
+    final List<Map<String, dynamic>> goals = await db.query(
+      'proteinGoal',
+      orderBy: 'id DESC',
+      limit: 1,
+    );
+    if (goals.isNotEmpty) {
+      return goals;
+    }
+    return null; // Returns null if there are no entries in the database.
   }
 
 
   static Future<List<Map<String, dynamic>>?> getLatestGoal() async {
     final db = await getDatabase();
     final List<Map<String, dynamic>> goals = await db.query(
-      'caloricGoal',
+      'nutritionGoal',
       orderBy: 'id DESC',
       limit: 1,
     );
@@ -158,10 +181,6 @@ class DBHelper {
     }
     return null; // Returns null if there are no entries in the database.
   }
-
-
-
-
   getDB() {
     return getDatabase();
   }
@@ -200,7 +219,6 @@ class DBHelper {
 
     return meals;
   }
-
 
   static Future<List<Map<String, dynamic>>> getExercises() async {
     final db = await getDatabase();
@@ -245,6 +263,19 @@ class DBHelper {
     final db = await getDatabase();
     final List<Map<String, dynamic>> maps = await db.query('weight');
     return maps;
+  }
+
+  static Future<List<Map<String, dynamic>>?> getLatestWeight() async {
+    final db = await getDatabase();
+    final List<Map<String, dynamic>> weights = await db.query(
+      'weight',
+      orderBy: 'id DESC',
+      limit: 1,
+    );
+    if (weights.isNotEmpty) {
+      return weights;
+    }
+    return null; // Returns null if there are no entries in the database.
   }
 
   static Future<List<Map<String, dynamic>>> getWeightsForDateRange(
