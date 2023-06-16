@@ -24,10 +24,38 @@ class DBHelper {
             'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, name TEXT, sets INTEGER, date TEXT)',
           );
           await db.execute(
-              'CREATE TABLE weight(id INTEGER PRIMARY KEY,weight REAL,date TEXT)');
+              'CREATE TABLE weight(id INTEGER PRIMARY KEY,weight REAL,date TEXT)'
+          );
+          await db.execute(
+              'CREATE TABLE caloricGoal(id INTEGER PRIMARY KEY, caloricGoal REAL)'
+          );
         }
     );
   }
+
+  static Future<void> insertGoal(Map<String, dynamic> goal) async {
+    final db = await getDatabase();
+    await db.insert(
+      'caloricGoal',
+      goal,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+
+  static Future<List<Map<String, dynamic>>?> getLatestGoal() async {
+    final db = await getDatabase();
+    final List<Map<String, dynamic>> goals = await db.query(
+      'caloricGoal',
+      orderBy: 'id DESC',
+      limit: 1,
+    );
+    if (goals.isNotEmpty) {
+      return goals;
+    }
+    return null; // Returns null if there are no entries in the database.
+  }
+
 
 
   static Future<void> insertMeal(Map<String, dynamic> mealData) async {
@@ -118,19 +146,21 @@ class DBHelper {
     );
     return maps;
   }
-
   static Future<Map<String, dynamic>?> getLatestMeal() async {
     final db = await getDatabase();
-    final List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> meals = await db.query(
       'meals',
       orderBy: 'id DESC',
       limit: 1,
     );
-    if (maps.isNotEmpty) {
-      return maps[0];
+    if (meals.isNotEmpty) {
+      return meals[0];
     }
     return null; // Returns null if there are no entries in the database.
   }
+
+
+
 
   getDB() {
     return getDatabase();

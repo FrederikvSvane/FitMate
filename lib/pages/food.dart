@@ -30,7 +30,20 @@ class _FoodState extends State<Food> {
     print("initState");
     super.initState();
     loadMealsFromDatabase();
+    loadGoalCalories();
   }
+
+  void loadGoalCalories() async {
+    if (goalCalories == 0) {
+      List<Map<String, dynamic>>? goal = await DBHelper.getLatestGoal();
+      if (goal!.isNotEmpty && goal[0]['caloricGoal'] != 0) {
+        setState(() {
+          goalCalories = goal[0]['caloricGoal'].toDouble();
+        });
+      }
+    }
+  }
+
 
   Future<void> loadMealsFromDatabase() async {
     DateTime now = selectedDate;
@@ -261,7 +274,9 @@ class _FoodState extends State<Food> {
                       setState(() {
                         goalCalories = double.parse(goal);
                       });
+                      DBHelper.insertGoal({'caloricGoal': goalCalories});
                     }
+                    loadGoalCalories();
                   },
                   child: goalCalories == 0
                       ? const Text(

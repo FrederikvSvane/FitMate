@@ -37,7 +37,6 @@ class AddFoodState extends State<AddFood> {
   }
 
   String mealType = '';
-
   Future<void> addMeal() async {
     // Check if all fields are filled in and they are numbers
     if (nameController.text.isEmpty ||
