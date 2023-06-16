@@ -91,8 +91,14 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                                 await DBHelper.insertExercise(exerciseData);
                               }
                             }
-                            Navigator.pop(context);
-                            Navigator.pop(context);
+                            var activeWorkoutState1 = Provider.of<ActiveWorkoutState>(context, listen: false);
+                            activeWorkoutState1.endWorkout();
+
+                            setState(() {
+                              activeExercises.clear();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            });
                             List<Exercise> savedExercises = await fetchExercises();
                             print(savedExercises);
                           },
@@ -146,10 +152,18 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                         ),
                         SimpleDialogOption(
                           onPressed: () {
-                            // Handle option 1
+                            var activeWorkoutState1 = Provider.of<ActiveWorkoutState>(context, listen: false);
+                            activeWorkoutState1.endWorkout();
+
+                            setState(() {
+                              activeExercises.clear();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            });
+                            // Handle option 3
                             Navigator.pop(context);
                             Navigator.pop(context);
-                            print('Option 1 chosen');
+                            print('Option 3 chosen');
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10.0),
