@@ -111,15 +111,30 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                               'sets': '',
                               'date': DateTime.now().toString(),
                             };
-                            for(int i = 0; i < activeExercises.length; i++){
-                                workoutData['exercises'] += activeExercises[i].name + ',';
-                                workoutData['sets'] += '${activeExercises[i].sets!.length},';
+                            for(int i = 0; i < activeWorkoutState.activeExercises.length; i++){
+                              workoutData['exercises'] += '${activeWorkoutState.activeExercises[i].name},';
+                              workoutData['sets'] += '${activeWorkoutState.activeExercises[i].sets!.length},';
+                              if (activeWorkoutState.activeExercises[i].weight != null){
+                                workoutData['type'] += '1,';
+                              } else if (activeWorkoutState.activeExercises[i].distance != null){
+                                workoutData['type'] += '2,';
+                              } else if (activeWorkoutState.activeExercises[i].time != null){
+                                workoutData['type'] += '3,';
+                              } else {
+                                workoutData['type'] += '4,';
+                              }
                             }
-                                await DBHelper.insertWorkout(workoutData);
+                            await DBHelper.insertWorkout(workoutData);
                             print(workoutData);
                             // Handle option 1
-                            Navigator.pop(context);
-                            Navigator.pop(context);
+                            var activeWorkoutState1 = Provider.of<ActiveWorkoutState>(context, listen: false);
+                            activeWorkoutState1.endWorkout();
+
+                            setState(() {
+                              activeExercises.clear();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            });
                             List<WorkoutTemplate> savedWorkouts = await convertToWorkoutTemplates();
                             print(savedWorkouts);
                           },
