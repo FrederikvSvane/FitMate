@@ -19,7 +19,7 @@ class DBHelper {
           'CREATE TABLE meals(id INTEGER PRIMARY KEY, barcode INTEGER, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)',
         );
         await db.execute(
-          'CREATE TABLE exercises(id INTEGER PRIMARY KEY, name TEXT, sets INTEGER, reps INTEGER, weight REAL, date TEXT)',
+          'CREATE TABLE exercises(id INTEGER PRIMARY KEY, name TEXT, sets TEXT, reps TEXT, weight TEXT, time TEXT, distance TEXT, date TEXT)',
         );
         await db.execute(
           'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, type TEXT, sets TEXT, date TEXT)',

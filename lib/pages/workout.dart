@@ -32,7 +32,6 @@ class _WorkoutState extends State<Workout> {
     setState(() {
       workoutTemplates = templates ?? [];
     });
-    print('${workoutTemplates[0].workoutExercises} hey');
   }
 
 

@@ -105,9 +105,10 @@ class _AddExerciseState extends State<AddExercise> {
     );
 
     if (result != null) {
+      Exercise newExercise = await checkDatabase( result);
       //Den valgte øvelse bliver returneret tilbage til active workout
-      setState(() {
-        Navigator.pop(context, result);
+      setState((){
+        Navigator.pop(context, newExercise);
       });
     }
     //Så skal vi også have noget total weight lifted, time spent working out, calories burned yada yada yada
@@ -139,9 +140,10 @@ class _AddExerciseState extends State<AddExercise> {
             padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 4.0),
             child: Card(
               child: ListTile(
-                onTap: () {
+                onTap: () async {
+                  Exercise newExercise = await checkDatabase(Exercises[index]);
                   setState(() {
-                    Navigator.pop(context, Exercises[index]);
+                    Navigator.pop(context, newExercise);
                   });
                 },
                 title: Text(Exercises[index].name),
@@ -151,5 +153,18 @@ class _AddExerciseState extends State<AddExercise> {
         },
       ),
     );
+  }
+  Future<Exercise> checkDatabase(Exercise exercise) async{
+    List<Exercise> savedExercise = [];
+    savedExercise = await fetchExercises();
+    print("hey you sister!!!!!!!!!!!!!!!!!!!!ASD $exercise");
+
+    for(int i = 0; i < savedExercise.length; i++){
+      if(savedExercise[i].name == exercise.name){
+        print('${savedExercise[0].sets}');
+        exercise = savedExercise[i];
+      }
+    }
+    return exercise;
   }
 }
