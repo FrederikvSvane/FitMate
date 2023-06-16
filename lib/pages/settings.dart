@@ -62,12 +62,15 @@ class _HistoryState extends State<History> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       alignment: Alignment.center,
-                      title: const Text('Update your weight'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)
+                      ),
+                      title: const Text('Update your name'),
                       content: const SizedBox(
                         child: TextField(
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: 'Enter your new weight',
+                            hintText: 'Enter your new name',
                           ),
                         ),
                       ),
@@ -76,7 +79,7 @@ class _HistoryState extends State<History> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('Update weight')),
+                            child: const Text('Update name')),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -113,12 +116,15 @@ class _HistoryState extends State<History> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       alignment: Alignment.center,
-                      title: const Text('Update your weight'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)
+                      ),
+                      title: const Text('Update your age'),
                       content: const SizedBox(
                         child: TextField(
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: 'Enter your new weight',
+                            hintText: 'Enter your new age',
                           ),
                         ),
                       ),
@@ -127,7 +133,7 @@ class _HistoryState extends State<History> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('Update weight')),
+                            child: const Text('Update age')),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -164,12 +170,15 @@ class _HistoryState extends State<History> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       alignment: Alignment.center,
-                      title: const Text('Update your weight'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)
+                      ),
+                      title: const Text('Update your height'),
                       content: const SizedBox(
                         child: TextField(
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: 'Enter your new weight',
+                            hintText: 'Enter your new height',
                           ),
                         ),
                       ),
@@ -178,7 +187,7 @@ class _HistoryState extends State<History> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('Update weight')),
+                            child: const Text('Update height')),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -215,7 +224,10 @@ class _HistoryState extends State<History> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       alignment: Alignment.center,
-                      title: const Text('Update your weight'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)
+                      ),
+                      title: const Text('Update weight measurement on the date'),
                       content: const SizedBox(
                         child: TextField(
                           keyboardType: TextInputType.number,
@@ -266,12 +278,15 @@ class _HistoryState extends State<History> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       alignment: Alignment.center,
-                      title: const Text('Update your weight'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)
+                      ),
+                      title: const Text('Choose current activity level'),
                       content: const SizedBox(
                         child: TextField(
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: 'Enter your new weight',
+                            hintText: 'Choose one of three levels',
                           ),
                         ),
                       ),
@@ -316,20 +331,33 @@ class _HistoryState extends State<History> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)
+                    ),
                     alignment: Alignment.center,
-                    title: const Text('You cannot'),
-                    content: const SizedBox(
-                        child: Icon(
-                      Icons.do_disturb,
-                      size: 100,
-                      color: Colors.red,
-                    )),
+                    title: const Text('Update your gender'),
+                    content:  SizedBox(
+                        child: SlidingSwitch(
+                          value: false,
+                          onChanged: (bool value) {
+                            gender = value;
+                          },
+                          onTap: () {},
+                          onDoubleTap: () {},
+                          onSwipe: () {},
+                          textOff: 'Male',
+                          textOn: 'Female',
+                          colorOn: Color(0xFFC62828),
+                          colorOff: Color(0xFFC62828),
+                        ),
+                    ),
+
                     actions: [
                       TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: const Text('Update weight')),
+                          child: const Text('Update gender')),
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -355,15 +383,7 @@ class _HistoryState extends State<History> {
                           fontSize: 18,
                           fontWeight: FontWeight.w400),
                     ),
-                    SlidingSwitch(
-                      value: false,
-                      onChanged: (bool value) {
-                        gender = value;
-                      },
-                      onTap: () {},
-                      onDoubleTap: () {},
-                      onSwipe: () {},
-                    ),
+                    const Icon(Icons.arrow_forward_ios),
                   ],
                 )),
           ),
@@ -380,38 +400,7 @@ class _HistoryState extends State<History> {
               ),
             ),
           ),
-          GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      alignment: Alignment.center,
-                      title: const Text('You cannot'),
-                      content: const SizedBox(
-                          child: Icon(
-                        Icons.do_disturb,
-                        size: 100,
-                        color: Colors.red,
-                      )),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Update weight')),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('return'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Container(
+             Container(
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
@@ -443,7 +432,7 @@ class _HistoryState extends State<History> {
                     ),
                   ],
                 ),
-              )),
+              ),
           GestureDetector(
               onTap: () {
                 showDialog(
@@ -451,6 +440,9 @@ class _HistoryState extends State<History> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       alignment: Alignment.center,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)
+                      ),
                       title: const Text('You cannot'),
                       content: const SizedBox(
                           child: Icon(
@@ -463,7 +455,7 @@ class _HistoryState extends State<History> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('Update weight')),
+                            child: const Text('Choose a colorscheme')),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
