@@ -96,20 +96,34 @@ class ProfileState extends State<Profile> {
     }
   }
 
-  Future<int> fetchStepDataFromDate(DateTime date) async {
+  Future<StepAndCalorieData> fetchStepDataFromDate(DateTime date) async {
     final midnight = DateTime(date.year, date.month, date.day);
 
-    int? steps;
+    int? stepsData;
 
     if (requested) {
       try {
-        steps = await health.getTotalStepsInInterval(midnight, date);
+        stepsData = await health.getTotalStepsInInterval(midnight, date);
       } catch (error) {
         print("Caught exception in getTotalStepsInInterval: $error");
       }
-      return steps ?? 0;
+
+      int steps = stepsData ?? 0;
+      double basalCalories = basalCalorieBurner();
+      double stepCalories = stepCalorieBurner(steps);
+
+      return StepAndCalorieData(
+          steps: steps,
+          basalCalories: basalCalories,
+          stepCalories: stepCalories,
+          totalCalories: basalCalories + stepCalories);
     } else {
-      return 0;
+      double basalCalories = basalCalorieBurner();
+      return StepAndCalorieData(
+          steps: 0,
+          basalCalories: basalCalories,
+          stepCalories: 0,
+          totalCalories: basalCalories + 0);
     }
   }
 
@@ -128,28 +142,24 @@ class ProfileState extends State<Profile> {
     }
   }
 
-  double basalCalorieBurner () {
+  double basalCalorieBurner() {
     double weight = 90.0;
-    double height = 190.0;
     int age = 23;
 
-    double dailyCal = (10*weight+6.25*height-5*age);
+    double dailyCal = (10 * weight + 6.25 * height - 5 * age);
 
     print(dailyCal);
 
     return dailyCal;
   }
 
-  double stepCalorieBurner () {
+  double stepCalorieBurner(int steps) {
     double factor = 0.0000031578947;
     double weight = 90.0;
-    double height = 190.0;
-    int steps = 10000;
 
-    double stepCal = height*weight*factor*steps;
+    double stepCal = height * weight * factor * steps;
 
     print(stepCal);
-
 
     return stepCal;
   }
@@ -269,13 +279,14 @@ class ProfileState extends State<Profile> {
                               ),
                               actions: [
                                 TextButton(
-                                    onPressed:() {
-                                       setState(() {weight = _textEditingController.text;});
-                                       _addWeightToDB();
-                                       basalCalorieBurner();
-                                       stepCalorieBurner();
+                                    onPressed: () {
+                                      setState(() {
+                                        weight = _textEditingController.text;
+                                      });
+                                      _addWeightToDB();
+                                      //basalCalorieBurner();
+                                      //stepCalorieBurner();
                                       Navigator.of(context).pop();
-
                                     },
                                     child: Text('Update weight')),
                                 TextButton(
@@ -356,11 +367,15 @@ class ProfileState extends State<Profile> {
         itemCount: 30,
         itemBuilder: (BuildContext context, index) {
           DateTime currentDate = DateTime.now().subtract(Duration(days: index));
-          return FutureBuilder<int>(
+          return FutureBuilder<StepAndCalorieData>(
               future: fetchStepDataFromDate(currentDate),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  int stepsTaken = snapshot.data!;
+                  StepAndCalorieData data = snapshot.data!;
+                  int stepsTaken = data.steps;
+                  double activeCalories = data.stepCalories;
+                  double basalCalories = data.basalCalories;
+                  double totalCalories = data.totalCalories;
                   return Container(
                     height: 285,
                     margin: const EdgeInsets.all(8),
@@ -410,7 +425,7 @@ class ProfileState extends State<Profile> {
                                         children: [
                                           Positioned(
                                             top: 10,
-                                            child: Text("Calories burned",
+                                            child: Text("Calories burned ",
                                                 style: TextStyle(
                                                     decoration: TextDecoration
                                                         .underline,
@@ -422,7 +437,7 @@ class ProfileState extends State<Profile> {
                                           Positioned(
                                             top: 50,
                                             left: 10,
-                                            child: Text("Active calories:",
+                                            child: Text("Active calories: ",
                                                 style: TextStyle(
                                                     color: Colors.grey[500],
                                                     fontSize: 15,
@@ -452,7 +467,9 @@ class ProfileState extends State<Profile> {
                                           Positioned(
                                             top: 50,
                                             left: 140,
-                                            child: Text("496",
+                                            child: Text(
+                                                activeCalories
+                                                    .toStringAsFixed(2),
                                                 style: TextStyle(
                                                     color: Colors.grey[500],
                                                     fontSize: 15,
@@ -462,7 +479,9 @@ class ProfileState extends State<Profile> {
                                           Positioned(
                                             top: 80,
                                             left: 140,
-                                            child: Text("2395",
+                                            child: Text(
+                                                basalCalories
+                                                    .toStringAsFixed(2),
                                                 style: TextStyle(
                                                     color: Colors.grey[500],
                                                     fontSize: 15,
@@ -473,7 +492,8 @@ class ProfileState extends State<Profile> {
                                             top: 110,
                                             left: 140,
                                             child: Text(
-                                                fetchHealthData().toString(),
+                                                totalCalories
+                                                    .toStringAsFixed(2),
                                                 style: TextStyle(
                                                     color: Colors.grey[500],
                                                     fontSize: 15,
@@ -624,7 +644,7 @@ class ProfileState extends State<Profile> {
         itemCount: 30,
         itemBuilder: (BuildContext context, index) {
           DateTime currentDate = DateTime.now().subtract(Duration(days: index));
-          return FutureBuilder<int>(
+          return FutureBuilder<StepAndCalorieData>(
               future: fetchStepDataFromDate(currentDate),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -687,4 +707,18 @@ class ProfileState extends State<Profile> {
               });
         });
   }
+}
+
+class StepAndCalorieData {
+  final int steps;
+  final double basalCalories;
+  final double stepCalories;
+  final double totalCalories;
+
+  StepAndCalorieData({
+    required this.steps,
+    required this.basalCalories,
+    required this.stepCalories,
+    required this.totalCalories,
+  });
 }
