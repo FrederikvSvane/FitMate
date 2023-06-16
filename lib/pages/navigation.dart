@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/pages/food.dart';
 import 'package:flutter_fitness_app/pages/workout.dart';
 import 'package:flutter_fitness_app/pages/profile.dart';
-import 'package:flutter_fitness_app/pages/history.dart';
+import 'package:flutter_fitness_app/pages/settings.dart';
 import 'package:flutter_fitness_app/pages/measure.dart';
 
 class Navigation extends StatefulWidget {
@@ -38,8 +38,8 @@ class _NavigationState extends State<Navigation> {
         backgroundColor: Colors.white,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.history, color: Colors.red[800]),
-            label: 'History',
+            icon: Icon(Icons.settings_outlined, color: Colors.red[800]),
+            label: 'Settings',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center, color: Colors.red[800]),
