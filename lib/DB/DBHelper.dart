@@ -68,9 +68,8 @@ class DBHelper {
           await insertMeal(mealData);
         }
       }
-      /*
       for(int i=0; i<30; i++) {
-        double tal = 100.0-i;
+        double tal = 100.0-i + Random().nextInt(10);
         DateTime now = DateTime.now();
         DateTime dateOnly = DateTime(now.year, now.month, now.day).subtract(Duration(days: i));
 
@@ -78,16 +77,22 @@ class DBHelper {
         String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
 
         insertWeight(tal, formattedDate);
-      }*/
+      }
       print("Done inserting mock data.");
 
-      DateTime now = DateTime.now();
-      DateTime dateOnly = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 50));
-
-      // Format dateOnly to a string that only contains the date
-      String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
-
-      insertWeight(65.2, formattedDate);
+      // DateTime now = DateTime.now();
+      // DateTime dateOnly = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 50));
+      // DateTime dateOnly1 = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 49));
+      // DateTime dateOnly2 = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 47));
+      //
+      // // Format dateOnly to a string that only contains the date
+      // String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
+      // String formattedDate1 = DateFormat('yyyy-MM-dd').format(dateOnly1);
+      // String formattedDate2 = DateFormat('yyyy-MM-dd').format(dateOnly2);
+      //
+      // insertWeight(65.2, formattedDate);
+      // insertWeight(60, formattedDate1);
+      // insertWeight(55, formattedDate2);
 
     }
   }

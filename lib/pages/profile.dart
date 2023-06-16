@@ -87,7 +87,6 @@ class ProfileState extends State<Profile> {
         print("Exception in authorize: $error");
       }
     }
-
   }
 
   void displayMostRecentWeight() async {

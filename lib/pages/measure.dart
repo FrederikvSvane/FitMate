@@ -10,67 +10,8 @@ class Measure extends StatefulWidget {
   State<Measure> createState() => MeasureState();
 }
 
-List<TimeSeriesCalories> extrapolateFutureData(List<TimeSeriesCalories> data,
-    LinearRegression regression, int futureDays) {
-  var futureData = List<TimeSeriesCalories>.from(data);
 
-  for (var i = 1; i <= futureDays; i++) {
-    var futureDate = data[data.length - 1].time.add(Duration(days: i));
-    var futureValue = regression.slope * futureDate.millisecondsSinceEpoch +
-        regression.intercept;
-    futureData.add(TimeSeriesCalories(futureDate, futureValue));
-  }
 
-  return futureData;
-}
-
-LinearRegression calculateRegression(List<TimeSeriesCalories> data) {
-  int n = data.length;
-  double sumX = 0;
-  double sumY = 0;
-  double sumXY = 0;
-  double sumXX = 0;
-
-  for (var i = 0; i < n; i++) {
-    sumX += data[i].time.millisecondsSinceEpoch;
-    sumY += data[i].calories;
-    sumXX += data[i].time.millisecondsSinceEpoch *
-        data[i].time.millisecondsSinceEpoch;
-    sumXY += data[i].time.millisecondsSinceEpoch * data[i].calories;
-  }
-
-  double slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-  double intercept = (sumY - slope * sumX) / n;
-
-  return LinearRegression(slope, intercept);
-}
-
-class LinearRegression {
-  final double slope;
-  final double intercept;
-
-  LinearRegression(this.slope, this.intercept);
-}
-
-charts.Series<TimeSeriesCalories, DateTime> createRegressionSeries(
-    List<TimeSeriesCalories> data,
-    LinearRegression regression,
-    int futureDays) {
-  var futureData = extrapolateFutureData(data, regression, futureDays);
-
-  return charts.Series<TimeSeriesCalories, DateTime>(
-    id: 'Calories Regression',
-    colorFn: (_, __) =>
-        charts.ColorUtil.fromDartColor(const Color.fromARGB(50, 255, 0, 0)),
-    // Semi-transparent color
-    domainFn: (TimeSeriesCalories calories, _) => calories.time,
-    measureFn: (TimeSeriesCalories calories, _) =>
-        regression.slope * calories.time.millisecondsSinceEpoch +
-        regression.intercept,
-    data: futureData,
-    displayName: 'Prediction for the next 7 days',
-  );
-}
 
 class MeasureState extends State<Measure> {
   final bool animate = false;
@@ -93,12 +34,6 @@ class MeasureState extends State<Measure> {
             TimeSeriesCalories(DateTime.parse(d['date']), d['totalCalories']))
         .toList();
 
-    // Calculate regression
-    var regression = calculateRegression(data);
-
-    // Create regression series
-    var regressionSeries = createRegressionSeries(data, regression, 7);
-
     return [
       charts.Series<TimeSeriesCalories, DateTime>(
         id: 'Calories',
@@ -109,7 +44,6 @@ class MeasureState extends State<Measure> {
         labelAccessorFn: (TimeSeriesCalories calories, _) =>
             '${calories.calories.toInt()}',
       ),
-      regressionSeries,
     ];
   }
 
@@ -135,6 +69,39 @@ class MeasureState extends State<Measure> {
       ),
     ];
   }
+
+  Future<List<charts.Series<TimeSeriesWeight, DateTime>>>
+  _fetchWeightData() async {
+    final dbData = await DBHelper.getWeightsForDateRange(
+        selectedDateRange.start, selectedDateRange.end);
+
+    // Create a new List from dbData and sort the new List by date
+    var dataList = List<Map<String, dynamic>>.from(dbData);
+    dataList.sort((a, b) {
+      DateTime aDate = DateTime.parse(a['date']);
+      DateTime bDate = DateTime.parse(b['date']);
+      return aDate.compareTo(bDate);
+    });
+
+    final data = dataList.map((d) {
+      print("Date: ${d['date']}, Weight: ${d['weight']}");
+      return TimeSeriesWeight(DateTime.parse(d['date']), d['weight']);
+    }).toList();
+
+    return [
+      charts.Series<TimeSeriesWeight, DateTime>(
+        id: 'Weight',
+        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
+        domainFn: (TimeSeriesWeight weight, _) => weight.time,
+        measureFn: (TimeSeriesWeight weight, _) => weight.weight,
+        data: data,
+        labelAccessorFn: (TimeSeriesWeight weight, _) =>
+        '${weight.weight.toInt()}',
+      ),
+    ];
+  }
+
+
 
   void _selectDateRange(BuildContext context) async {
     final picked = await showDateRangePicker(
@@ -222,52 +189,76 @@ class MeasureState extends State<Measure> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Calories',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Calories',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            FutureBuilder<List<charts.Series<TimeSeriesCalories, DateTime>>>(
-              future: _fetchCaloriesData(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return _buildTimeSeriesChart(snapshot.data!);
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                }
-                return const CircularProgressIndicator();
-              },
-            ),
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Proteins',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              FutureBuilder<List<charts.Series<TimeSeriesCalories, DateTime>>>(
+                future: _fetchCaloriesData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return _buildTimeSeriesChart(snapshot.data!);
+                  } else if (snapshot.hasError) {
+                    return Text("Error: ${snapshot.error}");
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
+              const SizedBox(height: 20),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Proteins',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            FutureBuilder<List<charts.Series<TimeSeriesProteins, DateTime>>>(
-              future: _fetchProteinsData(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return _buildTimeSeriesChart(snapshot.data!);
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                }
-                return const CircularProgressIndicator();
-              },
-            ),
-          ],
+              FutureBuilder<List<charts.Series<TimeSeriesProteins, DateTime>>>(
+                future: _fetchProteinsData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return _buildTimeSeriesChart(snapshot.data!);
+                  } else if (snapshot.hasError) {
+                    return Text("Error: ${snapshot.error}");
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
+              const SizedBox(height: 20),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Weight',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              FutureBuilder<List<charts.Series<TimeSeriesWeight, DateTime>>>(
+                future: _fetchWeightData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return _buildTimeSeriesChart(snapshot.data!);
+                  } else if (snapshot.hasError) {
+                    return Text("Error: ${snapshot.error}");
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -286,4 +277,11 @@ class TimeSeriesProteins {
   final double proteins;
 
   TimeSeriesProteins(this.time, this.proteins);
+}
+
+class TimeSeriesWeight {
+  final DateTime time;
+  final num weight;
+
+  TimeSeriesWeight(this.time, this.weight);
 }
