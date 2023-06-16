@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fitness_app/DB/DBHelper.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_switch/flutter_switch.dart';
+import 'package:sliding_switch/sliding_switch.dart';
 
 class History extends StatefulWidget {
   const History({super.key});
@@ -8,17 +8,491 @@ class History extends StatefulWidget {
   @override
   _HistoryState createState() => _HistoryState();
 }
-class _HistoryState extends State<History> {
 
+class _HistoryState extends State<History> {
   @override
   initState() {
     super.initState();
   }
 
+  bool darkMode = false;
 
+  bool gender = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container();
-
+    return Scaffold(
+        backgroundColor: Colors.grey[200],
+        body: Column(children: [
+          Container(
+              height: 120,
+              color: Colors.red[800],
+              child: const Stack(children: [
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      "Settings",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 48,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              ])),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                'Personal information',
+                style: TextStyle(
+                    color: Color.fromARGB(255, 150, 0, 0),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400),
+              ),
+            ),
+          ),
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text('Update your weight'),
+                      content: const SizedBox(
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your new weight',
+                          ),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Update weight')),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('return'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.grey[100],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Edit your name",
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const Icon(Icons.arrow_forward_ios)
+                  ],
+                ),
+              )),
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text('Update your weight'),
+                      content: const SizedBox(
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your new weight',
+                          ),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Update weight')),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('return'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.grey[100],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Edit your age",
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const Icon(Icons.arrow_forward_ios)
+                  ],
+                ),
+              )),
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text('Update your weight'),
+                      content: const SizedBox(
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your new weight',
+                          ),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Update weight')),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('return'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.grey[100],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Edit your height",
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const Icon(Icons.arrow_forward_ios)
+                  ],
+                ),
+              )),
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text('Update your weight'),
+                      content: const SizedBox(
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your new weight',
+                          ),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Update weight')),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('return'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.grey[100],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Edit your weight data",
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const Icon(Icons.arrow_forward_ios)
+                  ],
+                ),
+              )),
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text('Update your weight'),
+                      content: const SizedBox(
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your new weight',
+                          ),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Update weight')),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('return'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.grey[100],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Change your activity level",
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const Icon(Icons.arrow_forward_ios)
+                  ],
+                ),
+              )),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    alignment: Alignment.center,
+                    title: const Text('You cannot'),
+                    content: const SizedBox(
+                        child: Icon(
+                      Icons.do_disturb,
+                      size: 100,
+                      color: Colors.red,
+                    )),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Update weight')),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('return'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.grey[100],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Change your gender",
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    SlidingSwitch(
+                      value: false,
+                      onChanged: (bool value) {
+                        gender = value;
+                      },
+                      onTap: () {},
+                      onDoubleTap: () {},
+                      onSwipe: () {},
+                    ),
+                  ],
+                )),
+          ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                'Appearance',
+                style: TextStyle(
+                    color: Color.fromARGB(255, 150, 0, 0),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400),
+              ),
+            ),
+          ),
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text('You cannot'),
+                      content: const SizedBox(
+                          child: Icon(
+                        Icons.do_disturb,
+                        size: 100,
+                        color: Colors.red,
+                      )),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Update weight')),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('return'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.grey[100],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Enable dark mode",
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: FlutterSwitch(
+                        activeColor: const Color(0xFFC62828),
+                        inactiveColor: const Color(0xFFD6D6D6),
+                        height: 28,
+                        width: 60,
+                        value: darkMode,
+                        showOnOff: false,
+                        onToggle: (val) {
+                          setState(() {
+                            darkMode = val;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text('You cannot'),
+                      content: const SizedBox(
+                          child: Icon(
+                        Icons.do_disturb,
+                        size: 100,
+                        color: Colors.red,
+                      )),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Update weight')),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('return'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.grey[100],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Choose colour-scheme",
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const Icon(Icons.arrow_forward_ios)
+                  ],
+                ),
+              )),
+        ]));
   }
-
 }
