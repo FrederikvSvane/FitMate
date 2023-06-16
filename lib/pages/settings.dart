@@ -95,6 +95,8 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -108,6 +110,7 @@ class _HistoryState extends State<History> {
                     const Icon(Icons.arrow_forward_ios)
                   ],
                 ),
+                      ),
               )),
           GestureDetector(
               onTap: () {
@@ -149,6 +152,8 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
+                child: Padding(
+                  padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -161,6 +166,7 @@ class _HistoryState extends State<History> {
                     ),
                     const Icon(Icons.arrow_forward_ios)
                   ],
+                ),
                 ),
               )),
           GestureDetector(
@@ -203,6 +209,8 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -216,6 +224,7 @@ class _HistoryState extends State<History> {
                     const Icon(Icons.arrow_forward_ios)
                   ],
                 ),
+                  ),
               )),
           GestureDetector(
               onTap: () {
@@ -257,6 +266,8 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -270,6 +281,7 @@ class _HistoryState extends State<History> {
                     const Icon(Icons.arrow_forward_ios)
                   ],
                 ),
+                  ),
               )),
           GestureDetector(
               onTap: () {
@@ -311,6 +323,8 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -324,6 +338,7 @@ class _HistoryState extends State<History> {
                     const Icon(Icons.arrow_forward_ios)
                   ],
                 ),
+                  ),
               )),
           GestureDetector(
             onTap: () {
@@ -373,6 +388,8 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
+              child: Padding(
+                  padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -386,6 +403,7 @@ class _HistoryState extends State<History> {
                     const Icon(Icons.arrow_forward_ios),
                   ],
                 )),
+            ),
           ),
           const Align(
             alignment: Alignment.centerLeft,
@@ -404,6 +422,8 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
+                 child: Padding(
+                   padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -414,12 +434,10 @@ class _HistoryState extends State<History> {
                           fontSize: 18,
                           fontWeight: FontWeight.w400),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: FlutterSwitch(
+                       FlutterSwitch(
                         activeColor: const Color(0xFFC62828),
                         inactiveColor: const Color(0xFFD6D6D6),
-                        height: 28,
+                        height: 40,
                         width: 60,
                         value: darkMode,
                         showOnOff: false,
@@ -429,9 +447,10 @@ class _HistoryState extends State<History> {
                           });
                         },
                       ),
-                    ),
+
                   ],
                 ),
+                 ),
               ),
           GestureDetector(
               onTap: () {
@@ -471,6 +490,8 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -484,6 +505,7 @@ class _HistoryState extends State<History> {
                     const Icon(Icons.arrow_forward_ios)
                   ],
                 ),
+                  ),
               )),
         ]));
   }
