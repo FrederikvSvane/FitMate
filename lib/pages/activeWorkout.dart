@@ -18,6 +18,7 @@ class ActiveWorkout extends StatefulWidget {
 
 class _ActiveWorkoutState extends State<ActiveWorkout> {
   List<Exercise> activeExercises = [];
+  WorkoutTemplate template = WorkoutTemplate(workoutName: 'no name', workoutExercises: [], sets: [], date: '');
 
   TimerService timerService = TimerService();
 
@@ -30,7 +31,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    activeExercises = ModalRoute.of(context)!.settings.arguments as List<Exercise>? ?? [];
+    template = ModalRoute.of(context)!.settings.arguments as WorkoutTemplate? ?? WorkoutTemplate(workoutName: 'No name', workoutExercises: [], sets: [], date: '');
+    activeExercises = template.workoutExercises;
   }
 
   @override
@@ -58,9 +60,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                 final int minutes = (totalSeconds % 3600) ~/ 60;
                 final int seconds = totalSeconds % 60;
                 return Text(
-                    'Active Workout: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
+                    '${template.workoutName}: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
               } else {
-                return Text('Active Workout');
+                return Text('${template.workoutName}');
               }
             },
           ),
@@ -89,8 +91,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                                 await DBHelper.insertExercise(exerciseData);
                               }
                             }
-
-
                             Navigator.pop(context);
                             Navigator.pop(context);
                             List<Exercise> savedExercises = await fetchExercises();
@@ -104,18 +104,19 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                         ),
                         SimpleDialogOption(
                           onPressed: () async {
+                            Map<String, dynamic> workoutData = {
+                              'workoutName': template.workoutName,
+                              'exercises': '',
+                              'type': '',
+                              'sets': '',
+                              'date': DateTime.now().toString(),
+                            };
                             for(int i = 0; i < activeExercises.length; i++){
-                              for(int j = 0; j < activeExercises[i].sets!.length; j++){
-                                Map<String, dynamic> workoutData = {
-                                  'workoutName': 'Template Workout',
-                                  'name': activeExercises[i].name,
-                                  'sets': activeExercises[i].sets?[j],
-                                  'date': DateTime.now().toString(),
-                                };
-                                await DBHelper.insertWorkout(workoutData);
-                              }
+                                workoutData['exercises'] += activeExercises[i].name + ',';
+                                workoutData['sets'] += '${activeExercises[i].sets!.length},';
                             }
-
+                                await DBHelper.insertWorkout(workoutData);
+                            print(workoutData);
                             // Handle option 1
                             Navigator.pop(context);
                             Navigator.pop(context);
