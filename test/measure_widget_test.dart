@@ -5,7 +5,6 @@ import 'package:flutter_fitness_app/pages/addFavoriteMeal.dart';
 import 'package:flutter_fitness_app/pages/addFood.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:flutter_fitness_app/pages/profile.dart';
-import 'package:flutter_fitness_app/pages/profileSettings.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_fitness_app/pages/measure.dart';
 
@@ -27,7 +26,6 @@ void main() {
         "/addExercise": (context) => const AddExercise(),
         "/addFavoriteMeal": (context) => const AddFavoriteMeal(),
         "/addFood": (context) => const AddFood(),
-        "/profileSettings": (context) => const ProfileSettings(),
         "/profile": (context) => const Profile()
       },
     ));

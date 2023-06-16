@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +15,11 @@ class Profile extends StatefulWidget {
   ProfileState createState() => ProfileState();
 }
 
-String weight = '';
+
+
+
+
+double weight = 0;
 
 double height = 180.0;
 
@@ -38,6 +44,8 @@ class ProfileState extends State<Profile> {
     await authorize();
     await fetchStepData();
     displayMostRecentWeight();
+
+
 
   }
 
@@ -88,6 +96,9 @@ class ProfileState extends State<Profile> {
     String date = result['date'];
 
     print('Most recent weight: $weight on date: $date');
+    setState(() {
+      _textEditingController.text = weight.toStringAsFixed(2); 
+    });
   }
 
 
@@ -297,13 +308,18 @@ class ProfileState extends State<Profile> {
                               ),
                               actions: [
                                 TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        weight = _textEditingController.text;
-                                      });
+                                    onPressed: () async {
                                       _addWeightToDB();
+                                      Map<String, dynamic> result = await DBHelper.getMostRecentWeight(DateTime.now());
+                                      double weightDouble = result['weight'];
+
+                                      setState(() {
+                                        weight = weightDouble;
+
+                                      });
                                       //basalCalorieBurner();
                                       //stepCalorieBurner();
+
                                       Navigator.of(context).pop();
                                     },
                                     child: Text('Update weight')),
