@@ -37,7 +37,10 @@ class ProfileState extends State<Profile> {
     //Check if we are running in debug mode
     await authorize();
     await fetchStepData();
+    displayMostRecentWeight();
+
   }
+
 
   static final types = [
     HealthDataType.STEPS,
@@ -75,7 +78,19 @@ class ProfileState extends State<Profile> {
         print("Exception in authorize: $error");
       }
     }
+
   }
+
+  void displayMostRecentWeight() async {
+    Map<String, dynamic> result = await DBHelper.getMostRecentWeight(DateTime.now());
+
+    double weight = result['weight'];
+    String date = result['date'];
+
+    print('Most recent weight: $weight on date: $date');
+  }
+
+
 
   Future fetchStepData() async {
     final now = DateTime.now();
@@ -134,7 +149,13 @@ class ProfileState extends State<Profile> {
     double? weightNumber = double.tryParse(weightText);
 
     if (weightNumber != null) {
-      DBHelper.insertWeight(weightNumber, DateTime.now());
+      DateTime now = DateTime.now();
+      DateTime dateOnly = DateTime(now.year, now.month, now.day);
+
+      // Format dateOnly to a string that only contains the date
+      String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
+
+      DBHelper.insertWeight(weightNumber, formattedDate);
       _textEditingController.clear();
       print('gg ez');
     } else {
@@ -148,7 +169,6 @@ class ProfileState extends State<Profile> {
 
     double dailyCal = (10 * weight + 6.25 * height - 5 * age);
 
-    print(dailyCal);
 
     return dailyCal;
   }
@@ -158,8 +178,6 @@ class ProfileState extends State<Profile> {
     double weight = 90.0;
 
     double stepCal = height * weight * factor * steps;
-
-    print(stepCal);
 
     return stepCal;
   }
