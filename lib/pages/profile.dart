@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_switch/sliding_switch.dart';
 import 'package:health/health.dart';
 
@@ -15,10 +16,6 @@ class Profile extends StatefulWidget {
   ProfileState createState() => ProfileState();
 }
 
-
-
-
-
 double weight = 0;
 
 double height = 180.0;
@@ -30,6 +27,9 @@ bool requested = false;
 
 bool showList1 = true;
 
+String name = ' ';
+
+int age = 0;
 
 class ProfileState extends State<Profile> {
   int? steps;
@@ -41,15 +41,20 @@ class ProfileState extends State<Profile> {
   }
 
   Future<void> initializeData() async {
-    //Check if we are running in debug mode
-    await authorize();
-    await fetchStepData();
-    displayMostRecentWeight();
 
+    //Check if we have completed the intro screen
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool introSeen = (prefs.getBool('intro') ?? false);
 
+    if(introSeen) {
+      await authorize();
+      await fetchStepData();
+
+      fetchData();
+      displayMostRecentWeight();
+    }
   }
-
 
   static final types = [
     HealthDataType.STEPS,
@@ -90,18 +95,41 @@ class ProfileState extends State<Profile> {
   }
 
   void displayMostRecentWeight() async {
-    Map<String, dynamic> result = await DBHelper.getMostRecentWeight(DateTime.now());
+    Map<String, dynamic> result =
+        await DBHelper.getMostRecentWeight(DateTime.now());
 
     double weight = result['weight'];
     String date = result['date'];
 
     print('Most recent weight: $weight on date: $date');
     setState(() {
-      _textEditingController.text = weight.toStringAsFixed(2); 
+      _textEditingController.text = weight.toStringAsFixed(2);
     });
   }
 
+  Future<void> fetchData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    name = (prefs.getString('name') ?? " ");
+    age = (prefs.getInt('age') ?? 0);
+    weight = (prefs.getDouble('weight') ?? 0);
 
+    DateTime now = DateTime.now();
+    DateTime dateOnly = DateTime(now.year, now.month, now.day);
+
+    // Format dateOnly to a string that only contains the date
+    String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
+
+    //Add weight to database
+    DBHelper.insertWeight(weight, formattedDate);
+
+    height = (prefs.getDouble('height') ?? 0);
+    setState(() {
+      name = name;
+      age = age;
+      weight = weight;
+      height = height;
+    });
+  }
 
   Future fetchStepData() async {
     final now = DateTime.now();
@@ -180,7 +208,6 @@ class ProfileState extends State<Profile> {
 
     double dailyCal = (10 * weight + 6.25 * height - 5 * age);
 
-
     return dailyCal;
   }
 
@@ -236,13 +263,13 @@ class ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
-                  const Align(
+                  Align(
                     alignment: Alignment.center,
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Text(
-                        'Jens Jensen',
-                        style: TextStyle(
+                        name,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 50,
                             fontWeight: FontWeight.w500),
@@ -310,12 +337,13 @@ class ProfileState extends State<Profile> {
                                 TextButton(
                                     onPressed: () async {
                                       _addWeightToDB();
-                                      Map<String, dynamic> result = await DBHelper.getMostRecentWeight(DateTime.now());
+                                      Map<String, dynamic> result =
+                                          await DBHelper.getMostRecentWeight(
+                                              DateTime.now());
                                       double weightDouble = result['weight'];
 
                                       setState(() {
                                         weight = weightDouble;
-
                                       });
                                       //basalCalorieBurner();
                                       //stepCalorieBurner();
