@@ -102,7 +102,7 @@ class DBHelper {
     await db.insert(
       'exercises',
       exerciseData,
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.abort,
     );
   }
 

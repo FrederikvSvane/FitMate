@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
@@ -64,11 +65,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                       children: <Widget>[
                         SimpleDialogOption(
                           onPressed: () async {
-                            saveExerciseData(
-                                activeWorkoutState.activeExercises);
-                            var activeWorkoutState1 =
-                                Provider.of<ActiveWorkoutState>(context,
-                                    listen: false);
+                            saveExerciseData(activeWorkoutState.activeExercises);
+                            var activeWorkoutState1 = Provider.of<ActiveWorkoutState>(context, listen: false);
                             activeWorkoutState1.endWorkout();
 
                             setState(() {
@@ -276,22 +274,17 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   }
 
   void saveExerciseData(List<Exercise> exercises) async {
-    Map<String, dynamic> exerciseData = {
-      'name': '',
-      'sets': '',
-      'reps': '',
-      'weight': '',
-      'time': '',
-      'distance': '',
-      'date': DateTime.now().toString(),
-    };
+    print("Heyyo silver!!!!!!!!!!!!!! $exercises");
     for (int i = 0; i < exercises.length; i++) {
-      exerciseData['name'] = exercises[i].name;
-      exerciseData['sets'] = '';
-      exerciseData['reps'] = '';
-      exerciseData['weight'] = '';
-      exerciseData['time'] = '';
-      exerciseData['distance'] = '';
+      Map<String, dynamic> exerciseData = {
+        'name': exercises[i].name,
+        'sets': '',
+        'reps': '',
+        'weight': '',
+        'time': '',
+        'distance': '',
+        'date': DateTime.now().toString(),
+      };
       for (int j = 0; j < exercises[i].sets!.length; j++) {
         exerciseData['sets'] += '${j + 1},';
         if (exercises[i].weight != null) {
@@ -306,7 +299,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
           exerciseData['reps'] += '${exercises[i].reps?[j]},';
         }
       }
+      print("$exerciseData");
+      await DBHelper.insertExercise(exerciseData);
     }
-    await DBHelper.insertExercise(exerciseData);
   }
 }
