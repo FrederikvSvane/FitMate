@@ -64,8 +64,7 @@ Future<void> main() async {
         "/addExercise": (context) => const AddExercise(),
         "/addFavoriteMeal": (context) => const AddFavoriteMeal(),
         "/addFood": (context) => const AddFood(),
-        "/profile": (context) => const Profile()
-        "/profileSettings": (context) => const ProfileSettings(),
+        "/profile": (context) => const Profile(),
         "/workout": (context) => Workout(),
       },
     ),

@@ -22,6 +22,8 @@ class HistoryState extends State<History> {
     getPrefs();
   }
 
+  double _currentSliderValue = 0;
+
   bool darkMode = false;
 
   bool gender = false;
@@ -443,6 +445,70 @@ class HistoryState extends State<History> {
                   )),
             ),
           ),
+
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    alignment: Alignment.center,
+                    title: const Text('Update your calorie goal'),
+                    content: SizedBox(
+                      child: Slider(
+                        value: _currentSliderValue,
+                        max: 700,
+                        label: _currentSliderValue.round().toString(),
+                        onChanged: (double value)
+                        {setState(() {
+                          _currentSliderValue = value;
+                        });  },
+
+
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            prefs.setBool('gender', gender);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Update gender')),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('return'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Container(
+              width: double.infinity,
+              height: 50,
+              color: Colors.grey[100],
+              child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Change your calorie goal",
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      const Icon(Icons.arrow_forward_ios),
+                    ],
+                  )),
+            ),
+          ),
+
           const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
