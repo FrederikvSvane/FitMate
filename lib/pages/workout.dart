@@ -105,7 +105,7 @@ class _WorkoutState extends State<Workout> {
       itemCount: workoutTemplates.length,
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () {
+          onTap: () async {
             var activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
 
             if(activeWorkoutState.isActive) {
@@ -128,6 +128,7 @@ class _WorkoutState extends State<Workout> {
               );
             }else {
               for (Exercise exercise in workoutTemplates[index].workoutExercises) {
+                exercise = await checkDatabase(exercise);
                 activeWorkoutState.addExercise(exercise);
               }
               activeWorkoutState.workoutName = workoutTemplates[index].workoutName;
@@ -143,6 +144,19 @@ class _WorkoutState extends State<Workout> {
         );
       },
     );
+  }
+  Future<Exercise> checkDatabase(Exercise exercise) async{
+    List<Exercise> savedExercise = [];
+    savedExercise = await fetchExercises();
+    print("hey you sister!!!!!!!!!!!!!!!!!!!!ASD $exercise");
+
+    for(int i = 0; i < savedExercise.length; i++){
+      if(savedExercise[i].name == exercise.name){
+        print('${savedExercise[0].sets}');
+        exercise = savedExercise[i];
+      }
+    }
+    return exercise;
   }
 
 }
