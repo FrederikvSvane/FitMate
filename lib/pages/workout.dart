@@ -42,9 +42,9 @@ class _WorkoutState extends State<Workout> {
           body: Column(
             children: [
               Container(
-                height: 200,
+                height: 150,
                 color: Colors.red[800],
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+                padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
                 child: const Stack(
                   children: [
                     Align(
@@ -55,65 +55,10 @@ class _WorkoutState extends State<Workout> {
                           "Workouts",
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 30,
+                              fontSize: 40,
                               fontWeight: FontWeight.w500),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                      child: Text(
-                          'Avg weekly time: 17 hrs',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ),
-
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: Text(
-                          'Total time spent: 1000 hrs',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ),
-
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: Text(
-                          'Total workouts: 73',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ),
-
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          'Avg weekly workouts: 4',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500),
-                        ),
-                    ),
                     ),
                   ],
                 ),
@@ -121,52 +66,31 @@ class _WorkoutState extends State<Workout> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                        ),
-                      onPressed: () {
-                        var activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0,25.0, 0.0, 0.0),
+                      child: TextButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                          ),
+                        onPressed: () {
+                          var activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
 
-                        activeWorkoutState.startWorkout();
+                          activeWorkoutState.workoutName = "Active Workout";
 
-                        Navigator.pushNamed(context, "/activeWorkout");
-                      },
-                      child: Text('Start Emtpy Workout',
-                        style: TextStyle(
-                          color: Colors.red[800],
-                          fontWeight: FontWeight.bold
-                        ),
-                        ),
-                    ),
+                          activeWorkoutState.startWorkout();
 
-              ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
+                          Navigator.pushNamed(context, "/activeWorkout");
+                        },
+                        child: Text('Start Emtpy Workout',
+                          style: TextStyle(
+                            color: Colors.red[800],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                          ),
                       ),
-                      onPressed: () {
-                        ActiveWorkoutState().startWorkout();
-                        dynamic result =
-                        Navigator.pushNamed(context, "/activeWorkout",
-                            arguments: workoutTemplates[0]);
-                        setState(() {
-                          // Her skal dataen fra den aktive workout videresendes til næste skærm
-                          // Men jeg er hverken sikker på om det er den her skærm, der skal bruge dataen,
-                          // eller hvad dataen er endnu.
-                          // Vi må se hvad der sker når vi kommer så langt :p
-
-                          // Den kommer i hvert fald til at være noget i retning af:
-                          // data = {
-                          //   "weightExercises": result["weightExercises"],
-                          //   "cardioExercises": result["cardioExercises"],
-                        });
-                      },
-                      child: Text('Start existing template',
-                      style: TextStyle(
-                        color: Colors.red[800],
-                        fontWeight: FontWeight.bold
-                      ),),
                     ),
+
             ],
               ),
               Expanded(
@@ -180,17 +104,37 @@ class _WorkoutState extends State<Workout> {
     return ListView.builder(
       itemCount: workoutTemplates.length,
       itemBuilder: (context, index) {
-        return GestureDetector( //You need to make my child interactive
+        return GestureDetector(
           onTap: () {
             var activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
 
-            for (Exercise exercise in workoutTemplates[index].workoutExercises) {
-              activeWorkoutState.addExercise(exercise);
+            if(activeWorkoutState.isActive) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Alert'),
+                    content: Text('Workout already active'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }else {
+              for (Exercise exercise in workoutTemplates[index].workoutExercises) {
+                activeWorkoutState.addExercise(exercise);
+              }
+              activeWorkoutState.workoutName = workoutTemplates[index].workoutName;
+              activeWorkoutState.startWorkout();
+              Navigator.pushNamed(context, "/activeWorkout", arguments: workoutTemplates[index].workoutName);
             }
 
-            activeWorkoutState.startWorkout(); // assuming this is an async function
-
-            Navigator.pushNamed(context, "/activeWorkout");
 
           },
           child: TemplateCard(template: workoutTemplates[index]),
