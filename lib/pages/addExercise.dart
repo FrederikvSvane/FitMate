@@ -10,27 +10,20 @@ class AddExercise extends StatefulWidget {
 }
 
 class _AddExerciseState extends State<AddExercise> {
-  //This is very smart ok
-  //Vi laver objekter til weight exercise og cardio exercise
-  //Og så gemmer vi dem i en liste
   Exercise? selectedExercise;
 
   List<Exercise> Exercises = [
     Exercise(name: "Squat", sets: [], reps: [], weight: []),
-    //Objekterne jeg sætter ind her er bare til at teste med :DD
     Exercise(name: "Bench Press", sets: [], reps: [], weight: []),
     Exercise(name: "Deadlift", sets: [], reps: [], weight: []),
     Exercise(name: "Overhead Press", sets: [], reps: [], weight: []),
-    Exercise(
-        name: "Barbell Row",
-        sets: [1, 2, 3],
-        reps: [4, 4, 4],
-        weight: [10, 40, 30]),
+    Exercise(name: "Barbell Row", sets: [], reps: [], weight: []),
     Exercise(name: "Pull Ups", sets: [], reps: [], weight: []),
     Exercise(name: "Push Ups", sets: [], reps: [], weight: []),
     Exercise(name: "Dips", sets: [], reps: [], weight: []),
     Exercise(name: "Lateral Raises", sets: [], reps: [], weight: []),
     Exercise(name: "Bicep Curls", sets: [], reps: [], weight: []),
+    Exercise(name: "Face Pull", sets: [], reps: [], weight: []),
     Exercise(name: "Tricep Extensions", sets: [], reps: [], weight: []),
     Exercise(name: "Leg Press", sets: [], reps: [], weight: []),
     Exercise(name: "Leg Curls", sets: [], reps: [], weight: []),
@@ -103,20 +96,15 @@ class _AddExerciseState extends State<AddExercise> {
       context: context,
       delegate: SearchExercises(Exercises),
     );
+    Exercise? newExercise = await checkDatabase(result!);
 
-    if (result != null) {
+    if (newExercise.name != "") {
       //Den valgte øvelse bliver returneret tilbage til active workout
-      setState(() {
-        Navigator.pop(context, result);
-      });
+      setState((){
+        Navigator.pop(context, newExercise);
+      }
+      );
     }
-    //Så skal vi også have noget total weight lifted, time spent working out, calories burned yada yada yada
-
-    int totalWeightLifted = 0;
-    int totalTimeSpent = 0;
-    int totalCaloriesBurned = 0;
-    int totalDistance = 0;
-    int amountOfNewRecords = 0;
   }
 
   @override
@@ -139,9 +127,10 @@ class _AddExerciseState extends State<AddExercise> {
             padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 4.0),
             child: Card(
               child: ListTile(
-                onTap: () {
+                onTap: () async {
+                  Exercise newExercise = await checkDatabase(Exercises[index]);
                   setState(() {
-                    Navigator.pop(context, Exercises[index]);
+                    Navigator.pop(context, newExercise);
                   });
                 },
                 title: Text(Exercises[index].name),
@@ -151,5 +140,16 @@ class _AddExerciseState extends State<AddExercise> {
         },
       ),
     );
+  }
+  Future<Exercise> checkDatabase(Exercise exercise) async{
+    List<Exercise> savedExercise = [];
+    savedExercise = await fetchExercises();
+
+    for(int i = 0; i < savedExercise.length; i++){
+      if(savedExercise[i].name == exercise.name){
+        exercise = savedExercise[i];
+      }
+    }
+    return exercise;
   }
 }

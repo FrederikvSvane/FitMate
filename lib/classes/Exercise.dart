@@ -29,46 +29,67 @@ class Exercise {
     return 'Exercise{name: $name, sets: $sets, reps: $reps, weight: $weight, date: $date}';
   }
 }
+
+
+
 Future<List<Exercise>> fetchExercises() async {
-  final exerciseMaps = await DBHelper.getExercises();
-
-  Map<String, List<Map<String, dynamic>>> groupedExercises = {};
-
-  for (var map in exerciseMaps) {
-    String key = "${map['name']}_${map['date']}";
-    if (!groupedExercises.containsKey(key)) {
-      groupedExercises[key] = [map];
-    } else {
-      groupedExercises[key]?.add(map);
-    }
-  }
-
+  List<Map<String, dynamic>> exerciseMaps = await DBHelper.getExercises();
   List<Exercise> exercises = [];
+  for (var exerciseMap in exerciseMaps) {
+    String exerciseName = exerciseMap['name'];
+    String repsString = exerciseMap['reps'];
+    String weightString = exerciseMap['weight'];
+    String setsString = exerciseMap['sets'];
+    String timeString = exerciseMap['time'];
+    String distanceString = exerciseMap['distance'];
 
-  for (var key in groupedExercises.keys) {
-    List<int> sets = [];
-    List<int> reps = [];
-    List<double> weight = [];
-    String name = '';
-    String date = '';
 
-    for (var map in groupedExercises[key]!) {
-      name = map['name'];
-      date = map['date'];
-      sets.add(map['sets']);
-      reps.add(map['reps']);
-      weight.add(map['weight']);
+    List<int> sets = setsString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
+    List<int> reps = repsString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
+    List<int> weights = weightString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
+    List<int> timeList = timeString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
+    List<int> distanceList = distanceString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
+
+    Exercise exercise = Exercise(
+      name: '',
+    );
+
+    if ( weights.isNotEmpty){
+      exercise = Exercise(
+        name: exerciseName,
+        sets: sets,
+        reps: reps,
+        weight: weights,
+      );
+    } else if (distanceList.isNotEmpty){
+      exercise = Exercise(
+        name: exerciseName,
+        sets: sets,
+        time: timeList,
+        distance: distanceList,
+      );
+    } else if (timeList.isNotEmpty){
+      exercise = Exercise(
+        name: exerciseName,
+        sets: sets,
+        time: timeList,
+      );
+    } else {
+      exercise = Exercise(
+        name: exerciseName,
+        sets: sets,
+        reps: reps,
+      );
     }
 
-    exercises.add(Exercise(
-      name: name,
-      sets: sets,
-      reps: reps,
-      weight: weight,
-      date: date,
-    ));
-  }
 
+
+
+    exercises.add(exercise);
+  }
   return exercises;
 }
+
+
+
 

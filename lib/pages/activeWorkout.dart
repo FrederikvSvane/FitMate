@@ -3,6 +3,7 @@ import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/WorkoutTemplate.dart';
 import 'package:flutter_fitness_app/classes/timerService.dart';
 import 'package:flutter_fitness_app/pages/exerciseCard.dart';
+import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:provider/provider.dart';
 
 import '../DB/DBHelper.dart';
@@ -22,17 +23,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
 
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    activeExercises = ModalRoute.of(context)!.settings.arguments as List<Exercise>? ?? [];
-  }
-
-  @override
   Widget build(BuildContext context) {
     final activeWorkoutState = Provider.of<ActiveWorkoutState>(context);
     final timerService = activeWorkoutState.timerService;
@@ -42,7 +32,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          leading: IconButton( // Add this leading property
+          leading: IconButton(
+            // Add this leading property
             icon: Icon(Icons.arrow_downward, color: Colors.white),
             onPressed: () {
               Navigator.pop(context); // Navigates to the previous page
@@ -57,9 +48,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                 final int minutes = (totalSeconds % 3600) ~/ 60;
                 final int seconds = totalSeconds % 60;
                 return Text(
-                    'Active Workout: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
+                    '${activeWorkoutState.workoutName}:\n${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
               } else {
-                return Text('Active Workout');
+                return Text('${activeWorkoutState.workoutName}');
               }
             },
           ),
@@ -76,65 +67,133 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                       children: <Widget>[
                         SimpleDialogOption(
                           onPressed: () async {
-                            for(int i = 0; i < activeExercises.length; i++){
-                              for(int j = 0; j < activeExercises[i].sets!.length; j++){
-                                Map<String, dynamic> exerciseData = {
-                                  'name': activeExercises[i].name,
-                                  'sets': activeExercises[i].sets?[j],
-                                  'reps': activeExercises[i].reps?[j],
-                                  'weight': activeExercises[i].weight?[j],
-                                  'date': DateTime.now().toString(),
-                                };
-                                await DBHelper.insertExercise(exerciseData);
-                              }
-                            }
+                            saveExerciseData(activeWorkoutState.activeExercises);
+                            var activeWorkoutState1 =
+                                Provider.of<ActiveWorkoutState>(context,
+                                    listen: false);
+                            activeWorkoutState1.endWorkout();
 
-
-                            Navigator.pop(context);
-                            List<Exercise> savedExercises = await fetchExercises();
-                            print(savedExercises);
+                            setState(() {
+                              activeWorkoutState.activeExercises.clear();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            });
+                            List<Exercise> savedExercises =
+                                await fetchExercises();
                           },
                           child: Container(
                             padding: EdgeInsets.all(10.0),
                             color: Colors.red[800],
-                            child: Text('Save Workout Data', style: TextStyle(color: Colors.white)),
+                            child: Text('Save Workout Data',
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ),
                         SimpleDialogOption(
                           onPressed: () async {
-                            for(int i = 0; i < activeExercises.length; i++){
-                              for(int j = 0; j < activeExercises[i].sets!.length; j++){
-                                Map<String, dynamic> workoutData = {
-                                  'workoutName': 'Template Workout',
-                                  'name': activeExercises[i].name,
-                                  'sets': activeExercises[i].sets?[j],
-                                  'date': DateTime.now().toString(),
-                                };
-                                await DBHelper.insertWorkout(workoutData);
-                              }
-                            }
+                            String? workoutName = await showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                TextEditingController controller =
+                                    TextEditingController();
+                                return AlertDialog(
+                                  title: Text('Enter Workout Template Name'),
+                                  content: TextField(
+                                    controller: controller,
+                                    decoration: InputDecoration(
+                                        hintText: 'Workout Template Name'),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(controller.text);
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancel'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
 
-                            // Handle option 1
-                            Navigator.pop(context);
-                            List<WorkoutTemplate> savedWorkouts = await fetchWorkouts();
-                            print(savedWorkouts);
+                            if (workoutName != null && workoutName.isNotEmpty) {
+                              saveExerciseData(activeWorkoutState.activeExercises);
+                              Map<String, dynamic> workoutData = {
+                                'workoutName': workoutName,
+                                // Use user entered workoutName
+                                'exercises': '',
+                                'type': '',
+                                'sets': '',
+                                'date': DateTime.now().toString(),
+                              };
+                              for (int i = 0;
+                                  i < activeWorkoutState.activeExercises.length;
+                                  i++) {
+                                workoutData['exercises'] +=
+                                    '${activeWorkoutState.activeExercises[i].name},';
+                                workoutData['sets'] +=
+                                    '${activeWorkoutState.activeExercises[i].sets!.length},';
+                                if (activeWorkoutState
+                                        .activeExercises[i].weight !=
+                                    null) {
+                                  workoutData['type'] += '1,';
+                                } else if (activeWorkoutState
+                                        .activeExercises[i].distance !=
+                                    null) {
+                                  workoutData['type'] += '2,';
+                                } else if (activeWorkoutState
+                                        .activeExercises[i].time !=
+                                    null) {
+                                  workoutData['type'] += '3,';
+                                } else {
+                                  workoutData['type'] += '4,';
+                                }
+                              }
+                              await DBHelper.insertWorkout(workoutData);
+
+                              var activeWorkoutState1 =
+                                  Provider.of<ActiveWorkoutState>(context,
+                                      listen: false);
+                              activeWorkoutState1.endWorkout();
+
+                              setState(() {
+                                activeExercises.clear();
+                                Navigator.pushReplacementNamed(context, "/");
+                              });
+                              List<WorkoutTemplate> savedWorkouts =
+                                  await convertToWorkoutTemplates();
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10.0),
                             color: Colors.red[800],
-                            child: const Text('Save Workout as Template', style: TextStyle(color: Colors.white)),
+                            child: const Text('Save Workout as Template',
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ),
                         SimpleDialogOption(
                           onPressed: () {
-                            // Handle option 1
-                            Navigator.pop(context);
-                            print('Option 1 chosen');
+                            var activeWorkoutState1 =
+                                Provider.of<ActiveWorkoutState>(context,
+                                    listen: false);
+                            activeWorkoutState1.endWorkout();
+
+                            setState(() {
+                              activeExercises.clear();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            });
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10.0),
                             color: Colors.red[800],
-                            child: const Text('Finish without saving', style: TextStyle(color: Colors.white)),
+                            child: const Text('Finish without saving',
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ),
                       ],
@@ -154,13 +213,14 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         body: Stack(
           children: [
             // List of exercises
+
             ListView.builder(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 100.0),
               itemCount: activeWorkoutState.activeExercises.length,
               itemBuilder: (context, index) {
                 return ExerciseCard(
                   exercise: activeWorkoutState.activeExercises[index],
-                  exerciseIndex: index, // Pass the index to ExerciseCard
+                  exerciseIndex: index,
                 );
               },
             ),
@@ -178,7 +238,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                       // Cancel Workout Button
                       ElevatedButton.icon(
                         onPressed: () {
-                          var activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
+                          var activeWorkoutState =
+                              Provider.of<ActiveWorkoutState>(context,
+                                  listen: false);
                           activeWorkoutState.endWorkout();
 
                           setState(() {
@@ -192,8 +254,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                       // Add Exercise Button
                       ElevatedButton.icon(
                         onPressed: () async {
-                          dynamic result =
-                              await Navigator.pushNamed(context, '/addExercise');
+                          dynamic result = await Navigator.pushNamed(
+                              context, '/addExercise');
                           if (result != null) {
                             setState(() {
                               activeWorkoutState.addExercise(result);
@@ -218,5 +280,40 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   void dispose() {
     timerService.dispose();
     super.dispose();
+  }
+
+  void saveExerciseData(List<Exercise> exercises) async {
+    Map<String, dynamic> exerciseData = {
+      'name': '',
+      'sets': '',
+      'reps': '',
+      'weight': '',
+      'time': '',
+      'distance': '',
+      'date': DateTime.now().toString(),
+    };
+    for (int i = 0; i < exercises.length; i++) {
+      exerciseData['name'] = exercises[i].name;
+      exerciseData['sets'] = '';
+      exerciseData['reps'] = '';
+      exerciseData['weight'] = '';
+      exerciseData['time'] = '';
+      exerciseData['distance'] = '';
+      for (int j = 0; j < exercises[i].sets!.length; j++) {
+        exerciseData['sets'] += '${j + 1},';
+        if (exercises[i].weight != null) {
+          exerciseData['reps'] += '${exercises[i].reps?[j]},';
+          exerciseData['weight'] += '${exercises[i].weight?[j]},';
+        } else if (exercises[i].distance != null) {
+          exerciseData['time'] += '${exercises[i].time?[j]},';
+          exerciseData['distance'] += '${exercises[i].distance?[j]},';
+        } else if (exercises[i].time != null) {
+          exerciseData['time'] += '${exercises[i].time?[j]},';
+        } else {
+          exerciseData['reps'] += '${exercises[i].reps?[j]},';
+        }
+      }
+    }
+    await DBHelper.insertExercise(exerciseData);
   }
 }

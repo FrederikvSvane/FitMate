@@ -23,8 +23,8 @@ class ActiveWorkoutWindow extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Active Workout",
-                style: TextStyle(
+              Text(activeWorkoutState.workoutName,
+                style: const TextStyle(
                   color: Colors.white,
                   decoration: TextDecoration.none,
                   fontWeight: FontWeight.bold,

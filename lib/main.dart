@@ -10,6 +10,7 @@ import 'package:flutter_fitness_app/pages/profile.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_fitness_app/classes/activeWorkoutState.dart';
+import 'package:flutter_fitness_app/pages/workout.dart';
 
 Database? database;
 
@@ -62,6 +63,8 @@ Future<void> main() async {
         "/addFavoriteMeal": (context) => const AddFavoriteMeal(),
         "/addFood": (context) => const AddFood(),
         "/profile": (context) => const Profile()
+        "/profileSettings": (context) => const ProfileSettings(),
+        "/workout": (context) => Workout(),
       },
     ),
 
