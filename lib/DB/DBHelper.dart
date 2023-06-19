@@ -19,10 +19,10 @@ class DBHelper {
             'CREATE TABLE meals(id INTEGER PRIMARY KEY, barcode INTEGER, nameComponent TEXT, calories REAL, proteins REAL, mealType TEXT, date TEXT)',
           );
           await db.execute(
-            'CREATE TABLE exercises(id INTEGER PRIMARY KEY, name TEXT, sets INTEGER, reps INTEGER, weight REAL, date TEXT)',
+            'CREATE TABLE exercises(id INTEGER PRIMARY KEY, name TEXT, sets TEXT, reps TEXT, weight TEXT, time TEXT, distance TEXT, date TEXT)',
           );
           await db.execute(
-            'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, name TEXT, sets INTEGER, date TEXT)',
+            'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, type TEXT, sets TEXT, date TEXT)',
           );
           await db.execute(
               'CREATE TABLE weight(weight REAL,date TEXT PRIMARY KEY)'
@@ -81,21 +81,6 @@ class DBHelper {
 
         insertWeight(tal, formattedDate);
       }
-      print("Done inserting mock data.");
-
-      // DateTime now = DateTime.now();
-      // DateTime dateOnly = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 50));
-      // DateTime dateOnly1 = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 49));
-      // DateTime dateOnly2 = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 47));
-      //
-      // // Format dateOnly to a string that only contains the date
-      // String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
-      // String formattedDate1 = DateFormat('yyyy-MM-dd').format(dateOnly1);
-      // String formattedDate2 = DateFormat('yyyy-MM-dd').format(dateOnly2);
-      //
-      // insertWeight(65.2, formattedDate);
-      // insertWeight(60, formattedDate1);
-      // insertWeight(55, formattedDate2);
 
     }
   }

@@ -59,7 +59,7 @@ class HistoryState extends State<History> {
                       "Settings",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 48,
+                          fontSize: 40,
                           fontWeight: FontWeight.w500),
                     ),
                   ),
@@ -443,106 +443,106 @@ class HistoryState extends State<History> {
                   )),
             ),
           ),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'Appearance',
-                style: TextStyle(
-                    color: Color.fromARGB(255, 150, 0, 0),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            height: 50,
-            color: Colors.grey[100],
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Enable dark mode",
-                    style: TextStyle(
-                        color: Colors.grey[800],
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  FlutterSwitch(
-                    activeColor: const Color(0xFFC62828),
-                    inactiveColor: const Color(0xFFD6D6D6),
-                    height: 40,
-                    width: 60,
-                    value: darkMode,
-                    showOnOff: false,
-                    onToggle: (val) {
-                      setState(() {
-                        darkMode = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      alignment: Alignment.center,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      title: const Text('You cannot'),
-                      content: const SizedBox(
-                          child: Icon(
-                        Icons.do_disturb,
-                        size: 100,
-                        color: Colors.red,
-                      )),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Choose a colorscheme')),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('return'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Container(
-                width: double.infinity,
-                height: 50,
-                color: Colors.grey[100],
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Choose colour-scheme",
-                        style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      const Icon(Icons.arrow_forward_ios)
-                    ],
-                  ),
-                ),
-              )),
+          // const Align(
+          //   alignment: Alignment.centerLeft,
+          //   child: Padding(
+          //     padding: EdgeInsets.all(10),
+          //     child: Text(
+          //       'Appearance',
+          //       style: TextStyle(
+          //           color: Color.fromARGB(255, 150, 0, 0),
+          //           fontSize: 20,
+          //           fontWeight: FontWeight.w400),
+          //     ),
+          //   ),
+          // ),
+          // Container(
+          //   width: double.infinity,
+          //   height: 50,
+          //   color: Colors.grey[100],
+          //   child: Padding(
+          //     padding: EdgeInsets.all(10),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         Text(
+          //           "Enable dark mode",
+          //           style: TextStyle(
+          //               color: Colors.grey[800],
+          //               fontSize: 18,
+          //               fontWeight: FontWeight.w400),
+          //         ),
+          //         FlutterSwitch(
+          //           activeColor: const Color(0xFFC62828),
+          //           inactiveColor: const Color(0xFFD6D6D6),
+          //           height: 40,
+          //           width: 60,
+          //           value: darkMode,
+          //           showOnOff: false,
+          //           onToggle: (val) {
+          //             setState(() {
+          //               darkMode = val;
+          //             });
+          //           },
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          // GestureDetector(
+          //     onTap: () {
+          //       showDialog(
+          //         context: context,
+          //         builder: (BuildContext context) {
+          //           return AlertDialog(
+          //             alignment: Alignment.center,
+          //             shape: RoundedRectangleBorder(
+          //                 borderRadius: BorderRadius.circular(15)),
+          //             title: const Text('You cannot'),
+          //             content: const SizedBox(
+          //                 child: Icon(
+          //               Icons.do_disturb,
+          //               size: 100,
+          //               color: Colors.red,
+          //             )),
+          //             actions: [
+          //               TextButton(
+          //                   onPressed: () {
+          //                     Navigator.of(context).pop();
+          //                   },
+          //                   child: const Text('Choose a colorscheme')),
+          //               TextButton(
+          //                 onPressed: () {
+          //                   Navigator.of(context).pop();
+          //                 },
+          //                 child: const Text('return'),
+          //               ),
+          //             ],
+          //           );
+          //         },
+          //       );
+          //     },
+          //     child: Container(
+          //       width: double.infinity,
+          //       height: 50,
+          //       color: Colors.grey[100],
+          //       child: Padding(
+          //         padding: const EdgeInsets.all(10),
+          //         child: Row(
+          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //           children: [
+          //             Text(
+          //               "Choose colour-scheme",
+          //               style: TextStyle(
+          //                   color: Colors.grey[800],
+          //                   fontSize: 18,
+          //                   fontWeight: FontWeight.w400),
+          //             ),
+          //             const Icon(Icons.arrow_forward_ios)
+          //           ],
+          //         ),
+          //       ),
+          //     )),
         ]));
   }
 }

@@ -42,15 +42,15 @@ class _WorkoutState extends State<Workout> {
         body: Column(
           children: [
             Container(
-              height: 150,
+              height: 120,
               color: Colors.red[800],
-              padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+              padding: const EdgeInsets.fromLTRB(20, 55, 20, 20),
               child: const Stack(
                 children: [
                   Align(
                     alignment: Alignment.topCenter,
                     child: Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: EdgeInsets.all(0),
                       child: Text(
                         "Workouts",
                         style: TextStyle(

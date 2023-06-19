@@ -28,7 +28,6 @@ class _FoodState extends State<Food> {
 
   @override
   void initState() {
-    print("initState");
     super.initState();
     loadMealsFromDatabase();
     loadGoalCalories();
@@ -156,7 +155,7 @@ class _FoodState extends State<Food> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: const Text('Food Page'),
+        title: const Text('Food'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.calendar_today),

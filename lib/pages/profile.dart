@@ -257,38 +257,9 @@ class ProfileState extends State<Profile> {
             Container(
               height: 200,
               color: Colors.red[800],
-              padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Stack(
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: GestureDetector(
-                        onTap: () async {
-                          var result = await Navigator.pushNamed(
-                              context, "/profileSettings");
-
-                          if (result != null) {
-                            Map<String, dynamic> profileData =
-                            result as Map<String, dynamic>;
-                            setState(() {
-                              //TODO: Update profile data
-
-                              weight = profileData["weight"];
-                            });
-                          }
-                        },
-                        child: const Text(
-                          'Settings',
-                          style: TextStyle(
-                            color: Colors.white,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
@@ -302,41 +273,7 @@ class ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: GestureDetector(
-                        onTap: () async {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                alignment: Alignment.center,
-                                title: const Text('Update your weight'),
-                                content: Column(children: [
-                                  TextField(
-                                    controller: _textEditingController,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter your new weight',
-                                    ),
-                                  ),
-                                ]),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('close'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+
                   Align(
                     alignment: Alignment.bottomRight,
                     child: ElevatedButton(
@@ -803,7 +740,7 @@ class ProfileState extends State<Profile> {
                             Text('1 h 3 min'),
                             Text('13058 kg'),
                             Text('28 sets'),
-                            Text('4 pr\'s')
+                            Text('4 PR\'s')
                           ],
                         ),
                       ],
