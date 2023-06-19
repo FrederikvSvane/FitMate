@@ -72,7 +72,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
               widget.exercise.name,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            ..._buildExerciseRows(widget.exercise),
+            ..._setRows,
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Row(
@@ -102,7 +102,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
           child: Text("Set ${exercise.sets![i]}:"),
         )
       ];
-      
+
       if (exercise.reps != null) {
         columns.add(_buildTextField(
             "Reps", i, exercise.reps!, (value) => exercise.reps![i] = value));
