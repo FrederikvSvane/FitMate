@@ -185,9 +185,10 @@ class _WorkoutState extends State<Workout> {
             var activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
 
             activeWorkoutState.startWorkout();
-            dynamic result =
-            Navigator.pushNamed(context, "/activeWorkout",
-                arguments: workoutTemplates[index]);
+
+            activeWorkoutState.activeExercises = workoutTemplates[index].workoutExercises;
+
+            Navigator.pushNamed(context, "/activeWorkout", arguments: workoutTemplates[index]);
           },
           child: TemplateCard(template: workoutTemplates[index]),
           //title: Text(activeExercises[index].name),
