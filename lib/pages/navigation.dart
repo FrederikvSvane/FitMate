@@ -15,11 +15,11 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation> {
   int selectedIndex = 2;
   static final List<Widget> _widgetOptions = <Widget>[
-    History(),
+    const History(),
     Workout(),
-    Profile(),
+    const Profile(),
     const Food(),
-    Measure(),
+    const Measure(),
   ];
 
   void _onItemTapped(int index) {
