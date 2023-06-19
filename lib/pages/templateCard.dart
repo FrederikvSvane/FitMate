@@ -13,11 +13,6 @@ class TemplateCard extends StatefulWidget {
 class _TemplateCardState extends State<TemplateCard> {
   List<Widget> _setRows = [];
 
-  void _addExerciseRow() {
-    setState(() {
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -40,19 +35,6 @@ class _TemplateCardState extends State<TemplateCard> {
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             ..._setRows,
-            /*Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextButton.icon(
-                    onPressed: _addExerciseRow,
-                    icon: Icon(Icons.add),
-                    label: Text("Add Set"),
-                  ),
-                ],
-              ),
-            ),*/
           ],
         ),
       ),
