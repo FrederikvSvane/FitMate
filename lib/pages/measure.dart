@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../DB/DBHelper.dart';
 
 class Measure extends StatefulWidget {
@@ -9,9 +10,6 @@ class Measure extends StatefulWidget {
   @override
   State<Measure> createState() => MeasureState();
 }
-
-
-
 
 class MeasureState extends State<Measure> {
   final bool animate = false;
@@ -47,7 +45,6 @@ class MeasureState extends State<Measure> {
     ];
   }
 
-  //Fetch the data for the proteins chart
   Future<List<charts.Series<TimeSeriesProteins, DateTime>>>
       _fetchProteinsData() async {
     final dbData = await DBHelper.getProteinsForDateRange(
@@ -71,11 +68,10 @@ class MeasureState extends State<Measure> {
   }
 
   Future<List<charts.Series<TimeSeriesWeight, DateTime>>>
-  _fetchWeightData() async {
+      _fetchWeightData() async {
     final dbData = await DBHelper.getWeightsForDateRange(
         selectedDateRange.start, selectedDateRange.end);
 
-    // Create a new List from dbData and sort the new List by date
     var dataList = List<Map<String, dynamic>>.from(dbData);
     dataList.sort((a, b) {
       DateTime aDate = DateTime.parse(a['date']);
@@ -95,12 +91,10 @@ class MeasureState extends State<Measure> {
         measureFn: (TimeSeriesWeight weight, _) => weight.weight,
         data: data,
         labelAccessorFn: (TimeSeriesWeight weight, _) =>
-        '${weight.weight.toInt()}',
+            '${weight.weight.toInt()}',
       ),
     ];
   }
-
-
 
   void _selectDateRange(BuildContext context) async {
     final picked = await showDateRangePicker(
@@ -143,7 +137,7 @@ class MeasureState extends State<Measure> {
             symbolRenderer: charts.CircleSymbolRenderer(),
             defaultRadiusPx: 4,
           ),
-          charts.SeriesLegend(), // Add a series legend
+          charts.SeriesLegend(),
         ],
         primaryMeasureAxis: charts.NumericAxisSpec(
           renderSpec: charts.GridlineRendererSpec(

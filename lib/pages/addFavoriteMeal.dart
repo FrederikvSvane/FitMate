@@ -10,7 +10,7 @@ class AddFavoriteMeal extends StatefulWidget {
 }
 
 class addFavoriteMealState extends State<AddFavoriteMeal> {
-  String whichMeal ='';
+  String whichMeal = '';
   String whichPick = '';
 
   @override
@@ -37,8 +37,9 @@ class addFavoriteMealState extends State<AddFavoriteMeal> {
         whichPick = "null";
     }
 
-    // Get the arguments passed to this route.
-    final List<Map<String, dynamic>> meals = ModalRoute.of(context)!.settings.arguments as List<Map<String, dynamic>>;
+    final List<Map<String, dynamic>> meals = ModalRoute.of(context)!
+        .settings
+        .arguments as List<Map<String, dynamic>>;
     return Scaffold(
       appBar: AppBar(
         title: Text('Meal Details'),
@@ -46,10 +47,11 @@ class addFavoriteMealState extends State<AddFavoriteMeal> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-             Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset("assets/image/Breakfast.png", width: 50, height: 50),
+                Image.asset("assets/image/Breakfast.png",
+                    width: 50, height: 50),
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: Text(
@@ -66,7 +68,8 @@ class addFavoriteMealState extends State<AddFavoriteMeal> {
               children: meals.map((meal) {
                 return ListTile(
                   title: Text(meal['nameComponent']),
-                  subtitle: Text('Calories: ${meal['calories']}, Proteins: ${meal['proteins']}'),
+                  subtitle: Text(
+                      'Calories: ${meal['calories']}, Proteins: ${meal['proteins']}'),
                 );
               }).toList(),
             ),

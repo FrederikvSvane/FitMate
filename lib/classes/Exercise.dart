@@ -1,10 +1,4 @@
-import 'dart:ffi';
-
-import 'package:flutter/material.dart';
-
 import '../DB/DBHelper.dart';
-
-//This class should create an exercise object, containing the name of the exercise, the number of sets, reps and weight
 
 class Exercise {
   String name;
@@ -30,8 +24,6 @@ class Exercise {
   }
 }
 
-
-
 Future<List<Exercise>> fetchExercises() async {
   List<Map<String, dynamic>> exerciseMaps = await DBHelper.getExercises();
   List<Exercise> exercises = [];
@@ -43,32 +35,51 @@ Future<List<Exercise>> fetchExercises() async {
     String timeString = exerciseMap['time'];
     String distanceString = exerciseMap['distance'];
 
-
-    List<int> sets = setsString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
-    List<int> reps = repsString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
-    List<int> weights = weightString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
-    List<int> timeList = timeString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
-    List<int> distanceList = distanceString.split(',').where((s) => s.isNotEmpty).map(int.parse).toList();
+    List<int> sets = setsString
+        .split(',')
+        .where((s) => s.isNotEmpty)
+        .map(int.parse)
+        .toList();
+    List<int> reps = repsString
+        .split(',')
+        .where((s) => s.isNotEmpty)
+        .map(int.parse)
+        .toList();
+    List<int> weights = weightString
+        .split(',')
+        .where((s) => s.isNotEmpty)
+        .map(int.parse)
+        .toList();
+    List<int> timeList = timeString
+        .split(',')
+        .where((s) => s.isNotEmpty)
+        .map(int.parse)
+        .toList();
+    List<int> distanceList = distanceString
+        .split(',')
+        .where((s) => s.isNotEmpty)
+        .map(int.parse)
+        .toList();
 
     Exercise exercise = Exercise(
       name: '',
     );
 
-    if ( weights.isNotEmpty){
+    if (weights.isNotEmpty) {
       exercise = Exercise(
         name: exerciseName,
         sets: sets,
         reps: reps,
         weight: weights,
       );
-    } else if (distanceList.isNotEmpty){
+    } else if (distanceList.isNotEmpty) {
       exercise = Exercise(
         name: exerciseName,
         sets: sets,
         time: timeList,
         distance: distanceList,
       );
-    } else if (timeList.isNotEmpty){
+    } else if (timeList.isNotEmpty) {
       exercise = Exercise(
         name: exerciseName,
         sets: sets,
@@ -82,14 +93,7 @@ Future<List<Exercise>> fetchExercises() async {
       );
     }
 
-
-
-
     exercises.add(exercise);
   }
   return exercises;
 }
-
-
-
-
