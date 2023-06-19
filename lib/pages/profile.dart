@@ -31,6 +31,9 @@ String name = ' ';
 
 int age = 0;
 
+num protiensGoal = 0;
+num caloriesGoal = 0;
+
 class ProfileState extends State<Profile> {
   int? steps;
 
@@ -51,8 +54,19 @@ class ProfileState extends State<Profile> {
       await authorize();
       await fetchStepData();
     }
+
     fetchData();
     displayMostRecentWeight();
+  }
+
+  void loadGoalCalories() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    goalCalories = prefs.getDouble('goalCalories') ?? 0;
+  }
+
+  void loadGoalProteins() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    goalProteins = prefs.getDouble('goalProteins') ?? 0;
   }
 
   static final types = [
@@ -62,6 +76,11 @@ class ProfileState extends State<Profile> {
   HealthFactory health = HealthFactory(useHealthConnectIfAvailable: true);
 
   final permissions = types.map((e) => HealthDataAccess.READ_WRITE).toList();
+
+  double goalCalories = 0;
+  double goalProteins = 0;
+  double totalCalories = 0;
+  double totalProteins = 0;
 
   Future authorize() async {
     // If we are trying to read Step Count, Workout, Sleep or other data that requires
@@ -93,7 +112,8 @@ class ProfileState extends State<Profile> {
   }
 
   void displayMostRecentWeight() async {
-    Map<String, dynamic> result = await DBHelper.getMostRecentWeight(DateTime.now());
+    Map<String, dynamic> result =
+        await DBHelper.getMostRecentWeight(DateTime.now());
 
     double weight = result['weight'];
     String date = result['date'];
@@ -110,6 +130,10 @@ class ProfileState extends State<Profile> {
     age = (prefs.getInt('age') ?? 0);
     weight = (prefs.getDouble('weight') ?? 0);
     height = (prefs.getDouble('height') ?? 0);
+    caloriesGoal = (prefs.getDouble('goalCalories') ?? 0);
+    protiensGoal = (prefs.getDouble('goalProteins') ?? 0);
+
+
 
     DateTime now = DateTime.now();
     DateTime dateOnly = DateTime(now.year, now.month, now.day);
@@ -120,13 +144,22 @@ class ProfileState extends State<Profile> {
     //Add weight to database
     DBHelper.insertWeight(weight, formattedDate);
 
+    var dbData = await DBHelper.getProteinsForDateRange(DateTime.now(), dateOnly);
+    totalProteins = (dbData[0]['totalProteins']);
+    dbData = await DBHelper.getCaloriesForDateRange(DateTime.now(), dateOnly);
+    totalCalories = (dbData[0]['totalCalories']);
+
     setState(() {
       name = name;
       age = age;
       weight = weight;
       height = height;
+      caloriesGoal = caloriesGoal;
+      protiensGoal = protiensGoal;
+
     });
   }
+
 
   Future fetchStepData() async {
     final now = DateTime.now();
@@ -168,7 +201,8 @@ class ProfileState extends State<Profile> {
           basalCalories: basalCalories,
           stepCalories: stepCalories,
           totalCalories: basalCalories + stepCalories);
-    } else {
+    }
+    else {
       double basalCalories = basalCalorieBurner();
       return StepAndCalorieData(
           steps: 0,
@@ -178,9 +212,7 @@ class ProfileState extends State<Profile> {
     }
   }
 
-  Future<void> fetchHealthData() async {
 
-  }
 
   void addWeightToDB() {
     String weightText = _textEditingController.text;
@@ -332,16 +364,17 @@ class ProfileState extends State<Profile> {
                                 TextButton(
                                     onPressed: () async {
                                       addWeightToDB();
-                                      Map<String, dynamic> result = await DBHelper.getMostRecentWeight(DateTime.now());
+                                      Map<String, dynamic> result =
+                                          await DBHelper.getMostRecentWeight(
+                                              DateTime.now());
                                       double weightDouble = result['weight'];
-                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
                                       prefs.setDouble('weight', weightDouble);
 
                                       setState(() {
                                         weight = weightDouble;
                                       });
-                                      //basalCalorieBurner();
-                                      //stepCalorieBurner();
 
                                       Navigator.of(context).pop();
                                     },
@@ -395,7 +428,6 @@ class ProfileState extends State<Profile> {
                 onChanged: (bool value) {
                   setState(() {
                     showList1 = !showList1;
-                    fetchHealthData();
                   });
                 },
                 colorOn: Colors.red,
@@ -622,7 +654,7 @@ class ProfileState extends State<Profile> {
                                           Positioned(
                                             top: 50,
                                             left: 140,
-                                            child: Text("200",
+                                            child: Text(protiensGoal.toString(),
                                                 style: TextStyle(
                                                     color: Colors.grey[500],
                                                     fontSize: 15,
