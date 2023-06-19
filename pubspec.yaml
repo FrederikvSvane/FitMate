@@ -71,6 +71,8 @@ dev_dependencies:
   flutter_lints: ^2.0.1
   flutter_launcher_icons: "^0.13.1"
 
+
+
 flutter_launcher_icons:
   image_path: "assets/image/logo.png"
   adaptive_icon_foreground: "assets/image/logo.png"
@@ -93,6 +95,10 @@ flutter:
   assets:
     - assets/image/Front page.png
     - assets/image/Front page 2.png
+    - assets/image/Breakfast.png
+    - assets/image/Lunch.png
+    - assets/image/Dinner.png
+    - assets/image/Snacks.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -30,6 +30,31 @@ class _FoodState extends State<Food> {
     print("initState");
     super.initState();
     loadMealsFromDatabase();
+    loadGoalCalories();
+    loadGoalProteins();
+  }
+
+  void loadGoalCalories() async {
+    if (goalCalories == 0) {
+      List<Map<String, dynamic>>? goal = await DBHelper.getLatestGoal();
+      if (goal != null && goal.isNotEmpty && goal[0]['caloricGoal'] != 0) {
+        setState(() {
+          goalCalories = goal[0]['caloricGoal'].toDouble();
+        });
+      }
+    }
+  }
+
+
+  void loadGoalProteins() async {
+    if (goalCalories == 0) {
+      List<Map<String, dynamic>>? goal = await DBHelper.getLatestProteinGoal();
+      if (goal != null && goal.isNotEmpty && goal[0]['proteinGoal'] != 0) {
+        setState(() {
+          goalProteins = goal[0]['proteinGoal'].toDouble();
+        });
+      }
+    }
   }
 
   Future<void> loadMealsFromDatabase() async {
@@ -171,10 +196,221 @@ class _FoodState extends State<Food> {
           children: [
             //Design for the selected day is made with assistance from chatGPT
             Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.all(10),
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: 25,
+                    top: 0,
+                    bottom: 0,
+                    child: Center(
+                      child: goalCalories == 0 ? const Text(''): Text(
+                        'KCAL:\n${(totalCalories).toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: () async {
+                        final String? goal = await showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Enter Goal Calories'),
+                              content: TextField(
+                                autofocus: true,
+                                keyboardType: TextInputType.number,
+                                onSubmitted: (value) {
+                                  Navigator.of(context).pop(value);
+                                },
+                              ),
+                            );
+                          },
+                        );
+
+                        if (goal != null) {
+                          setState(() {
+                            goalCalories = double.parse(goal);
+                          });
+                          DBHelper.insertGoal({'caloricGoal': goalCalories});
+                        }
+                        loadGoalCalories();
+                      },
+                      child: goalCalories == 0
+                          ? const Text(
+                              "Please set a calorie goal.",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : SleekCircularSlider(
+                              appearance: CircularSliderAppearance(
+                                startAngle: 270,
+                                angleRange: 360,
+                                size: 150,
+                                // Size of the circular slider
+                                customWidths: CustomSliderWidths(
+                                  progressBarWidth: 8,
+                                  // Set the width of the progress bar here.
+                                  trackWidth: 10,
+                                ),
+                                // Size of the circular slider
+                                customColors: CustomSliderColors(
+                                  trackColor: Colors.grey.withOpacity(0.3),
+                                  // Less opaque track
+                                  progressBarColors: [
+                                    Colors.lightGreenAccent,
+                                    Colors.lightGreen,
+                                    Colors.greenAccent,
+                                    Colors.green
+                                  ],
+                                  // Beautiful gradient for progress bar
+                                  gradientStartAngle: 0,
+                                  gradientEndAngle: 180,
+                                  shadowColor: Colors.transparent,
+                                  dotColor: Colors.transparent,
+                                ),
+                                infoProperties: InfoProperties(
+                                  bottomLabelStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  modifier: (double value) {
+                                    if (totalCalories <= goalCalories) {
+                                      final kcalLeft =
+                                          max(0, goalCalories - totalCalories);
+                                      return "$kcalLeft"; // Display the remaining calories
+                                    } else {
+                                      final kcalOver =
+                                          totalCalories - goalCalories;
+                                      return "$kcalOver"; // Display the exceeded calories
+                                    }
+                                  },
+                                  bottomLabelText: totalCalories <= goalCalories
+                                      ? 'KCAL Left'
+                                      : 'KCAL Over',
+                                ),
+                              ),
+                              min: 0,
+                              max: goalCalories,
+                              initialValue: min(totalCalories,
+                                  goalCalories), // The initial value is the minimum between totalCalories and goalCalories
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(5.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 5,
+                    offset: Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  goalProteins == 0 ? const Text('') : const Text(
+                    'Protein',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                  SizedBox(
+                    width: 120,
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        sliderTheme: Theme.of(context).sliderTheme.copyWith(
+                              disabledActiveTrackColor: Colors.orange,
+                              disabledInactiveTrackColor:
+                                  Colors.orange.withOpacity(0.3),
+                              //remove the thumb from the slider
+                              thumbShape: const RoundSliderThumbShape(
+                                  enabledThumbRadius: 0.0),
+                            ),
+                      ),
+                      child: GestureDetector(
+                        onTap: () async {
+                          final String? proteinGoal = await showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Enter Goal Proteins'),
+                                content: TextField(
+                                  autofocus: true,
+                                  keyboardType: TextInputType.number,
+                                  onSubmitted: (value) {
+                                    Navigator.of(context).pop(value);
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                          if (proteinGoal != null) {
+                            setState(() {
+                              goalProteins = double.parse(proteinGoal);
+                            });
+                            DBHelper.insertProteinGoal(
+                                {'proteinGoal': goalProteins});
+                          }
+                          loadGoalProteins();
+                        },
+                        child: goalProteins == 0
+                            ? const Text(
+                          "Please set a\nprotein goal.",
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                            : Slider(
+                          value: min(totalProteins, goalProteins),
+                          min: 0,
+                          max: goalProteins,
+                          onChanged: null, // Disables the ability for this to be changed by user interaction
+                          label: "${totalProteins.round()}",
+                          divisions: 10,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    goalProteins == 0
+                        ? ''
+                        : '${(totalProteins).round()} / ${goalProteins.round()}',
+                    style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(5.0),
               height: MediaQuery.of(context).size.height / 16,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: Colors.red[800],
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -190,7 +426,7 @@ class _FoodState extends State<Food> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        icon: const Icon(Icons.arrow_back, color: Colors.red),
                         onPressed: () async {
                           setState(() {
                             selectedDate =
@@ -205,11 +441,11 @@ class _FoodState extends State<Food> {
                         style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                            color: Colors.red),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.arrow_forward,
-                            color: Colors.white),
+                        icon:
+                            const Icon(Icons.arrow_forward, color: Colors.red),
                         onPressed: selectedDate.isBefore(DateTime(
                                 DateTime.now().year,
                                 DateTime.now().month,
@@ -228,172 +464,6 @@ class _FoodState extends State<Food> {
                   ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  'KCAL eaten:\n ${(totalCalories).toStringAsFixed(2)}',
-                  style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    final String? goal = await showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Enter Goal Calories'),
-                          content: TextField(
-                            autofocus: true,
-                            keyboardType: TextInputType.number,
-                            onSubmitted: (value) {
-                              Navigator.of(context).pop(value);
-                            },
-                          ),
-                        );
-                      },
-                    );
-
-                    if (goal != null) {
-                      setState(() {
-                        goalCalories = double.parse(goal);
-                      });
-                    }
-                  },
-                  child: goalCalories == 0
-                      ? const Text(
-                          "Please set a calorie goal.",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : SleekCircularSlider(
-                          appearance: CircularSliderAppearance(
-                            startAngle: 270,
-                            angleRange: 360,
-                            size: 150,
-                            // Size of the circular slider
-                            customWidths: CustomSliderWidths(
-                              progressBarWidth: 8,
-                              // Set the width of the progress bar here.
-                              trackWidth: 10,
-                            ),
-                            // Size of the circular slider
-                            customColors: CustomSliderColors(
-                              trackColor: Colors.grey.withOpacity(0.3),
-                              // Less opaque track
-                              progressBarColors: [
-                                Colors.red,
-                                Colors.orange,
-                                Colors.yellow
-                              ],
-                              // Beautiful gradient for progress bar
-                              gradientStartAngle: 0,
-                              gradientEndAngle: 180,
-                              shadowColor: Colors.transparent,
-                              dotColor: Colors.transparent,
-                            ),
-                            infoProperties: InfoProperties(
-                              bottomLabelStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              modifier: (double value) {
-                                if (totalCalories <= goalCalories) {
-                                  final kcalLeft =
-                                      max(0, goalCalories - totalCalories);
-                                  return "$kcalLeft"; // Display the remaining calories
-                                } else {
-                                  final kcalOver = totalCalories - goalCalories;
-                                  return "$kcalOver"; // Display the exceeded calories
-                                }
-                              },
-                              bottomLabelText: totalCalories <= goalCalories
-                                  ? 'KCAL Left'
-                                  : 'KCAL Over',
-                            ),
-                          ),
-                          min: 0,
-                          max: goalCalories,
-                          initialValue: min(totalCalories,
-                              goalCalories), // The initial value is the minimum between totalCalories and goalCalories
-                        ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                const Text(
-                  'Protein',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-                SizedBox(
-                  width: 120,
-                  child: Theme(
-                    data: Theme.of(context).copyWith(
-                      sliderTheme: Theme.of(context).sliderTheme.copyWith(
-                            disabledActiveTrackColor: Colors.orange,
-                            disabledInactiveTrackColor:
-                                Colors.orange.withOpacity(0.3),
-                            //remove the thumb from the slider
-                            thumbShape: const RoundSliderThumbShape(
-                                enabledThumbRadius: 0.0),
-                          ),
-                    ),
-                    child: GestureDetector(
-                      onTap: () async {
-                        final String? proteinGoal = await showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Enter Goal Proteins'),
-                              content: TextField(
-                                autofocus: true,
-                                keyboardType: TextInputType.number,
-                                onSubmitted: (value) {
-                                  Navigator.of(context).pop(value);
-                                },
-                              ),
-                            );
-                          },
-                        );
-                        if (proteinGoal != null) {
-                          setState(() {
-                            goalProteins = double.parse(proteinGoal);
-                          });
-                        }
-                      },
-                      child: Slider(
-                        value: min(totalProteins,
-                            goalProteins != 0 ? goalProteins : 1),
-                        min: 0,
-                        max: goalProteins != 0 ? goalProteins : 1,
-                        // to avoid division by zero, the default maximum is 1
-                        onChanged: null,
-                        // Disables the ability for this to be changed by user interaction
-                        label: "${totalProteins.round()}",
-                        divisions: 10,
-                      ),
-                    ),
-                  ),
-                ),
-                Text(
-                  '${(totalProteins).round()} / ${goalProteins.round()}',
-                  style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-              ],
             ),
             Container(
               margin: const EdgeInsets.all(10.0),
@@ -417,11 +487,12 @@ class _FoodState extends State<Food> {
                     children: [
                       Row(
                         children: [
-                          const Padding(
+                          Padding(
                             // Add padding to the left
-                            padding: EdgeInsets.only(left: 9.0, right: 5.0),
-                            child: Icon(Icons
-                                .restaurant), // Some icon that could represent a meal
+                            padding:
+                                const EdgeInsets.only(left: 9.0, right: 5.0),
+                            child: Image.asset('assets/image/Breakfast.png',
+                                width: 50, height: 50),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -433,7 +504,8 @@ class _FoodState extends State<Food> {
                               'Breakfast',
                               style: TextStyle(
                                   fontSize: 24, // Increased text size
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
                             ),
                           ),
                           IconButton(
@@ -527,11 +599,14 @@ class _FoodState extends State<Food> {
                     children: [
                       Row(
                         children: [
-                          const Padding(
+                          Padding(
                             // Add padding to the left
-                            padding: EdgeInsets.only(left: 9.0, right: 5.0),
-                            child: Icon(Icons
-                                .restaurant), // Some icon that could represent a meal
+                            padding:
+                                const EdgeInsets.only(left: 9.0, right: 5.0),
+                            child: Image.asset("assets/image/Lunch.png",
+                                height: 50,
+                                width:
+                                    50), // Some icon that could represent a meal
                           ),
                           GestureDetector(
                             onTap: () {
@@ -584,7 +659,7 @@ class _FoodState extends State<Food> {
                           String mealDetails = '${meal['nameComponent']}';
                           int mealId = meal['id'];
                           return Padding(
-                            padding: EdgeInsets.only(left: 10.0, bottom: 0.0),
+                            padding: const EdgeInsets.only(left: 10.0, bottom: 0.0),
                             // Added padding to the left and bottom
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -595,7 +670,8 @@ class _FoodState extends State<Food> {
                                       fontSize: 18), // Increased text size
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.delete),
+                                  icon: const Icon(Icons.delete_forever),
+                                  iconSize: 15,
                                   onPressed: () {
                                     _showDeleteConfirmationDialog(
                                         mealId, 'Lunch');
@@ -634,11 +710,14 @@ class _FoodState extends State<Food> {
                     children: [
                       Row(
                         children: [
-                          const Padding(
+                          Padding(
                             // Add padding to the left
-                            padding: EdgeInsets.only(left: 9.0, right: 5.0),
-                            child: Icon(Icons
-                                .restaurant), // Some icon that could represent a meal
+                            padding:
+                                const EdgeInsets.only(left: 9.0, right: 5.0),
+                            child: Image.asset("assets/image/Dinner.png",
+                                height: 50,
+                                width:
+                                    50), // Some icon that could represent a meal
                           ),
                           GestureDetector(
                             onTap: () {
@@ -702,7 +781,8 @@ class _FoodState extends State<Food> {
                                       fontSize: 18), // Increased text size
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.delete),
+                                  icon: const Icon(Icons.delete_forever),
+                                  iconSize: 15,
                                   onPressed: () {
                                     _showDeleteConfirmationDialog(
                                         mealId, 'Dinner');
@@ -733,18 +813,21 @@ class _FoodState extends State<Food> {
               ),
               child: SizedBox(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 10.0),
+                  padding: const EdgeInsets.only(bottom: 10.0),
                   // Add padding at the bottom
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          const Padding(
+                          Padding(
                             // Add padding to the left
-                            padding: EdgeInsets.only(left: 9.0, right: 5.0),
-                            child: Icon(Icons
-                                .restaurant), // Some icon that could represent a meal
+                            padding:
+                                const EdgeInsets.only(left: 9.0, right: 5.0),
+                            child: Image.asset("assets/image/Snacks.png",
+                                height: 50,
+                                width:
+                                    50), // Some icon that could represent a meal
                           ),
                           GestureDetector(
                             onTap: () {
@@ -797,18 +880,19 @@ class _FoodState extends State<Food> {
                           String mealDetails = '${meal['nameComponent']}';
                           int mealId = meal['id'];
                           return Padding(
-                            padding: EdgeInsets.only(left: 10.0, bottom: 0.0),
+                            padding: const EdgeInsets.only(left: 10.0, bottom: 0.0),
                             // Added padding to the left and bottom
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                   mealDetails,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 18), // Increased text size
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.delete),
+                                  icon: const Icon(Icons.delete_forever),
+                                  iconSize: 15,
                                   onPressed: () {
                                     _showDeleteConfirmationDialog(
                                         mealId, 'Snacks');
