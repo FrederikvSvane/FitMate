@@ -37,7 +37,7 @@ class _FoodState extends State<Food> {
   void loadGoalCalories() async {
     if (goalCalories == 0) {
       List<Map<String, dynamic>>? goal = await DBHelper.getLatestGoal();
-      if (goal!.isNotEmpty && goal[0]['caloricGoal'] != 0) {
+      if (goal != null && goal.isNotEmpty && goal[0]['caloricGoal'] != 0) {
         setState(() {
           goalCalories = goal[0]['caloricGoal'].toDouble();
         });
@@ -45,10 +45,11 @@ class _FoodState extends State<Food> {
     }
   }
 
+
   void loadGoalProteins() async {
     if (goalCalories == 0) {
       List<Map<String, dynamic>>? goal = await DBHelper.getLatestProteinGoal();
-      if (goal!.isNotEmpty && goal[0]['proteinGoal'] != 0) {
+      if (goal != null && goal.isNotEmpty && goal[0]['proteinGoal'] != 0) {
         setState(() {
           goalProteins = goal[0]['proteinGoal'].toDouble();
         });
