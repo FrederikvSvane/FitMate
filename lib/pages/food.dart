@@ -24,7 +24,7 @@ class _FoodState extends State<Food> {
   double totalCalories = 0;
   double totalProteins = 0;
   GlobalKey<RefreshIndicatorState> refreshKey =
-  GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -38,7 +38,6 @@ class _FoodState extends State<Food> {
   void loadGoalCalories() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     goalCalories = prefs.getDouble('goalCalories')!;
-
   }
 
   void loadGoalProteins() async {
@@ -194,14 +193,16 @@ class _FoodState extends State<Food> {
                     top: 0,
                     bottom: 0,
                     child: Center(
-                      child: goalCalories == 0 ? const Text(''): Text(
-                        'KCAL:\n${(totalCalories).toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
+                      child: goalCalories == 0
+                          ? const Text('')
+                          : Text(
+                              'KCAL:\n${(totalCalories).toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
                     ),
                   ),
                   Align(
@@ -225,7 +226,7 @@ class _FoodState extends State<Food> {
                         );
 
                         SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
+                            await SharedPreferences.getInstance();
 
                         if (goal != null) {
                           setState(() {
@@ -237,67 +238,67 @@ class _FoodState extends State<Food> {
                       },
                       child: goalCalories == 0
                           ? const Text(
-                        "Please set a calorie goal.",
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
+                              "Please set a calorie goal.",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
                           : SleekCircularSlider(
-                        appearance: CircularSliderAppearance(
-                          startAngle: 270,
-                          angleRange: 360,
-                          size: 150,
-                          // Size of the circular slider
-                          customWidths: CustomSliderWidths(
-                            progressBarWidth: 8,
-                            // Set the width of the progress bar here.
-                            trackWidth: 10,
-                          ),
-                          // Size of the circular slider
-                          customColors: CustomSliderColors(
-                            trackColor: Colors.grey.withOpacity(0.3),
-                            // Less opaque track
-                            progressBarColors: [
-                              Colors.lightGreenAccent,
-                              Colors.lightGreen,
-                              Colors.greenAccent,
-                              Colors.green
-                            ],
-                            // Beautiful gradient for progress bar
-                            gradientStartAngle: 0,
-                            gradientEndAngle: 180,
-                            shadowColor: Colors.transparent,
-                            dotColor: Colors.transparent,
-                          ),
-                          infoProperties: InfoProperties(
-                            bottomLabelStyle: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
+                              appearance: CircularSliderAppearance(
+                                startAngle: 270,
+                                angleRange: 360,
+                                size: 150,
+                                // Size of the circular slider
+                                customWidths: CustomSliderWidths(
+                                  progressBarWidth: 8,
+                                  // Set the width of the progress bar here.
+                                  trackWidth: 10,
+                                ),
+                                // Size of the circular slider
+                                customColors: CustomSliderColors(
+                                  trackColor: Colors.grey.withOpacity(0.3),
+                                  // Less opaque track
+                                  progressBarColors: [
+                                    Colors.lightGreenAccent,
+                                    Colors.lightGreen,
+                                    Colors.greenAccent,
+                                    Colors.green
+                                  ],
+                                  // Beautiful gradient for progress bar
+                                  gradientStartAngle: 0,
+                                  gradientEndAngle: 180,
+                                  shadowColor: Colors.transparent,
+                                  dotColor: Colors.transparent,
+                                ),
+                                infoProperties: InfoProperties(
+                                  bottomLabelStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  modifier: (double value) {
+                                    if (totalCalories <= goalCalories) {
+                                      final kcalLeft =
+                                          max(0, goalCalories - totalCalories);
+                                      return "$kcalLeft"; // Display the remaining calories
+                                    } else {
+                                      final kcalOver =
+                                          totalCalories - goalCalories;
+                                      return "$kcalOver"; // Display the exceeded calories
+                                    }
+                                  },
+                                  bottomLabelText: totalCalories <= goalCalories
+                                      ? 'KCAL Left'
+                                      : 'KCAL Over',
+                                ),
+                              ),
+                              min: 0,
+                              max: goalCalories,
+                              initialValue: min(totalCalories,
+                                  goalCalories), // The initial value is the minimum between totalCalories and goalCalories
                             ),
-                            modifier: (double value) {
-                              if (totalCalories <= goalCalories) {
-                                final kcalLeft =
-                                max(0, goalCalories - totalCalories);
-                                return "$kcalLeft"; // Display the remaining calories
-                              } else {
-                                final kcalOver =
-                                    totalCalories - goalCalories;
-                                return "$kcalOver"; // Display the exceeded calories
-                              }
-                            },
-                            bottomLabelText: totalCalories <= goalCalories
-                                ? 'KCAL Left'
-                                : 'KCAL Over',
-                          ),
-                        ),
-                        min: 0,
-                        max: goalCalories,
-                        initialValue: min(totalCalories,
-                            goalCalories), // The initial value is the minimum between totalCalories and goalCalories
-                      ),
                     ),
                   ),
                 ],
@@ -318,25 +319,27 @@ class _FoodState extends State<Food> {
               ),
               child: Column(
                 children: [
-                  goalProteins == 0 ? const Text('') : const Text(
-                    'Protein',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
+                  goalProteins == 0
+                      ? const Text('')
+                      : const Text(
+                          'Protein',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
                   SizedBox(
                     width: 120,
                     child: Theme(
                       data: Theme.of(context).copyWith(
                         sliderTheme: Theme.of(context).sliderTheme.copyWith(
-                          disabledActiveTrackColor: Colors.orange,
-                          disabledInactiveTrackColor:
-                          Colors.orange.withOpacity(0.3),
-                          //remove the thumb from the slider
-                          thumbShape: const RoundSliderThumbShape(
-                              enabledThumbRadius: 0.0),
-                        ),
+                              disabledActiveTrackColor: Colors.orange,
+                              disabledInactiveTrackColor:
+                                  Colors.orange.withOpacity(0.3),
+                              //remove the thumb from the slider
+                              thumbShape: const RoundSliderThumbShape(
+                                  enabledThumbRadius: 0.0),
+                            ),
                       ),
                       child: GestureDetector(
                         onTap: () async {
@@ -356,7 +359,7 @@ class _FoodState extends State<Food> {
                             },
                           );
                           SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
+                              await SharedPreferences.getInstance();
                           if (proteinGoal != null) {
                             setState(() {
                               goalProteins = double.parse(proteinGoal);
@@ -366,22 +369,26 @@ class _FoodState extends State<Food> {
 
                           loadGoalProteins();
                         },
-                        child: goalProteins == 0
-                            ? const Text(
-                          "Please set a\nprotein goal.",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: goalProteins == 0
+                              ? const Text(
+                            "Please set a\nprotein goal.",
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                              : Slider(
+                            value: min(totalProteins, goalProteins),
+                            min: 0,
+                            max: goalProteins,
+                            onChanged: null,
+                            // Disables the ability for this to be changed by user interaction
+                            label: "${totalProteins.round()}",
+                            divisions: 10,
                           ),
-                        )
-                            : Slider(
-                          value: min(totalProteins, goalProteins),
-                          min: 0,
-                          max: goalProteins,
-                          onChanged: null, // Disables the ability for this to be changed by user interaction
-                          label: "${totalProteins.round()}",
-                          divisions: 10,
                         ),
                       ),
                     ),
@@ -439,19 +446,19 @@ class _FoodState extends State<Food> {
                       ),
                       IconButton(
                         icon:
-                        const Icon(Icons.arrow_forward, color: Colors.red),
+                            const Icon(Icons.arrow_forward, color: Colors.red),
                         onPressed: selectedDate.isBefore(DateTime(
-                            DateTime.now().year,
-                            DateTime.now().month,
-                            DateTime.now().day))
+                                DateTime.now().year,
+                                DateTime.now().month,
+                                DateTime.now().day))
                             ? () async {
-                          setState(() {
-                            selectedDate =
-                                selectedDate.add(const Duration(days: 1));
-                          });
-                          await loadMealsFromDatabase();
-                          setState(() {});
-                        }
+                                setState(() {
+                                  selectedDate =
+                                      selectedDate.add(const Duration(days: 1));
+                                });
+                                await loadMealsFromDatabase();
+                                setState(() {});
+                              }
                             : null, // Disable the button if the selected date is today or in the future
                       ),
                     ],
@@ -484,7 +491,7 @@ class _FoodState extends State<Food> {
                           Padding(
                             // Add padding to the left
                             padding:
-                            const EdgeInsets.only(left: 9.0, right: 5.0),
+                                const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset('assets/image/Breakfast.png',
                                 width: 50, height: 50),
                           ),
@@ -509,7 +516,7 @@ class _FoodState extends State<Food> {
                                   context, "/addFood");
                               if (result != null) {
                                 Map<String, dynamic> mealData =
-                                result as Map<String, dynamic>;
+                                    result as Map<String, dynamic>;
                                 if (mealData['id'] != null &&
                                     mealData['nameComponent'] != null &&
                                     mealData['calories'] != null &&
@@ -520,7 +527,7 @@ class _FoodState extends State<Food> {
                                     breakfastMeals.add({
                                       'id': mealData['id'],
                                       'nameComponent':
-                                      mealData['nameComponent'],
+                                          mealData['nameComponent'],
                                       'calories': mealData['calories'],
                                       'proteins': mealData['proteins'],
                                       'mealType': mealData['mealType'],
@@ -541,7 +548,7 @@ class _FoodState extends State<Food> {
                           int mealId = meal['id'];
                           return Padding(
                             padding:
-                            const EdgeInsets.only(left: 10.0, bottom: 0.0),
+                                const EdgeInsets.only(left: 10.0, bottom: 0.0),
                             // Added padding to the left and bottom
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -596,11 +603,11 @@ class _FoodState extends State<Food> {
                           Padding(
                             // Add padding to the left
                             padding:
-                            const EdgeInsets.only(left: 9.0, right: 5.0),
+                                const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset("assets/image/Lunch.png",
                                 height: 50,
                                 width:
-                                50), // Some icon that could represent a meal
+                                    50), // Some icon that could represent a meal
                           ),
                           GestureDetector(
                             onTap: () {
@@ -622,7 +629,7 @@ class _FoodState extends State<Food> {
                                   context, "/addFood");
                               if (result != null) {
                                 Map<String, dynamic> mealData =
-                                result as Map<String, dynamic>;
+                                    result as Map<String, dynamic>;
                                 if (mealData['id'] != null &&
                                     mealData['nameComponent'] != null &&
                                     mealData['calories'] != null &&
@@ -633,7 +640,7 @@ class _FoodState extends State<Food> {
                                     lunchMeals.add({
                                       'id': mealData['id'],
                                       'nameComponent':
-                                      mealData['nameComponent'],
+                                          mealData['nameComponent'],
                                       'calories': mealData['calories'],
                                       'proteins': mealData['proteins'],
                                       'mealType': mealData['mealType'],
@@ -653,7 +660,8 @@ class _FoodState extends State<Food> {
                           String mealDetails = '${meal['nameComponent']}';
                           int mealId = meal['id'];
                           return Padding(
-                            padding: const EdgeInsets.only(left: 10.0, bottom: 0.0),
+                            padding:
+                                const EdgeInsets.only(left: 10.0, bottom: 0.0),
                             // Added padding to the left and bottom
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -707,11 +715,11 @@ class _FoodState extends State<Food> {
                           Padding(
                             // Add padding to the left
                             padding:
-                            const EdgeInsets.only(left: 9.0, right: 5.0),
+                                const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset("assets/image/Dinner.png",
                                 height: 50,
                                 width:
-                                50), // Some icon that could represent a meal
+                                    50), // Some icon that could represent a meal
                           ),
                           GestureDetector(
                             onTap: () {
@@ -733,7 +741,7 @@ class _FoodState extends State<Food> {
                                   context, "/addFood");
                               if (result != null) {
                                 Map<String, dynamic> mealData =
-                                result as Map<String, dynamic>;
+                                    result as Map<String, dynamic>;
                                 if (mealData['id'] != null &&
                                     mealData['nameComponent'] != null &&
                                     mealData['calories'] != null &&
@@ -744,7 +752,7 @@ class _FoodState extends State<Food> {
                                     dinnerMeals.add({
                                       'id': mealData['id'],
                                       'nameComponent':
-                                      mealData['nameComponent'],
+                                          mealData['nameComponent'],
                                       'calories': mealData['calories'],
                                       'proteins': mealData['proteins'],
                                       'mealType': mealData['mealType'],
@@ -817,11 +825,11 @@ class _FoodState extends State<Food> {
                           Padding(
                             // Add padding to the left
                             padding:
-                            const EdgeInsets.only(left: 9.0, right: 5.0),
+                                const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset("assets/image/Snacks.png",
                                 height: 50,
                                 width:
-                                50), // Some icon that could represent a meal
+                                    50), // Some icon that could represent a meal
                           ),
                           GestureDetector(
                             onTap: () {
@@ -843,7 +851,7 @@ class _FoodState extends State<Food> {
                                   context, "/addFood");
                               if (result != null) {
                                 Map<String, dynamic> mealData =
-                                result as Map<String, dynamic>;
+                                    result as Map<String, dynamic>;
                                 if (mealData['id'] != null &&
                                     mealData['nameComponent'] != null &&
                                     mealData['calories'] != null &&
@@ -854,7 +862,7 @@ class _FoodState extends State<Food> {
                                     snacksMeals.add({
                                       'id': mealData['id'],
                                       'nameComponent':
-                                      mealData['nameComponent'],
+                                          mealData['nameComponent'],
                                       'calories': mealData['calories'],
                                       'proteins': mealData['proteins'],
                                       'mealType': mealData['mealType'],
@@ -874,7 +882,8 @@ class _FoodState extends State<Food> {
                           String mealDetails = '${meal['nameComponent']}';
                           int mealId = meal['id'];
                           return Padding(
-                            padding: const EdgeInsets.only(left: 10.0, bottom: 0.0),
+                            padding:
+                                const EdgeInsets.only(left: 10.0, bottom: 0.0),
                             // Added padding to the left and bottom
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
