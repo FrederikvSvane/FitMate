@@ -13,6 +13,7 @@ import 'package:flutter_fitness_app/pages/workout.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:dcdg/dcdg.dart';
 
 Database? database;
 
