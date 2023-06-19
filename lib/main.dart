@@ -31,7 +31,6 @@ Future<void> main() async {
   // Insert mock data if in debug mode.
   await DBHelper.insertMockData();
 
-
   runApp(ChangeNotifierProvider(
     create: (context) => ActiveWorkoutState(),
     child: MaterialApp(
@@ -59,7 +58,7 @@ Future<void> main() async {
       initialRoute: "/",
       routes: {
         "/": (context) => const MainScaffold(),
-        "/introScreen": (context) =>  IntroScreen(), // Add this line
+        "/introScreen": (context) => IntroScreen(), // Add this line
         "/activeWorkout": (context) => const ActiveWorkout(),
         "/addExercise": (context) => const AddExercise(),
         "/addFavoriteMeal": (context) => const AddFavoriteMeal(),
@@ -67,7 +66,6 @@ Future<void> main() async {
         "/profile": (context) => const Profile()
       },
     ),
-
   ));
 }
 
@@ -78,7 +76,6 @@ class MainScaffold extends StatefulWidget {
   State<MainScaffold> createState() => _MainScaffoldState();
 }
 
-
 class _MainScaffoldState extends State<MainScaffold> {
   @override
   void initState() {
@@ -87,12 +84,14 @@ class _MainScaffoldState extends State<MainScaffold> {
   }
 
   Future checkFirstSeen() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool _introSeen = (prefs.getBool('intro_seen') ?? false);
+    var nav = Navigator.of(context);
 
-    if (!_introSeen) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool introSeen = (prefs.getBool('intro_seen') ?? false);
+
+    if (!introSeen) {
       await prefs.setBool('intro_seen', true);
-      Navigator.pushNamed(context, "/introScreen");
+      nav.pushReplacementNamed("/introScreen");
     }
   }
 
@@ -105,7 +104,7 @@ class _MainScaffoldState extends State<MainScaffold> {
           bottom: 0,
           child: Consumer<ActiveWorkoutState>(
             builder: (context, activeWorkoutState, child) {
-              if(activeWorkoutState.isActive){
+              if (activeWorkoutState.isActive) {
                 return ActiveWorkoutWindow();
               } else {
                 return Container();
@@ -117,8 +116,3 @@ class _MainScaffoldState extends State<MainScaffold> {
     );
   }
 }
-
-
-
-
-
