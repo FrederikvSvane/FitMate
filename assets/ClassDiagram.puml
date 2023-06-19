@@ -1,394 +1,154 @@
 @startuml
-set namespaceSeparator ::
+left to right direction
 
-class "flutter_fitness_app::classes::activeWorkoutState.dart::ActiveWorkoutState" {
-  +TimerService timerService
-  +bool isActive
-  +List<Exercise> activeExercises
-  +String workoutName
-  +bool getIsActive
-  +void startWorkout()
-  +void endWorkout()
-  +void addExercise()
-  +void updateExercise()
+class ActiveWorkoutState {
+  +isActive: bool
+  +activeExercises: List<Exercise>
+  +workoutName: String
+  +startWorkout(): void
+  +endWorkout(): void
 }
 
-"flutter_fitness_app::classes::activeWorkoutState.dart::ActiveWorkoutState" o-- "flutter_fitness_app::classes::timerService.dart::TimerService"
-"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "flutter_fitness_app::classes::activeWorkoutState.dart::ActiveWorkoutState"
-
-class "flutter_fitness_app::classes::Exercise.dart::Exercise" {
-  +String name
-  +List<int>? sets
-  +List<num>? reps
-  +List<num>? weight
-  +List<num>? time
-  +List<num>? distance
-  +String? date
-  +String toString()
+class TimerService {
+  +timer: Timer?
+  +startTimer(): void
+  +stopTimer(): void
 }
 
-class "flutter_fitness_app::classes::FoodApi.dart::FoodApi" {
-  +int? id
-  +String barcode
-  +String nameComponent
-  +double calories
-  +double proteins
-  +String? mealType
-  +String? date
-  +Map<String, dynamic> toMap()
-  {static} +dynamic getAllMeals()
-  +dynamic insertMeal()
-  {static} +dynamic fetchFoodApi()
-  {static} +dynamic getLatestMeal()
-  +dynamic getBarcode()
-  +dynamic getNameComponent()
-  +dynamic getCalories()
-  +dynamic getProteins()
+class Exercise {
+  +name: String
+  +sets: List<int>?
+  +reps: List<num>?
+  +weight: List<num>?
+  +distance: List<num>?
+  +duration: List<num>?
+  +toString(): String
 }
 
-class "flutter_fitness_app::classes::timerService.dart::TimerService" {
-  +StreamController<int> streamController
-  +Timer? timer
-  +int counter
-  +Stream<int> timerStream
-  +void startTimer()
-  +void stopTimer()
-  +void resetCounter()
-  +void dispose()
+class FoodApi {
+  +id: int?
+  +barcode: String
+  +calories: double
+  +proteins: double
+  +getAllMeals(): dynamic
 }
 
-"flutter_fitness_app::classes::timerService.dart::TimerService" o-- "dart::async::StreamController<int>"
-"flutter_fitness_app::classes::timerService.dart::TimerService" o-- "dart::async::Timer"
-"flutter_fitness_app::classes::timerService.dart::TimerService" o-- "dart::async::Stream<int>"
-
-class "flutter_fitness_app::classes::WorkoutTemplate.dart::WorkoutTemplate" {
-  +String workoutName
-  +List<Exercise> workoutExercises
-  +String date
+class DBHelper {
+  +getDatabase(): dynamic
+  +insertMeal(): dynamic
+  +insertExercise(): dynamic
+  +insertWorkout(): dynamic
+  +getAllMeals(): dynamic
 }
 
-class "flutter_fitness_app::DB::DBHelper.dart::DBHelper" {
-  {static} +dynamic getDatabase()
-  {static} +dynamic insertMeal()
-  {static} +dynamic insertMockData()
-  {static} +dynamic getMostRecentWeight()
-  {static} +dynamic insertExercise()
-  {static} +dynamic insertWorkout()
-  {static} +dynamic getAllMeals()
-  {static} +dynamic removeMeal()
-  {static} +dynamic getMealById()
-  {static} +dynamic getLatestMeal()
-  +dynamic getDB()
-  {static} +dynamic getCaloriesForDateRange()
-  {static} +dynamic getProteinsForDateRange()
-  {static} +dynamic getExercises()
-  {static} +dynamic getWorkouts()
-  {static} +dynamic weightDB()
-  {static} +dynamic insertWeight()
-  {static} +dynamic getAllWeights()
-  {static} +dynamic getLatestWeight()
-  {static} +dynamic getWeightsForDateRange()
+class Navigation {
+  +createState(): State<MainScaffold>
 }
 
-class "flutter_fitness_app::main.dart::MainScaffold" {
-  +State<MainScaffold> createState()
+class ActiveWorkout {
+  +createState(): State<ActiveWorkout>
 }
 
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::main.dart::MainScaffold"
-
-class "flutter_fitness_app::main.dart::_MainScaffoldState" {
-  +void initState()
-  +dynamic checkFirstSeen()
-  +Widget build()
+class ExerciseCard {
+  +exercise: Exercise
+  +exerciseIndex: int
 }
 
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::main.dart::_MainScaffoldState"
-
-class "flutter_fitness_app::pages::activeWorkout.dart::ActiveWorkout" {
-  +State<ActiveWorkout> createState()
+class Profile {
+  +Weight: double
+  +Name: String
+  +createState(): State<Profile>
 }
 
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::activeWorkout.dart::ActiveWorkout"
+class Settings {}
 
-class "flutter_fitness_app::pages::activeWorkout.dart::_ActiveWorkoutState" {
-  +List<Exercise> activeExercises
-  +TimerService timerService
-  +Widget build()
-  +void dispose()
-  +void saveExerciseData()
+class WorkoutTemplate {
+  +WorkoutTemplates: List<WorkoutTemplate>
 }
 
-"flutter_fitness_app::pages::activeWorkout.dart::_ActiveWorkoutState" o-- "flutter_fitness_app::classes::timerService.dart::TimerService"
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::activeWorkout.dart::_ActiveWorkoutState"
+class activeWorkoutWindow {}
 
-class "flutter_fitness_app::pages::activeWorkoutWindow.dart::ActiveWorkoutWindow" {
-  +Widget build()
+class addExercise {}
+
+class addFood {}
+
+class addFavoriteMeal {}
+
+class Food {
+    +meals: List<Map<String, dynamic>>
+    +selectedDate: DateTime
 }
 
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "flutter_fitness_app::pages::activeWorkoutWindow.dart::ActiveWorkoutWindow"
+class IntroScene {}
 
-class "flutter_fitness_app::pages::addExercise.dart::AddExercise" {
-  +State<AddExercise> createState()
-}
-
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::addExercise.dart::AddExercise"
-
-class "flutter_fitness_app::pages::addExercise.dart::_AddExerciseState" {
-  +Exercise? selectedExercise
-  +List<Exercise> Exercises
-  +dynamic sortExercises()
-  -void _showExerciseSearch()
-  +Widget build()
-  +dynamic checkDatabase()
-}
-
-"flutter_fitness_app::pages::addExercise.dart::_AddExerciseState" o-- "flutter_fitness_app::classes::Exercise.dart::Exercise"
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::addExercise.dart::_AddExerciseState"
-
-class "flutter_fitness_app::pages::addFavoriteMeal.dart::AddFavoriteMeal" {
-  +addFavoriteMealState createState()
-}
-
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::addFavoriteMeal.dart::AddFavoriteMeal"
-
-class "flutter_fitness_app::pages::addFavoriteMeal.dart::addFavoriteMealState" {
-  +String whichMeal
-  +String whichPick
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::addFavoriteMeal.dart::addFavoriteMealState"
-
-class "flutter_fitness_app::pages::addFood.dart::AddFood" {
-  +AddFoodState createState()
-}
-
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::addFood.dart::AddFood"
-
-class "flutter_fitness_app::pages::addFood.dart::AddFoodState" {
-  +TextEditingController barcodeController
-  +TextEditingController howMuchController
-  +TextEditingController nameController
-  +TextEditingController caloriesController
-  +TextEditingController proteinsController
-  +dynamic foodApiFuture
-  +String mealType
-  +void init()
-  +dynamic fetchFood()
-  +dynamic addMeal()
-  +Widget build()
-  +void showSnackBar()
-  +void dispose()
-}
-
-"flutter_fitness_app::pages::addFood.dart::AddFoodState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::addFood.dart::AddFoodState"
-
-class "flutter_fitness_app::pages::exerciseCard.dart::ExerciseCard" {
-  +Exercise exercise
-  +int exerciseIndex
-  +_ExerciseCardState createState()
-}
-
-"flutter_fitness_app::pages::exerciseCard.dart::ExerciseCard" o-- "flutter_fitness_app::classes::Exercise.dart::Exercise"
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::exerciseCard.dart::ExerciseCard"
-
-class "flutter_fitness_app::pages::exerciseCard.dart::_ExerciseCardState" {
-  -List<Widget> _setRows
-  -TextEditingController _buildTextEditingController()
-  -void _addSetRow()
-  +void initState()
-  +Widget build()
-  -List<Widget> _buildExerciseRows()
-  -Widget _buildTextField()
-}
-
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::exerciseCard.dart::_ExerciseCardState"
-
-class "flutter_fitness_app::pages::food.dart::Food" {
-  +State<Food> createState()
-}
-
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::food.dart::Food"
-
-class "flutter_fitness_app::pages::food.dart::_FoodState" {
-  +List<Map<String, dynamic>> breakfastMeals
-  +List<Map<String, dynamic>> lunchMeals
-  +List<Map<String, dynamic>> dinnerMeals
-  +List<Map<String, dynamic>> snacksMeals
-  +double totalCalories
-  +double totalProteins
-  +GlobalKey<RefreshIndicatorState> refreshKey
-  +double goalCalories
-  +double goalProteins
-  +void initState()
-  +void loadGoalCalories()
-  +void loadGoalProteins()
-  +dynamic loadMealsFromDatabase()
-  -dynamic _showDeleteConfirmationDialog()
-  +Widget build()
-}
-
-"flutter_fitness_app::pages::food.dart::_FoodState" o-- "flutter::src::widgets::framework.dart::GlobalKey<RefreshIndicatorState>"
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::food.dart::_FoodState"
-
-class "flutter_fitness_app::pages::introScene.dart::IntroScreen" {
-  +_IntroScreenState createState()
-}
-
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::introScene.dart::IntroScreen"
-
-class "flutter_fitness_app::pages::introScene.dart::_IntroScreenState" {
-  +TextEditingController nameController
-  +TextEditingController ageController
-  +TextEditingController weightController
-  +TextEditingController heightController
-  +TextEditingController activityLevelController
-  +TextEditingController genderController
-  +String? activityLevel
-  +Widget build()
-}
-
-"flutter_fitness_app::pages::introScene.dart::_IntroScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::introScene.dart::_IntroScreenState"
-
-class "flutter_fitness_app::pages::measure.dart::Measure" {
-  +State<Measure> createState()
-}
-
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::measure.dart::Measure"
-
-class "flutter_fitness_app::pages::measure.dart::MeasureState" {
+class Measure {
   +bool animate
   +DateTimeRange selectedDateRange
-  -dynamic _fetchCaloriesData()
-  -dynamic _fetchProteinsData()
-  -dynamic _fetchWeightData()
-  -void _selectDateRange()
-  -Widget _buildTimeSeriesChart()
-  +Widget build()
+  +dynamic _fetchCaloriesData()
+  +dynamic _fetchProteinsData()
+  +dynamic _fetchWeightData()
+  +void _selectDateRange()
 }
 
-"flutter_fitness_app::pages::measure.dart::MeasureState" o-- "flutter::src::material::date.dart::DateTimeRange"
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::measure.dart::MeasureState"
-
-class "flutter_fitness_app::pages::measure.dart::TimeSeriesCalories" {
-  +DateTime time
-  +double calories
+class Navigation {
+  +int _currentIndex
+  +List<Widget> _children
+  +void onTabTapped(int index)
 }
 
-class "flutter_fitness_app::pages::measure.dart::TimeSeriesProteins" {
-  +DateTime time
-  +double proteins
+class SearchExercises {
+    +List<Exercise> exercises
+    +List<Exercise> filteredExercises
+    +void initState()
+    +void filterSearchResults(String query)
+    +void _getExercises()
 }
 
-class "flutter_fitness_app::pages::measure.dart::TimeSeriesWeight" {
-  +DateTime time
-  +num weight
-}
-
-class "flutter_fitness_app::pages::navigation.dart::Navigation" {
-  +State<Navigation> createState()
-}
-
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::navigation.dart::Navigation"
-
-class "flutter_fitness_app::pages::navigation.dart::_NavigationState" {
-  +int selectedIndex
-  {static} -List<Widget> _widgetOptions
-  -void _onItemTapped()
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::navigation.dart::_NavigationState"
-
-class "flutter_fitness_app::pages::profile.dart::Profile" {
-  +ProfileState createState()
-}
-
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::profile.dart::Profile"
-
-class "flutter_fitness_app::pages::profile.dart::ProfileState" {
-  +int? steps
-  {static} +List<HealthDataType> types
-  +HealthFactory health
-  +List<HealthDataAccess> permissions
-  +double goalCalories
-  +double goalProteins
-  +double totalCalories
-  +double totalProteins
-  +void initState()
-  +dynamic initializeData()
-  +void loadGoalCalories()
-  +void loadGoalProteins()
-  +dynamic authorize()
-  +void displayMostRecentWeight()
-  +dynamic fetchData()
-  +dynamic fetchStepData()
-  +dynamic fetchStepDataFromDate()
-  +void addWeightToDB()
-  +double basalCalorieBurner()
-  +double stepCalorieBurner()
-  +Widget build()
-  +Widget listBuilder1()
-  +Widget listBuilder2()
-}
-
-"flutter_fitness_app::pages::profile.dart::ProfileState" o-- "health::health.dart::HealthFactory"
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::profile.dart::ProfileState"
-
-class "flutter_fitness_app::pages::profile.dart::StepAndCalorieData" {
-  +int steps
-  +double basalCalories
-  +double stepCalories
-  +double totalCalories
-}
-
-class "flutter_fitness_app::pages::SearchExercises.dart::SearchExercises" {
-  +List<Exercise> exerciseList
-  +List<Widget> buildActions()
-  +Widget buildLeading()
-  +Widget buildResults()
-  +Widget buildSuggestions()
-}
-
-"flutter::src::material::search.dart::SearchDelegate" <|-- "flutter_fitness_app::pages::SearchExercises.dart::SearchExercises"
-
-class "flutter_fitness_app::pages::settings.dart::History" {
-  +HistoryState createState()
-}
-
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "flutter_fitness_app::pages::settings.dart::History"
-
-class "flutter_fitness_app::pages::settings.dart::HistoryState" {
-  +bool darkMode
-  +bool gender
-  +SharedPreferences prefs
-  +TextEditingController nameController
-  +TextEditingController ageController
-  +TextEditingController weightController
-  +TextEditingController heightController
-  +TextEditingController activityLevelController
-  +TextEditingController genderController
-  +void initState()
-  +void getPrefs()
-  +Widget build()
-}
-
-"flutter_fitness_app::pages::settings.dart::HistoryState" o-- "shared_preferences::shared_preferences.dart::SharedPreferences"
-"flutter_fitness_app::pages::settings.dart::HistoryState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::settings.dart::HistoryState"
-
-class "flutter_fitness_app::pages::templateCard.dart::TemplateCard" {
-  +void initState()
-  +void didChangeDependencies()
-  +void fetchWorkoutTemplates()
+class TemplateCard {
+ +void fetchWorkoutTemplates()
   +Widget build()
   +Widget listBuilder2()
   +dynamic checkDatabase()
 }
 
-"flutter::src::widgets::framework.dart::State" <|-- "flutter_fitness_app::pages::workout.dart::_WorkoutState"
+class Workout {
+    +TextButton startWorkoutButton()
+    +ListView.builder itemBuilder()
+}
 
+ActiveWorkoutState o-- TimerService
+ActiveWorkoutState o-- Exercise
+ExerciseCard o-- Exercise
+Profile --o DBHelper
+Food -- DBHelper
+addFood --o FoodApi
+Workout -- DBHelper
+ActiveWorkoutState -- ActiveWorkout
+Measure --o DBHelper
+WorkoutTemplate --o DBHelper
+ActiveWorkout ..> addExercise
+ActiveWorkout <.. Workout
+ActiveWorkout --o ExerciseCard
+addExercise ..> SearchExercises
+
+main o-- Navigation
+main ..> activeWorkoutWindow
+main ..> IntroScene
+
+Navigation ..> Profile
+Navigation ..> Food
+Navigation ..> Measure
+Navigation ..> Workout
+Navigation ..> Settings
+
+Food o-- addFood
+Food o-- addFavoriteMeal
+
+Workout o-- WorkoutTemplate
+
+Profile -- Settings
+Profile --o IntroScene
+
+WorkoutTemplate o-- TemplateCard
 
 @enduml
