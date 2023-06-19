@@ -86,58 +86,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                       children: <Widget>[
                         SimpleDialogOption(
                           onPressed: () async {
-                            Map<String, dynamic> exerciseData = {
-                              'name': '',
-                              'sets': '',
-                              'reps': '',
-                              'weight': '',
-                              'time': '',
-                              'distance': '',
-                              'date': DateTime.now().toString(),
-                            };
-                            for (int i = 0; i <
-                                activeWorkoutState.activeExercises
-                                    .length; i++) {
-                              exerciseData['name'] =
-                                  activeWorkoutState.activeExercises[i].name;
-                              exerciseData['sets'] = '';
-                              exerciseData['reps'] = '';
-                              exerciseData['weight'] = '';
-                              exerciseData['time'] = '';
-                              exerciseData['distance'] = '';
-                              for (int j = 0; j <
-                                  activeWorkoutState.activeExercises[i].sets!
-                                      .length; j++) {
-                                exerciseData['sets'] += '${j + 1},';
-                                if (activeWorkoutState.activeExercises[i]
-                                    .weight != null) {
-                                  exerciseData['reps'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .reps?[j]},';
-                                  exerciseData['weight'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .weight?[j]},';
-                                } else if (activeWorkoutState.activeExercises[i]
-                                    .distance != null) {
-                                  exerciseData['time'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .time?[j]},';
-                                  exerciseData['distance'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .distance?[j]},';
-                                } else if (activeWorkoutState.activeExercises[i]
-                                    .time != null) {
-                                  exerciseData['time'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .time?[j]},';
-                                } else {
-                                  exerciseData['reps'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .reps?[j]},';
-                                }
-                              }
-                              await DBHelper.insertExercise(exerciseData);
-                            }
+                            saveExerciseData(activeExercises);
                             var activeWorkoutState1 = Provider.of<
                                 ActiveWorkoutState>(context, listen: false);
                             activeWorkoutState1.endWorkout();
@@ -160,58 +109,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                         ),
                         SimpleDialogOption(
                           onPressed: () async {
-                            Map<String, dynamic> exerciseData = {
-                              'name': '',
-                              'sets': '',
-                              'reps': '',
-                              'weight': '',
-                              'time': '',
-                              'distance': '',
-                              'date': DateTime.now().toString(),
-                            };
-                            for (int i = 0; i <
-                                activeWorkoutState.activeExercises
-                                    .length; i++) {
-                              exerciseData['name'] =
-                                  activeWorkoutState.activeExercises[i].name;
-                              exerciseData['sets'] = '';
-                              exerciseData['reps'] = '';
-                              exerciseData['weight'] = '';
-                              exerciseData['time'] = '';
-                              exerciseData['distance'] = '';
-                              for (int j = 0; j <
-                                  activeWorkoutState.activeExercises[i].sets!
-                                      .length; j++) {
-                                exerciseData['sets'] += '${j + 1},';
-                                if (activeWorkoutState.activeExercises[i]
-                                    .weight != null) {
-                                  exerciseData['reps'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .reps?[j]},';
-                                  exerciseData['weight'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .weight?[j]},';
-                                } else if (activeWorkoutState.activeExercises[i]
-                                    .distance != null) {
-                                  exerciseData['time'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .time?[j]},';
-                                  exerciseData['distance'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .distance?[j]},';
-                                } else if (activeWorkoutState.activeExercises[i]
-                                    .time != null) {
-                                  exerciseData['time'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .time?[j]},';
-                                } else {
-                                  exerciseData['reps'] +=
-                                  '${activeWorkoutState.activeExercises[i]
-                                      .reps?[j]},';
-                                }
-                              }
-                              await DBHelper.insertExercise(exerciseData);
-                            }
+                            saveExerciseData(activeExercises);
                             Map<String, dynamic> workoutData = {
                               'workoutName': template.workoutName,
                               'exercises': '',
@@ -366,7 +264,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
     timerService.dispose();
     super.dispose();
   }
-  Map<String, dynamic> saveExerciseData() {
+  void saveExerciseData(List<Exercise> exercises) async {
     Map<String, dynamic> exerciseData = {
       'name': '',
       'sets': '',
@@ -376,35 +274,35 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
       'distance': '',
       'date': DateTime.now().toString(),
     };
-    for (int i = 0; i < activeWorkoutState.activeExercises.length; i++) {
-      exerciseData['name'] = activeWorkoutState.activeExercises[i].name;
+    for (int i = 0; i < exercises.length; i++) {
+      exerciseData['name'] = exercises[i].name;
       exerciseData['sets'] = '';
       exerciseData['reps'] = '';
       exerciseData['weight'] = '';
       exerciseData['time'] = '';
       exerciseData['distance'] = '';
       for (int j = 0; j <
-          activeWorkoutState.activeExercises[i].sets!.length; j++) {
+          exercises[i].sets!.length; j++) {
         exerciseData['sets'] += '${j + 1},';
-        if (activeWorkoutState.activeExercises[i].weight != null) {
+        if (exercises[i].weight != null) {
           exerciseData['reps'] +=
-          '${activeWorkoutState.activeExercises[i].reps?[j]},';
+          '${exercises[i].reps?[j]},';
           exerciseData['weight'] +=
-          '${activeWorkoutState.activeExercises[i].weight?[j]},';
-        } else if (activeWorkoutState.activeExercises[i].distance != null) {
+          '${exercises[i].weight?[j]},';
+        } else if (exercises[i].distance != null) {
           exerciseData['time'] +=
-          '${activeWorkoutState.activeExercises[i].time?[j]},';
+          '${exercises[i].time?[j]},';
           exerciseData['distance'] +=
-          '${activeWorkoutState.activeExercises[i].distance?[j]},';
-        } else if (activeWorkoutState.activeExercises[i].time != null) {
+          '${exercises[i].distance?[j]},';
+        } else if (exercises[i].time != null) {
           exerciseData['time'] +=
-          '${activeWorkoutState.activeExercises[i].time?[j]},';
+          '${exercises[i].time?[j]},';
         } else {
           exerciseData['reps'] +=
-          '${activeWorkoutState.activeExercises[i].reps?[j]},';
+          '${exercises[i].reps?[j]},';
         }
       }
     }
-    return exerciseData;
+    await DBHelper.insertExercise(exerciseData);
   }
 }
