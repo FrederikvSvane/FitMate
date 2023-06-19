@@ -18,7 +18,7 @@ class Profile extends StatefulWidget {
 
 double weight = 0;
 
-double height = 180.0;
+double height = 0;
 
 TextEditingController _textEditingController = TextEditingController();
 String textValue = _textEditingController.text;
@@ -203,7 +203,6 @@ class ProfileState extends State<Profile> {
   }
 
   double basalCalorieBurner() {
-    double weight = 90.0;
     int age = 23;
 
     double dailyCal = (10 * weight + 6.25 * height - 5 * age);
@@ -213,7 +212,6 @@ class ProfileState extends State<Profile> {
 
   double stepCalorieBurner(int steps) {
     double factor = 0.0000031578947;
-    double weight = 90.0;
 
     double stepCal = height * weight * factor * steps;
 
