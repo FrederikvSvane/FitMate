@@ -93,7 +93,6 @@ class _IntroScreenState extends State<IntroScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                  //Check if all fields are filled
                   if (nameController.text.isEmpty ||
                       ageController.text.isEmpty ||
                       weightController.text.isEmpty ||

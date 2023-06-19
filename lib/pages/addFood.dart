@@ -47,7 +47,6 @@ class AddFoodState extends State<AddFood> {
     }
   }
 
-
   String mealType = '';
 
   Future<void> addMeal() async {
@@ -112,8 +111,7 @@ class AddFoodState extends State<AddFood> {
       final localContext = context;
       Navigator.pop(localContext, {'nameComponent': nameController.text});
     } catch (e) {
-      if (kDebugMode) {
-      }
+      if (kDebugMode) {}
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Failed to add meal'),
@@ -191,7 +189,6 @@ class AddFoodState extends State<AddFood> {
                               child: ElevatedButton.icon(
                                 onPressed: () {
                                   bool validNumbers = true;
-                                  // Check if they both can be parsed to int
                                   try {
                                     int.parse(barcodeController.text);
                                   } catch (e) {
@@ -207,14 +204,16 @@ class AddFoodState extends State<AddFood> {
                                   if (validNumbers &&
                                       barcodeController.text.isNotEmpty) {
                                     setState(() {
-                                      foodApiFuture = fetchFood(barcodeController.text);
+                                      foodApiFuture =
+                                          fetchFood(barcodeController.text);
 
-                                      foodApiFuture = fetchFood(barcodeController.text);
+                                      foodApiFuture =
+                                          fetchFood(barcodeController.text);
                                       foodApiFuture!.then((foodApi) async {
                                         double caloriesPerGram =
-                                        foodApi.calories.toDouble();
+                                            foodApi.calories.toDouble();
                                         double proteinsPerGram =
-                                        foodApi.proteins.toDouble();
+                                            foodApi.proteins.toDouble();
 
                                         if (mounted) {
                                           setState(() {
@@ -323,7 +322,6 @@ class AddFoodState extends State<AddFood> {
     );
   }
 
-  //Show snack bar with message function
   void showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -335,7 +333,6 @@ class AddFoodState extends State<AddFood> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the widget tree.
     barcodeController.dispose();
     howMuchController.dispose();
     super.dispose();

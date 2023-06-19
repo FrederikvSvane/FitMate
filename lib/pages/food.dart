@@ -288,8 +288,7 @@ class _FoodState extends State<Food> {
                               ),
                               min: 0,
                               max: goalCalories,
-                              initialValue: min(totalCalories,
-                                  goalCalories),
+                              initialValue: min(totalCalories, goalCalories),
                             ),
                     ),
                   ),
@@ -364,22 +363,21 @@ class _FoodState extends State<Food> {
                           alignment: Alignment.center,
                           child: goalProteins == 0
                               ? const Text(
-                            "Please set a\nprotein goal.",
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
+                                  "Please set a\nprotein goal.",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
                               : Slider(
-                            value: min(totalProteins, goalProteins),
-                            min: 0,
-                            max: goalProteins,
-                            onChanged: null,
-
-                            label: "${totalProteins.round()}",
-                            divisions: 10,
-                          ),
+                                  value: min(totalProteins, goalProteins),
+                                  min: 0,
+                                  max: goalProteins,
+                                  onChanged: null,
+                                  label: "${totalProteins.round()}",
+                                  divisions: 10,
+                                ),
                         ),
                       ),
                     ),
@@ -543,8 +541,7 @@ class _FoodState extends State<Food> {
                               children: [
                                 Text(
                                   mealDetails,
-                                  style: const TextStyle(
-                                      fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.delete_forever),
@@ -564,7 +561,6 @@ class _FoodState extends State<Food> {
                 ),
               ),
             ),
-
             Container(
               margin: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(
@@ -590,9 +586,7 @@ class _FoodState extends State<Food> {
                             padding:
                                 const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset("assets/image/Lunch.png",
-                                height: 50,
-                                width:
-                                    50),
+                                height: 50, width: 50),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -603,8 +597,7 @@ class _FoodState extends State<Food> {
                             child: const Text(
                               'Lunch',
                               style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold),
+                                  fontSize: 24, fontWeight: FontWeight.bold),
                             ),
                           ),
                           IconButton(
@@ -652,8 +645,7 @@ class _FoodState extends State<Food> {
                               children: [
                                 Text(
                                   mealDetails,
-                                  style: TextStyle(
-                                      fontSize: 18),
+                                  style: TextStyle(fontSize: 18),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.delete_forever),
@@ -673,7 +665,6 @@ class _FoodState extends State<Food> {
                 ),
               ),
             ),
-
             Container(
               margin: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(
@@ -699,9 +690,7 @@ class _FoodState extends State<Food> {
                             padding:
                                 const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset("assets/image/Dinner.png",
-                                height: 50,
-                                width:
-                                    50),
+                                height: 50, width: 50),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -712,8 +701,7 @@ class _FoodState extends State<Food> {
                             child: const Text(
                               'Dinner',
                               style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold),
+                                  fontSize: 24, fontWeight: FontWeight.bold),
                             ),
                           ),
                           IconButton(
@@ -761,8 +749,7 @@ class _FoodState extends State<Food> {
                               children: [
                                 Text(
                                   mealDetails,
-                                  style: TextStyle(
-                                      fontSize: 18),
+                                  style: TextStyle(fontSize: 18),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.delete_forever),
@@ -807,9 +794,7 @@ class _FoodState extends State<Food> {
                             padding:
                                 const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset("assets/image/Snacks.png",
-                                height: 50,
-                                width:
-                                    50),
+                                height: 50, width: 50),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -820,8 +805,7 @@ class _FoodState extends State<Food> {
                             child: const Text(
                               'Snacks',
                               style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold),
+                                  fontSize: 24, fontWeight: FontWeight.bold),
                             ),
                           ),
                           IconButton(
@@ -869,8 +853,7 @@ class _FoodState extends State<Food> {
                               children: [
                                 Text(
                                   mealDetails,
-                                  style: const TextStyle(
-                                      fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.delete_forever),

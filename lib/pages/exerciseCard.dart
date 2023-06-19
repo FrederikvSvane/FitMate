@@ -5,9 +5,10 @@ import 'package:provider/provider.dart';
 
 class ExerciseCard extends StatefulWidget {
   final Exercise exercise;
-  final int exerciseIndex; // Add this
+  final int exerciseIndex;
 
-  ExerciseCard({required this.exercise, required this.exerciseIndex}); // Modify this
+  ExerciseCard(
+      {required this.exercise, required this.exerciseIndex});
 
   @override
   _ExerciseCardState createState() => _ExerciseCardState();
@@ -24,14 +25,11 @@ class _ExerciseCardState extends State<ExerciseCard> {
     return controller;
   }
 
-
-
   void _addSetRow() {
     setState(() {
       int nextSetNumber = widget.exercise.sets!.length + 1;
       widget.exercise.sets!.add(nextSetNumber);
 
-      // Dynamically check which properties are not null
       if (widget.exercise.weight != null) {
         widget.exercise.weight!.add(0);
       }
@@ -45,7 +43,6 @@ class _ExerciseCardState extends State<ExerciseCard> {
         widget.exercise.time!.add(0);
       }
 
-      // Rebuild the set rows
       _setRows = _buildExerciseRows(widget.exercise);
     });
   }
@@ -92,7 +89,6 @@ class _ExerciseCardState extends State<ExerciseCard> {
     );
   }
 
-
   List<Widget> _buildExerciseRows(Exercise exercise) {
     List<Widget> rows = [];
     for (int i = 0; i < exercise.sets!.length; i++) {
@@ -108,16 +104,16 @@ class _ExerciseCardState extends State<ExerciseCard> {
             "Reps", i, exercise.reps!, (value) => exercise.reps![i] = value));
       }
       if (exercise.weight != null) {
-        columns.add(_buildTextField(
-            "Weight (kg)", i, exercise.weight!, (value) => exercise.weight![i] = value));
+        columns.add(_buildTextField("Weight (kg)", i, exercise.weight!,
+            (value) => exercise.weight![i] = value));
       }
       if (exercise.time != null) {
         columns.add(_buildTextField(
             "Time", i, exercise.time!, (value) => exercise.time![i] = value));
       }
       if (exercise.distance != null) {
-        columns.add(_buildTextField(
-            "Distance", i, exercise.distance!, (value) => exercise.distance![i] = value));
+        columns.add(_buildTextField("Distance", i, exercise.distance!,
+            (value) => exercise.distance![i] = value));
       }
 
       rows.add(Row(
@@ -128,8 +124,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
     return rows;
   }
 
-  Widget _buildTextField(String label, int index, List<num> data,
-      Function(num) updateFunction) {
+  Widget _buildTextField(
+      String label, int index, List<num> data, Function(num) updateFunction) {
     TextEditingController controller = _buildTextEditingController(data, index);
     return Container(
       width: 100,
@@ -141,8 +137,10 @@ class _ExerciseCardState extends State<ExerciseCard> {
           num? newValue = num.tryParse(value);
           if (newValue != null) {
             updateFunction(newValue);
-            final activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
-            activeWorkoutState.updateExercise(widget.exerciseIndex, widget.exercise);
+            final activeWorkoutState =
+                Provider.of<ActiveWorkoutState>(context, listen: false);
+            activeWorkoutState.updateExercise(
+                widget.exerciseIndex, widget.exercise);
           }
         },
       ),

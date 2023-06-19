@@ -75,7 +75,6 @@ class _AddExerciseState extends State<AddExercise> {
   ];
 
   sortExercises() {
-    //Sorterer øvelserne alfabetisk
     for (int i = 0; i < Exercises.length; i++) {
       for (int j = i + 1; j < Exercises.length; j++) {
         if (Exercises[i]
@@ -99,11 +98,9 @@ class _AddExerciseState extends State<AddExercise> {
     Exercise? newExercise = await checkDatabase(result!);
 
     if (newExercise.name != "") {
-      //Den valgte øvelse bliver returneret tilbage til active workout
-      setState((){
+      setState(() {
         Navigator.pop(context, newExercise);
-      }
-      );
+      });
     }
   }
 
@@ -141,12 +138,13 @@ class _AddExerciseState extends State<AddExercise> {
       ),
     );
   }
-  Future<Exercise> checkDatabase(Exercise exercise) async{
+
+  Future<Exercise> checkDatabase(Exercise exercise) async {
     List<Exercise> savedExercise = [];
     savedExercise = await fetchExercises();
 
-    for(int i = 0; i < savedExercise.length; i++){
-      if(savedExercise[i].name == exercise.name){
+    for (int i = 0; i < savedExercise.length; i++) {
+      if (savedExercise[i].name == exercise.name) {
         exercise = savedExercise[i];
       }
     }

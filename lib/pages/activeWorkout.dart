@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:flutter_fitness_app/classes/Exercise.dart';
 import 'package:flutter_fitness_app/classes/WorkoutTemplate.dart';
 import 'package:flutter_fitness_app/classes/timerService.dart';
 import 'package:flutter_fitness_app/pages/exerciseCard.dart';
-import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:provider/provider.dart';
 
-import '../DB/DBHelper.dart';
 import '../classes/activeWorkoutState.dart';
 
 class ActiveWorkout extends StatefulWidget {
@@ -21,7 +20,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
 
   TimerService timerService = TimerService();
 
-
   @override
   Widget build(BuildContext context) {
     final activeWorkoutState = Provider.of<ActiveWorkoutState>(context);
@@ -33,10 +31,9 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           leading: IconButton(
-            // Add this leading property
             icon: Icon(Icons.arrow_downward, color: Colors.white),
             onPressed: () {
-              Navigator.pop(context); // Navigates to the previous page
+              Navigator.pop(context);
             },
           ),
           title: StreamBuilder<int>(
@@ -67,7 +64,8 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                       children: <Widget>[
                         SimpleDialogOption(
                           onPressed: () async {
-                            saveExerciseData(activeWorkoutState.activeExercises);
+                            saveExerciseData(
+                                activeWorkoutState.activeExercises);
                             var activeWorkoutState1 =
                                 Provider.of<ActiveWorkoutState>(context,
                                     listen: false);
@@ -122,10 +120,10 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                             );
 
                             if (workoutName != null && workoutName.isNotEmpty) {
-                              saveExerciseData(activeWorkoutState.activeExercises);
+                              saveExerciseData(
+                                  activeWorkoutState.activeExercises);
                               Map<String, dynamic> workoutData = {
                                 'workoutName': workoutName,
-                                // Use user entered workoutName
                                 'exercises': '',
                                 'type': '',
                                 'sets': '',
@@ -212,8 +210,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         ),
         body: Stack(
           children: [
-            // List of exercises
-
             ListView.builder(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 100.0),
               itemCount: activeWorkoutState.activeExercises.length,
@@ -224,7 +220,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                 );
               },
             ),
-            // Buttons to cancel workout and add exercise
             Positioned(
               left: 0,
               right: 0,
@@ -235,7 +230,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Cancel Workout Button
                       ElevatedButton.icon(
                         onPressed: () {
                           var activeWorkoutState =
@@ -251,7 +245,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                         icon: Icon(Icons.cancel_outlined),
                         label: Text("Cancel Workout"),
                       ),
-                      // Add Exercise Button
                       ElevatedButton.icon(
                         onPressed: () async {
                           dynamic result = await Navigator.pushNamed(
