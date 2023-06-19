@@ -43,6 +43,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
   @override
   Widget build(BuildContext context) {
     final activeWorkoutState = Provider.of<ActiveWorkoutState>(context);
+    print("active workout start ${activeWorkoutState.activeExercises} ");
     final timerService = activeWorkoutState.timerService;
 
     return WillPopScope(
@@ -198,13 +199,15 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         body: Stack(
           children: [
             // List of exercises
+
             ListView.builder(
+
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 100.0),
               itemCount: activeWorkoutState.activeExercises.length,
               itemBuilder: (context, index) {
                 return ExerciseCard(
                   exercise: activeWorkoutState.activeExercises[index],
-                  exerciseIndex: index, // Pass the index to ExerciseCard
+                  exerciseIndex: index,
                 );
               },
             ),

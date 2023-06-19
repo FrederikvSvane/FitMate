@@ -21,11 +21,7 @@ class _AddExerciseState extends State<AddExercise> {
     Exercise(name: "Bench Press", sets: [], reps: [], weight: []),
     Exercise(name: "Deadlift", sets: [], reps: [], weight: []),
     Exercise(name: "Overhead Press", sets: [], reps: [], weight: []),
-    Exercise(
-        name: "Barbell Row",
-        sets: [1, 2, 3],
-        reps: [4, 4, 4],
-        weight: [10, 40, 30]),
+    Exercise(name: "Barbell Row", sets: [], reps: [], weight: []),
     Exercise(name: "Pull Ups", sets: [], reps: [], weight: []),
     Exercise(name: "Push Ups", sets: [], reps: [], weight: []),
     Exercise(name: "Dips", sets: [], reps: [], weight: []),

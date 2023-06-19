@@ -184,11 +184,14 @@ class _WorkoutState extends State<Workout> {
           onTap: () {
             var activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
 
-            activeWorkoutState.startWorkout();
+            for (Exercise exercise in workoutTemplates[index].workoutExercises) {
+              activeWorkoutState.addExercise(exercise);
+            }
 
-            activeWorkoutState.activeExercises = workoutTemplates[index].workoutExercises;
+            activeWorkoutState.startWorkout(); // assuming this is an async function
 
-            Navigator.pushNamed(context, "/activeWorkout", arguments: workoutTemplates[index]);
+            Navigator.pushNamed(context, "/activeWorkout");
+
           },
           child: TemplateCard(template: workoutTemplates[index]),
           //title: Text(activeExercises[index].name),
@@ -197,4 +200,5 @@ class _WorkoutState extends State<Workout> {
       },
     );
   }
+
 }

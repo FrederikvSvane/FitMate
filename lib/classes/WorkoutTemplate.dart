@@ -1,3 +1,5 @@
+import 'package:path/path.dart';
+
 import '../DB/DBHelper.dart';
 import 'Exercise.dart';
 
@@ -27,16 +29,20 @@ Future<List<WorkoutTemplate>> convertToWorkoutTemplates() async {
 
     List<Exercise> exercises = [];
     for (int i = 0; i < exerciseNames.length; i++) {
+      List<int> currentSets = [];
+      for(int j = 0; j < sets[i]; j++){
+        currentSets.add(j+1);
+      }
       String exerciseName = exerciseNames[i];
       Exercise exercise = Exercise(name: '');
       if (types[i] == 1){
-        exercise = Exercise(name: exerciseName, sets: sets, weight: [], reps: []);
+        exercise = Exercise(name: exerciseName, sets: currentSets, weight: [], reps: []);
       } else if (types[i] == 2){
-        exercise = Exercise(name: exerciseName, sets: sets, distance: [], time: []);
+        exercise = Exercise(name: exerciseName, sets: currentSets, distance: [], time: []);
       } else if (types[i] == 3){
-        exercise = Exercise(name: exerciseName, sets: sets, time: []);
+        exercise = Exercise(name: exerciseName, sets: currentSets, time: []);
       } else {
-        exercise = Exercise(name: exerciseName, sets: sets, reps: []);
+        exercise = Exercise(name: exerciseName, sets: currentSets, reps: []);
       }
       exercises.add(exercise);
     }
