@@ -314,7 +314,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         }
       }
     }
-    print("Exercise Data: $exerciseData");
     await DBHelper.insertExercise(exerciseData);
   }
 }

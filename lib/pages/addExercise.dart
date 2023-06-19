@@ -17,7 +17,6 @@ class _AddExerciseState extends State<AddExercise> {
 
   List<Exercise> Exercises = [
     Exercise(name: "Squat", sets: [], reps: [], weight: []),
-    //Objekterne jeg sætter ind her er bare til at teste med :DD
     Exercise(name: "Bench Press", sets: [], reps: [], weight: []),
     Exercise(name: "Deadlift", sets: [], reps: [], weight: []),
     Exercise(name: "Overhead Press", sets: [], reps: [], weight: []),
@@ -27,6 +26,7 @@ class _AddExerciseState extends State<AddExercise> {
     Exercise(name: "Dips", sets: [], reps: [], weight: []),
     Exercise(name: "Lateral Raises", sets: [], reps: [], weight: []),
     Exercise(name: "Bicep Curls", sets: [], reps: [], weight: []),
+    Exercise(name: "Face Pull", sets: [], reps: [], weight: []),
     Exercise(name: "Tricep Extensions", sets: [], reps: [], weight: []),
     Exercise(name: "Leg Press", sets: [], reps: [], weight: []),
     Exercise(name: "Leg Curls", sets: [], reps: [], weight: []),
@@ -153,11 +153,9 @@ class _AddExerciseState extends State<AddExercise> {
   Future<Exercise> checkDatabase(Exercise exercise) async{
     List<Exercise> savedExercise = [];
     savedExercise = await fetchExercises();
-    print("hey you sister!!!!!!!!!!!!!!!!!!!!ASD $exercise");
 
     for(int i = 0; i < savedExercise.length; i++){
       if(savedExercise[i].name == exercise.name){
-        print('${savedExercise[0].sets}');
         exercise = savedExercise[i];
       }
     }
