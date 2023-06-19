@@ -38,22 +38,21 @@ class ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     initializeData();
+    showList1 = true;
   }
 
   Future<void> initializeData() async {
-
     //Check if we have completed the intro screen
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool introSeen = (prefs.getBool('intro') ?? false);
 
-    if(introSeen) {
+    if (introSeen) {
       await authorize();
       await fetchStepData();
-
-      fetchData();
-      displayMostRecentWeight();
     }
+    fetchData();
+    displayMostRecentWeight();
   }
 
   static final types = [
@@ -71,7 +70,6 @@ class ProfileState extends State<Profile> {
     //
     // The location permission is requested for Workouts using the Distance information.
     await Permission.activityRecognition.request();
-    await Permission.location.request();
 
     // Check if we have permission
     bool? hasPermissions =
@@ -95,8 +93,7 @@ class ProfileState extends State<Profile> {
   }
 
   void displayMostRecentWeight() async {
-    Map<String, dynamic> result =
-        await DBHelper.getMostRecentWeight(DateTime.now());
+    Map<String, dynamic> result = await DBHelper.getMostRecentWeight(DateTime.now());
 
     double weight = result['weight'];
     String date = result['date'];
@@ -112,6 +109,7 @@ class ProfileState extends State<Profile> {
     name = (prefs.getString('name') ?? " ");
     age = (prefs.getInt('age') ?? 0);
     weight = (prefs.getDouble('weight') ?? 0);
+    height = (prefs.getDouble('height') ?? 0);
 
     DateTime now = DateTime.now();
     DateTime dateOnly = DateTime(now.year, now.month, now.day);
@@ -122,7 +120,6 @@ class ProfileState extends State<Profile> {
     //Add weight to database
     DBHelper.insertWeight(weight, formattedDate);
 
-    height = (prefs.getDouble('height') ?? 0);
     setState(() {
       name = name;
       age = age;
@@ -181,9 +178,11 @@ class ProfileState extends State<Profile> {
     }
   }
 
-  Future<void> fetchHealthData() async {}
+  Future<void> fetchHealthData() async {
 
-  void _addWeightToDB() {
+  }
+
+  void addWeightToDB() {
     String weightText = _textEditingController.text;
     double? weightNumber = double.tryParse(weightText);
 
@@ -203,8 +202,6 @@ class ProfileState extends State<Profile> {
   }
 
   double basalCalorieBurner() {
-    int age = 23;
-
     double dailyCal = (10 * weight + 6.25 * height - 5 * age);
 
     return dailyCal;
@@ -334,11 +331,11 @@ class ProfileState extends State<Profile> {
                               actions: [
                                 TextButton(
                                     onPressed: () async {
-                                      _addWeightToDB();
-                                      Map<String, dynamic> result =
-                                          await DBHelper.getMostRecentWeight(
-                                              DateTime.now());
+                                      addWeightToDB();
+                                      Map<String, dynamic> result = await DBHelper.getMostRecentWeight(DateTime.now());
                                       double weightDouble = result['weight'];
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      prefs.setDouble('weight', weightDouble);
 
                                       setState(() {
                                         weight = weightDouble;
@@ -348,12 +345,12 @@ class ProfileState extends State<Profile> {
 
                                       Navigator.of(context).pop();
                                     },
-                                    child: Text('Update weight')),
+                                    child: const Text('Update weight')),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('return'),
+                                  child: const Text('return'),
                                 ),
                               ],
                             );
