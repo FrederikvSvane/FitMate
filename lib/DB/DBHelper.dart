@@ -168,7 +168,7 @@ class DBHelper {
   static Future<List<Map<String, dynamic>>> getExercises() async {
     final db = await getDatabase();
 
-    // Execute the query
+
     final List<Map<String, dynamic>> maps = await db.query('exercises');
     return maps;
   }
@@ -176,7 +176,7 @@ class DBHelper {
   static Future<List<Map<String, dynamic>>> getWorkouts() async {
     final db = await getDatabase();
 
-    // Execute the query
+
     final List<Map<String, dynamic>> maps = await db.query('workouts');
     return maps;
   }
