@@ -148,11 +148,9 @@ class _WorkoutState extends State<Workout> {
   Future<Exercise> checkDatabase(Exercise exercise) async{
     List<Exercise> savedExercise = [];
     savedExercise = await fetchExercises();
-    print("hey you sister!!!!!!!!!!!!!!!!!!!!ASD $exercise");
 
     for(int i = 0; i < savedExercise.length; i++){
       if(savedExercise[i].name == exercise.name){
-        print('${savedExercise[0].sets}');
         exercise = savedExercise[i];
       }
     }
