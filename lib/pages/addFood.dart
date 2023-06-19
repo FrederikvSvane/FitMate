@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/pages/food.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -101,23 +100,14 @@ class AddFoodState extends State<AddFood> {
 
       DBHelper.insertMeal(mealData);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Meal added successfully'),
-          duration: Duration(seconds: 1),
-        ),
-      );
+
+
+      showSnackBar("Meal added successfully");
 
       final localContext = context;
       Navigator.pop(localContext, {'nameComponent': nameController.text});
     } catch (e) {
-      if (kDebugMode) {}
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to add meal'),
-          duration: Duration(seconds: 1),
-        ),
-      );
+      showSnackBar("Failed to add meal");
     }
   }
 
@@ -149,14 +139,14 @@ class AddFoodState extends State<AddFood> {
                               hintText: 'Enter name',
                             ),
                           ),
-                          const Text("Calories:"),
+                          const Text("Calories per 100g:"),
                           TextField(
                             controller: caloriesController,
                             decoration: const InputDecoration(
                               hintText: 'Enter calories',
                             ),
                           ),
-                          const Text("Proteins:"),
+                          const Text("Proteins per 100g:"),
                           TextField(
                             controller: proteinsController,
                             decoration: const InputDecoration(
@@ -290,31 +280,14 @@ class AddFoodState extends State<AddFood> {
               ),
             ),
             if (MediaQuery.of(context).viewInsets.bottom == 0)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FloatingActionButton(
-                      heroTag: 'favMealButton',
-                      onPressed: () async {
-                        await Navigator.pushNamed(context, "/addFavoriteMeal");
-                      },
-                      backgroundColor: Colors.red[800],
-                      tooltip: 'Use favorite meals',
-                      child: const Icon(Icons.favorite),
-                    ),
-                    FloatingActionButton(
-                      heroTag: 'AddMealButton',
-                      onPressed: () {
-                        addMeal();
-                      },
-                      backgroundColor: Colors.red[800],
-                      tooltip: 'Add Meal',
-                      child: const Icon(Icons.add),
-                    ),
-                  ],
-                ),
+              FloatingActionButton(
+                heroTag: 'AddMealButton',
+                onPressed: () {
+                  addMeal();
+                },
+                backgroundColor: Colors.red[800],
+                tooltip: 'Add Meal',
+                child: const Icon(Icons.add),
               ),
           ],
         ),

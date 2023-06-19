@@ -9,7 +9,7 @@ import '../main.dart';
 class DBHelper {
   static Future<Database> getDatabase() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'meal_database.db');
+    final path = join(dbPath, 'FitMate_DB.db');
 
     return openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute(

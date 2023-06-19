@@ -4,7 +4,6 @@ import 'package:flutter_fitness_app/classes/activeWorkoutState.dart';
 import 'package:flutter_fitness_app/pages/activeWorkout.dart';
 import 'package:flutter_fitness_app/pages/activeWorkoutWindow.dart';
 import 'package:flutter_fitness_app/pages/addExercise.dart';
-import 'package:flutter_fitness_app/pages/addFavoriteMeal.dart';
 import 'package:flutter_fitness_app/pages/addFood.dart';
 import 'package:flutter_fitness_app/pages/introScene.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
@@ -41,10 +40,9 @@ Future<void> main() async {
       initialRoute: "/",
       routes: {
         "/": (context) => const MainScaffold(),
-        "/introScreen": (context) => IntroScreen(),
+        "/introScreen": (context) => const IntroScreen(),
         "/activeWorkout": (context) => const ActiveWorkout(),
         "/addExercise": (context) => const AddExercise(),
-        "/addFavoriteMeal": (context) => const AddFavoriteMeal(),
         "/addFood": (context) => const AddFood(),
         "/profile": (context) => const Profile(),
         "/workout": (context) => Workout(),

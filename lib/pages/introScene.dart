@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class IntroScreen extends StatefulWidget {
-  IntroScreen({Key? key}) : super(key: key);
+
+  const IntroScreen({Key? key}) : super(key: key);
 
   @override
-  _IntroScreenState createState() => _IntroScreenState();
+  IntroScreenState createState() => IntroScreenState();
 }
 
-class _IntroScreenState extends State<IntroScreen> {
+class IntroScreenState extends State<IntroScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
