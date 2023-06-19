@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class Food extends StatefulWidget {
@@ -35,26 +36,14 @@ class _FoodState extends State<Food> {
   }
 
   void loadGoalCalories() async {
-    if (goalCalories == 0) {
-      List<Map<String, dynamic>>? goal = await DBHelper.getLatestGoal();
-      if (goal != null && goal.isNotEmpty && goal[0]['caloricGoal'] != 0) {
-        setState(() {
-          goalCalories = goal[0]['caloricGoal'].toDouble();
-        });
-      }
-    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    goalCalories = prefs.getDouble('goalCalories')!;
+
   }
 
-
   void loadGoalProteins() async {
-    if (goalCalories == 0) {
-      List<Map<String, dynamic>>? goal = await DBHelper.getLatestProteinGoal();
-      if (goal != null && goal.isNotEmpty && goal[0]['proteinGoal'] != 0) {
-        setState(() {
-          goalProteins = goal[0]['proteinGoal'].toDouble();
-        });
-      }
-    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    goalProteins = prefs.getDouble('goalProteins')!;
   }
 
   Future<void> loadMealsFromDatabase() async {
