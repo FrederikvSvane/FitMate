@@ -160,8 +160,6 @@ class _WorkoutState extends State<Workout> {
             }
           },
           child: TemplateCard(template: workoutTemplates[index]),
-          //title: Text(activeExercises[index].name),
-          // add other fields of Exercise class as needed
         );
       },
     );

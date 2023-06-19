@@ -2,12 +2,11 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/DB/DBHelper.dart';
+import 'package:health/health.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_switch/sliding_switch.dart';
-import 'package:health/health.dart';
-
-import 'package:permission_handler/permission_handler.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -45,7 +44,6 @@ class ProfileState extends State<Profile> {
   }
 
   Future<void> initializeData() async {
-    //Check if we have completed the intro screen
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool introSeen = (prefs.getBool('intro') ?? false);
@@ -83,36 +81,27 @@ class ProfileState extends State<Profile> {
   double totalProteins = 0;
 
   Future authorize() async {
-    // If we are trying to read Step Count, Workout, Sleep or other data that requires
-    // the ACTIVITY_RECOGNITION permission, we need to request the permission first.
-    // This requires a special request authorization call.
-    //
-    // The location permission is requested for Workouts using the Distance information.
+
     await Permission.activityRecognition.request();
 
-    // Check if we have permission
     bool? hasPermissions =
-    await health.hasPermissions(types, permissions: permissions);
+        await health.hasPermissions(types, permissions: permissions);
 
-    // hasPermissions = false because the hasPermission cannot disclose if WRITE access exists.
-    // Hence, we have to request with WRITE as well.
     hasPermissions = false;
 
     if (!hasPermissions) {
-      // requesting access to the data types before reading them
       requested = await health.requestAuthorization([
         HealthDataType.STEPS,
       ]);
       try {
         requested;
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   }
 
   void displayMostRecentWeight() async {
     Map<String, dynamic> result =
-    await DBHelper.getMostRecentWeight(DateTime.now());
+        await DBHelper.getMostRecentWeight(DateTime.now());
 
     double weight = result['weight'];
     String date = result['date'];
@@ -131,18 +120,15 @@ class ProfileState extends State<Profile> {
     caloriesGoal = (prefs.getDouble('goalCalories') ?? 0);
     protiensGoal = (prefs.getDouble('goalProteins') ?? 0);
 
-
     DateTime now = DateTime.now();
     DateTime dateOnly = DateTime(now.year, now.month, now.day);
 
-    // Format dateOnly to a string that only contains the date
     String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
 
-    //Add weight to database
     DBHelper.insertWeight(weight, formattedDate);
 
-    var dbData = await DBHelper.getProteinsForDateRange(
-        DateTime.now(), dateOnly);
+    var dbData =
+        await DBHelper.getProteinsForDateRange(DateTime.now(), dateOnly);
     totalProteins = (dbData[0]['totalProteins']);
     dbData = await DBHelper.getCaloriesForDateRange(DateTime.now(), dateOnly);
     totalCalories = (dbData[0]['totalCalories']);
@@ -157,7 +143,6 @@ class ProfileState extends State<Profile> {
     });
   }
 
-
   Future fetchStepData() async {
     final now = DateTime.now();
     final midnight = DateTime(now.year, now.month, now.day);
@@ -165,8 +150,7 @@ class ProfileState extends State<Profile> {
     if (requested) {
       try {
         steps = await health.getTotalStepsInInterval(midnight, now);
-      } catch (error) {
-      }
+      } catch (error) {}
 
       setState(() {
         steps = (steps == null) ? 0 : steps;
@@ -184,8 +168,7 @@ class ProfileState extends State<Profile> {
     if (requested) {
       try {
         stepsData = await health.getTotalStepsInInterval(midnight, date);
-      } catch (error) {
-      }
+      } catch (error) {}
 
       int steps = stepsData ?? 0;
       double basalCalories = basalCalorieBurner();
@@ -196,8 +179,7 @@ class ProfileState extends State<Profile> {
           basalCalories: basalCalories,
           stepCalories: stepCalories,
           totalCalories: basalCalories + stepCalories);
-    }
-    else {
+    } else {
       double basalCalories = basalCalorieBurner();
       return StepAndCalorieData(
           steps: 0,
@@ -207,7 +189,6 @@ class ProfileState extends State<Profile> {
     }
   }
 
-
   void addWeightToDB() {
     String weightText = _textEditingController.text;
     double? weightNumber = double.tryParse(weightText);
@@ -216,7 +197,6 @@ class ProfileState extends State<Profile> {
       DateTime now = DateTime.now();
       DateTime dateOnly = DateTime(now.year, now.month, now.day);
 
-      // Format dateOnly to a string that only contains the date
       String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
 
       DBHelper.insertWeight(weightNumber, formattedDate);
@@ -265,7 +245,6 @@ class ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
-
                   Align(
                     alignment: Alignment.bottomRight,
                     child: ElevatedButton(
@@ -293,11 +272,11 @@ class ProfileState extends State<Profile> {
                                     onPressed: () async {
                                       addWeightToDB();
                                       Map<String, dynamic> result =
-                                      await DBHelper.getMostRecentWeight(
-                                          DateTime.now());
+                                          await DBHelper.getMostRecentWeight(
+                                              DateTime.now());
                                       double weightDouble = result['weight'];
                                       SharedPreferences prefs =
-                                      await SharedPreferences.getInstance();
+                                          await SharedPreferences.getInstance();
                                       prefs.setDouble('weight', weightDouble);
 
                                       setState(() {
@@ -368,10 +347,10 @@ class ProfileState extends State<Profile> {
             ),
             Expanded(
                 child: Visibility(
-                  visible: showList1,
-                  replacement: listBuilder1(),
-                  child: listBuilder2(),
-                )),
+              visible: showList1,
+              replacement: listBuilder1(),
+              child: listBuilder2(),
+            )),
           ],
         ),
       ),
@@ -388,12 +367,12 @@ class ProfileState extends State<Profile> {
               currentDate.year, currentDate.month, currentDate.day, 0, 0, 0);
           DateTime after = DateTime(
               currentDate.year, currentDate.month, currentDate.day, 23, 59, 59);
-          Future<List<Map<String, dynamic>>> dbData = DBHelper
-              .getProteinsForDateRange(before, after);
-          Future<List<Map<String, dynamic>>> dbData2 = DBHelper
-              .getCaloriesForDateRange(before, after);
-          Future<StepAndCalorieData> stepAndCalorieData = fetchStepDataFromDate(
-              currentDate);
+          Future<List<Map<String, dynamic>>> dbData =
+              DBHelper.getProteinsForDateRange(before, after);
+          Future<List<Map<String, dynamic>>> dbData2 =
+              DBHelper.getCaloriesForDateRange(before, after);
+          Future<StepAndCalorieData> stepAndCalorieData =
+              fetchStepDataFromDate(currentDate);
 
           return FutureBuilder<List<dynamic>>(
             future: Future.wait([dbData, dbData2, stepAndCalorieData]),
@@ -403,8 +382,10 @@ class ProfileState extends State<Profile> {
                 List<Map<String, dynamic>> calorieData = snapshot.data?[1];
                 StepAndCalorieData data = snapshot.data?[2];
 
-                String totalProtein = proteinData[0]['totalProteins'].toString();
-                String totalCalories = calorieData[0]['totalCalories'].toString();
+                String totalProtein =
+                    proteinData[0]['totalProteins'].toString();
+                String totalCalories =
+                    calorieData[0]['totalCalories'].toString();
 
                 int stepsTaken = data.steps;
                 double activeCalories = data.stepCalories;
@@ -462,12 +443,11 @@ class ProfileState extends State<Profile> {
                                           top: 10,
                                           child: Text("Calories burned ",
                                               style: TextStyle(
-                                                  decoration: TextDecoration
-                                                      .underline,
+                                                  decoration:
+                                                      TextDecoration.underline,
                                                   color: Colors.grey[600],
                                                   fontSize: 18,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 50,
@@ -476,8 +456,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 80,
@@ -486,8 +465,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 110,
@@ -496,32 +474,27 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 50,
                                           left: 140,
                                           child: Text(
-                                              activeCalories
-                                                  .toStringAsFixed(2),
+                                              activeCalories.toStringAsFixed(2),
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 80,
                                           left: 140,
                                           child: Text(
-                                              basalCalories
-                                                  .toStringAsFixed(2),
+                                              basalCalories.toStringAsFixed(2),
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 110,
@@ -532,8 +505,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                       ],
                                     ),
@@ -560,12 +532,11 @@ class ProfileState extends State<Profile> {
                                           top: 10,
                                           child: Text("Calories consumed ",
                                               style: TextStyle(
-                                                  decoration: TextDecoration
-                                                      .underline,
+                                                  decoration:
+                                                      TextDecoration.underline,
                                                   color: Colors.grey[600],
                                                   fontSize: 18,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 50,
@@ -574,8 +545,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 80,
@@ -584,8 +554,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 110,
@@ -594,8 +563,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 50,
@@ -604,8 +572,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 80,
@@ -614,8 +581,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 110,
@@ -624,8 +590,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   color: Colors.grey[500],
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                       ],
                                     ),
@@ -668,13 +633,12 @@ class ProfileState extends State<Profile> {
               } else if (snapshot.hasError) {
                 return Text("Error: ${snapshot.error}");
               } else {
-                return CircularProgressIndicator(); // return a loading spinner while waiting for data
+                return CircularProgressIndicator();
               }
             },
           );
         });
   }
-
 
   Widget listBuilder2() {
     return ListView.builder(

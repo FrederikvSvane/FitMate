@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/pages/food.dart';
-import 'package:flutter_fitness_app/pages/workout.dart';
+import 'package:flutter_fitness_app/pages/measure.dart';
 import 'package:flutter_fitness_app/pages/profile.dart';
 import 'package:flutter_fitness_app/pages/settings.dart';
-import 'package:flutter_fitness_app/pages/measure.dart';
+import 'package:flutter_fitness_app/pages/workout.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});

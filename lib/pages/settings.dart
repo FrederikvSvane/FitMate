@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_switch/sliding_switch.dart';
@@ -14,8 +13,6 @@ class History extends StatefulWidget {
 }
 
 class HistoryState extends State<History> {
-
-
   @override
   initState() {
     super.initState();
@@ -158,7 +155,8 @@ class HistoryState extends State<History> {
                       actions: [
                         TextButton(
                             onPressed: () {
-                              prefs.setInt("age", int.tryParse(ageController.text)!);
+                              prefs.setInt(
+                                  "age", int.tryParse(ageController.text)!);
                               Navigator.of(context).pop();
                             },
                             child: const Text('Update age')),
@@ -275,14 +273,17 @@ class HistoryState extends State<History> {
                         TextButton(
                             onPressed: () {
                               DateTime now = DateTime.now();
-                              DateTime dateOnly = DateTime(now.year, now.month, now.day);
+                              DateTime dateOnly =
+                                  DateTime(now.year, now.month, now.day);
 
-                              // Format dateOnly to a string that only contains the date
-                              String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
+                              String formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(dateOnly);
 
-                              //Add weight to database
-                              DBHelper.insertWeight(double.tryParse(weightController.text)!, formattedDate);
-                              prefs.setDouble("weight", double.tryParse(weightController.text)!);
+                              DBHelper.insertWeight(
+                                  double.tryParse(weightController.text)!,
+                                  formattedDate);
+                              prefs.setDouble("weight",
+                                  double.tryParse(weightController.text)!);
                               Navigator.of(context).pop();
                             },
                             child: const Text('Update weight')),
@@ -340,9 +341,13 @@ class HistoryState extends State<History> {
                       actions: [
                         TextButton(
                             onPressed: () {
-                              int text = int.tryParse(activityLevelController.text)!;
-                              if(text == 1 && text == 2 && text == 3) {
-                                prefs.setInt("activityLevel", int.tryParse(activityLevelController.text)!);
+                              int text =
+                                  int.tryParse(activityLevelController.text)!;
+                              if (text == 1 && text == 2 && text == 3) {
+                                prefs.setInt(
+                                    "activityLevel",
+                                    int.tryParse(
+                                        activityLevelController.text)!);
                               }
                               Navigator.of(context).pop();
                             },
