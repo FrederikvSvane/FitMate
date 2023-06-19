@@ -26,17 +26,33 @@ class AddFoodState extends State<AddFood> {
     howMuchController.text = '100';
   }
 
-  Future<FoodApi> fetchFood(String barcode) {
+  Future<FoodApi>? fetchFood(String barcode) {
     try {
       var barcodeInt = int.parse(barcode);
-      var foodApi = FoodApi.fetchFoodApi(barcodeInt);
-      return foodApi;
+      try {
+        var foodApi = FoodApi.fetchFoodApi(barcodeInt);
+        return foodApi;
+      } catch (e) {
+        print(e);
+        // Check if the error message is 'Product not found'
+        if (e.toString() == 'Exception: Product not found') {
+          print('Product not found');
+          showSnackBar('Product not found');
+        } else {
+          // Show snack bar with general error
+          showSnackBar(e.toString());
+        }
+        return null;
+      }
     } catch (e) {
+      print(e);
       throw ArgumentError('Invalid barcode: $barcode');
     }
   }
 
+
   String mealType = '';
+
   Future<void> addMeal() async {
     // Check if all fields are filled in and they are numbers
     if (nameController.text.isEmpty ||
@@ -97,8 +113,7 @@ class AddFoodState extends State<AddFood> {
       );
 
       final localContext = context;
-      Navigator.pop(localContext, {
-        'nameComponent': nameController.text});
+      Navigator.pop(localContext, {'nameComponent': nameController.text});
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -196,14 +211,14 @@ class AddFoodState extends State<AddFood> {
                                   if (validNumbers &&
                                       barcodeController.text.isNotEmpty) {
                                     setState(() {
-                                      foodApiFuture =
-                                          fetchFood(barcodeController.text);
+                                      foodApiFuture = fetchFood(barcodeController.text);
 
+                                      foodApiFuture = fetchFood(barcodeController.text);
                                       foodApiFuture!.then((foodApi) async {
                                         double caloriesPerGram =
-                                            foodApi.calories.toDouble();
+                                        foodApi.calories.toDouble();
                                         double proteinsPerGram =
-                                            foodApi.proteins.toDouble();
+                                        foodApi.proteins.toDouble();
 
                                         if (mounted) {
                                           setState(() {
@@ -217,6 +232,8 @@ class AddFoodState extends State<AddFood> {
                                                     .toStringAsFixed(2);
                                           });
                                         }
+                                      }).catchError((e) {
+                                        showSnackBar(e.toString());
                                       });
                                     });
                                   }
@@ -248,7 +265,16 @@ class AddFoodState extends State<AddFood> {
                                     if (res is String) {
                                       var result = res;
                                       if (result != '-1') {
-                                        result = res.substring(0, 13);
+                                        barcodeController.text = result;
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Please enter a valid barcode number'),
+                                            duration: Duration(seconds: 1),
+                                          ),
+                                        );
                                       }
                                     }
                                   });
@@ -277,8 +303,7 @@ class AddFoodState extends State<AddFood> {
                     FloatingActionButton(
                       heroTag: 'favMealButton',
                       onPressed: () async {
-                        await Navigator.pushNamed(
-                            context, "/addFavoriteMeal");
+                        await Navigator.pushNamed(context, "/addFavoriteMeal");
                       },
                       backgroundColor: Colors.red[800],
                       tooltip: 'Use favorite meals',
@@ -298,6 +323,16 @@ class AddFoodState extends State<AddFood> {
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  //Show snack bar with message function
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

@@ -658,7 +658,7 @@ class _FoodState extends State<Food> {
                           String mealDetails = '${meal['nameComponent']}';
                           int mealId = meal['id'];
                           return Padding(
-                            padding: EdgeInsets.only(left: 10.0, bottom: 0.0),
+                            padding: const EdgeInsets.only(left: 10.0, bottom: 0.0),
                             // Added padding to the left and bottom
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -812,7 +812,7 @@ class _FoodState extends State<Food> {
               ),
               child: SizedBox(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 10.0),
+                  padding: const EdgeInsets.only(bottom: 10.0),
                   // Add padding at the bottom
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -879,14 +879,14 @@ class _FoodState extends State<Food> {
                           String mealDetails = '${meal['nameComponent']}';
                           int mealId = meal['id'];
                           return Padding(
-                            padding: EdgeInsets.only(left: 10.0, bottom: 0.0),
+                            padding: const EdgeInsets.only(left: 10.0, bottom: 0.0),
                             // Added padding to the left and bottom
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                   mealDetails,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 18), // Increased text size
                                 ),
                                 IconButton(
