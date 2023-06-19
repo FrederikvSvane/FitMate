@@ -1,6 +1,6 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 
 class FoodApi {
@@ -23,7 +23,7 @@ class FoodApi {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id, // SQLite will automatically assign this if it's null.
+      'id': id,
       'barcode': barcode,
       'nameComponent': nameComponent,
       'calories': calories,
@@ -49,7 +49,6 @@ class FoodApi {
   }
 
   Future<void> insertMeal(Database db) async {
-    // Insert the meal into the correct table.
     await db.insert(
       'meals',
       toMap(),
@@ -110,7 +109,7 @@ class FoodApi {
         date: maps[0]['date'],
       );
     }
-    return null; // Returns null if there are no entries in the database.
+    return null;
   }
 
   getBarcode() {

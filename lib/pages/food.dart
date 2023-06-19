@@ -94,7 +94,6 @@ class _FoodState extends State<Food> {
       int mealId, String mealType) async {
     List<Map<String, dynamic>> mealData = await DBHelper.getMealById(mealId);
 
-    // This is to prevent the dialog from being shown after the page is disposed
     if (!context.mounted) return;
 
     String mealName = mealData[0]['nameComponent'];
@@ -181,7 +180,6 @@ class _FoodState extends State<Food> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //Design for the selected day is made with assistance from chatGPT
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.all(10),
@@ -249,23 +247,18 @@ class _FoodState extends State<Food> {
                                 startAngle: 270,
                                 angleRange: 360,
                                 size: 150,
-                                // Size of the circular slider
                                 customWidths: CustomSliderWidths(
                                   progressBarWidth: 8,
-                                  // Set the width of the progress bar here.
                                   trackWidth: 10,
                                 ),
-                                // Size of the circular slider
                                 customColors: CustomSliderColors(
                                   trackColor: Colors.grey.withOpacity(0.3),
-                                  // Less opaque track
                                   progressBarColors: [
                                     Colors.lightGreenAccent,
                                     Colors.lightGreen,
                                     Colors.greenAccent,
                                     Colors.green
                                   ],
-                                  // Beautiful gradient for progress bar
                                   gradientStartAngle: 0,
                                   gradientEndAngle: 180,
                                   shadowColor: Colors.transparent,
@@ -281,11 +274,11 @@ class _FoodState extends State<Food> {
                                     if (totalCalories <= goalCalories) {
                                       final kcalLeft =
                                           max(0, goalCalories - totalCalories);
-                                      return "$kcalLeft"; // Display the remaining calories
+                                      return "$kcalLeft";
                                     } else {
                                       final kcalOver =
                                           totalCalories - goalCalories;
-                                      return "$kcalOver"; // Display the exceeded calories
+                                      return "$kcalOver";
                                     }
                                   },
                                   bottomLabelText: totalCalories <= goalCalories
@@ -296,7 +289,7 @@ class _FoodState extends State<Food> {
                               min: 0,
                               max: goalCalories,
                               initialValue: min(totalCalories,
-                                  goalCalories), // The initial value is the minimum between totalCalories and goalCalories
+                                  goalCalories),
                             ),
                     ),
                   ),
@@ -335,7 +328,6 @@ class _FoodState extends State<Food> {
                               disabledActiveTrackColor: Colors.orange,
                               disabledInactiveTrackColor:
                                   Colors.orange.withOpacity(0.3),
-                              //remove the thumb from the slider
                               thumbShape: const RoundSliderThumbShape(
                                   enabledThumbRadius: 0.0),
                             ),
@@ -384,7 +376,7 @@ class _FoodState extends State<Food> {
                             min: 0,
                             max: goalProteins,
                             onChanged: null,
-                            // Disables the ability for this to be changed by user interaction
+
                             label: "${totalProteins.round()}",
                             divisions: 10,
                           ),
@@ -458,7 +450,7 @@ class _FoodState extends State<Food> {
                                 await loadMealsFromDatabase();
                                 setState(() {});
                               }
-                            : null, // Disable the button if the selected date is today or in the future
+                            : null,
                       ),
                     ],
                   ),
@@ -481,14 +473,12 @@ class _FoodState extends State<Food> {
               child: SizedBox(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  // Add padding at the bottom
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Row(
                         children: [
                           Padding(
-                            // Add padding to the left
                             padding:
                                 const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset('assets/image/Breakfast.png',
@@ -548,17 +538,15 @@ class _FoodState extends State<Food> {
                           return Padding(
                             padding:
                                 const EdgeInsets.only(left: 10.0, bottom: 0.0),
-                            // Added padding to the left and bottom
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                   mealDetails,
                                   style: const TextStyle(
-                                      fontSize: 18), // Increased text size
+                                      fontSize: 18),
                                 ),
                                 IconButton(
-                                  //make the icon an x
                                   icon: const Icon(Icons.delete_forever),
                                   iconSize: 15,
                                   onPressed: () {
@@ -593,20 +581,18 @@ class _FoodState extends State<Food> {
               child: SizedBox(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 10.0),
-                  // Add padding at the bottom
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Row(
                         children: [
                           Padding(
-                            // Add padding to the left
                             padding:
                                 const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset("assets/image/Lunch.png",
                                 height: 50,
                                 width:
-                                    50), // Some icon that could represent a meal
+                                    50),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -617,7 +603,7 @@ class _FoodState extends State<Food> {
                             child: const Text(
                               'Lunch',
                               style: TextStyle(
-                                  fontSize: 24, // Increased text size
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -661,14 +647,13 @@ class _FoodState extends State<Food> {
                           return Padding(
                             padding:
                                 const EdgeInsets.only(left: 10.0, bottom: 0.0),
-                            // Added padding to the left and bottom
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                   mealDetails,
                                   style: TextStyle(
-                                      fontSize: 18), // Increased text size
+                                      fontSize: 18),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.delete_forever),
@@ -705,20 +690,18 @@ class _FoodState extends State<Food> {
               child: SizedBox(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 10.0),
-                  // Add padding at the bottom
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Row(
                         children: [
                           Padding(
-                            // Add padding to the left
                             padding:
                                 const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset("assets/image/Dinner.png",
                                 height: 50,
                                 width:
-                                    50), // Some icon that could represent a meal
+                                    50),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -729,7 +712,7 @@ class _FoodState extends State<Food> {
                             child: const Text(
                               'Dinner',
                               style: TextStyle(
-                                  fontSize: 24, // Increased text size
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -779,7 +762,7 @@ class _FoodState extends State<Food> {
                                 Text(
                                   mealDetails,
                                   style: TextStyle(
-                                      fontSize: 18), // Increased text size
+                                      fontSize: 18),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.delete_forever),
@@ -815,20 +798,18 @@ class _FoodState extends State<Food> {
               child: SizedBox(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  // Add padding at the bottom
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Row(
                         children: [
                           Padding(
-                            // Add padding to the left
                             padding:
                                 const EdgeInsets.only(left: 9.0, right: 5.0),
                             child: Image.asset("assets/image/Snacks.png",
                                 height: 50,
                                 width:
-                                    50), // Some icon that could represent a meal
+                                    50),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -839,7 +820,7 @@ class _FoodState extends State<Food> {
                             child: const Text(
                               'Snacks',
                               style: TextStyle(
-                                  fontSize: 24, // Increased text size
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -883,14 +864,13 @@ class _FoodState extends State<Food> {
                           return Padding(
                             padding:
                                 const EdgeInsets.only(left: 10.0, bottom: 0.0),
-                            // Added padding to the left and bottom
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                   mealDetails,
                                   style: const TextStyle(
-                                      fontSize: 18), // Increased text size
+                                      fontSize: 18),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.delete_forever),

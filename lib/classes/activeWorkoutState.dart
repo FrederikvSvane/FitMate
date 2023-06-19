@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fitness_app/classes/timerService.dart';
+
 import 'Exercise.dart';
 
 class ActiveWorkoutState with ChangeNotifier {
@@ -33,5 +34,4 @@ class ActiveWorkoutState with ChangeNotifier {
     activeExercises[index] = exercise;
     notifyListeners();
   }
-
 }
