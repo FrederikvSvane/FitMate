@@ -1,14 +1,11 @@
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter_fitness_app/DB/DBHelper.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
   setUpAll(() async {
-    // Initialize sqflite for desktop embedding.
     sqfliteFfiInit();
-    // Use sqflite in FFI mode (force native implementation).
     databaseFactory = databaseFactoryFfi;
-    // Initialize your database
     await DBHelper.getDatabase();
     await DBHelper.insertMockData();
 
@@ -53,7 +50,8 @@ void main() {
       }
 
       final allMeals = await DBHelper.getAllMeals();
-      expect(allMeals.where((m) => m['nameComponent'] == 'Test Meal 2'), isEmpty);
+      expect(
+          allMeals.where((m) => m['nameComponent'] == 'Test Meal 2'), isEmpty);
     });
 
     test('get meal by id', () async {
