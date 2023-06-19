@@ -33,10 +33,8 @@ class AddFoodState extends State<AddFood> {
         var foodApi = FoodApi.fetchFoodApi(barcodeInt);
         return foodApi;
       } catch (e) {
-        print(e);
         // Check if the error message is 'Product not found'
         if (e.toString() == 'Exception: Product not found') {
-          print('Product not found');
           showSnackBar('Product not found');
         } else {
           // Show snack bar with general error
@@ -45,7 +43,6 @@ class AddFoodState extends State<AddFood> {
         return null;
       }
     } catch (e) {
-      print(e);
       throw ArgumentError('Invalid barcode: $barcode');
     }
   }
@@ -116,7 +113,6 @@ class AddFoodState extends State<AddFood> {
       Navigator.pop(localContext, {'nameComponent': nameController.text});
     } catch (e) {
       if (kDebugMode) {
-        print(e);
       }
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

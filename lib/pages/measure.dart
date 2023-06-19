@@ -84,7 +84,6 @@ class MeasureState extends State<Measure> {
     });
 
     final data = dataList.map((d) {
-      print("Date: ${d['date']}, Weight: ${d['weight']}");
       return TimeSeriesWeight(DateTime.parse(d['date']), d['weight']);
     }).toList();
 
