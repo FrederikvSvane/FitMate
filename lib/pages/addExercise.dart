@@ -10,9 +10,6 @@ class AddExercise extends StatefulWidget {
 }
 
 class _AddExerciseState extends State<AddExercise> {
-  //This is very smart ok
-  //Vi laver objekter til weight exercise og cardio exercise
-  //Og så gemmer vi dem i en liste
   Exercise? selectedExercise;
 
   List<Exercise> Exercises = [
@@ -99,21 +96,15 @@ class _AddExerciseState extends State<AddExercise> {
       context: context,
       delegate: SearchExercises(Exercises),
     );
+    Exercise? newExercise = await checkDatabase(result!);
 
-    if (result != null) {
-      Exercise newExercise = await checkDatabase( result);
+    if (newExercise.name != "") {
       //Den valgte øvelse bliver returneret tilbage til active workout
       setState((){
         Navigator.pop(context, newExercise);
-      });
+      }
+      );
     }
-    //Så skal vi også have noget total weight lifted, time spent working out, calories burned yada yada yada
-
-    int totalWeightLifted = 0;
-    int totalTimeSpent = 0;
-    int totalCaloriesBurned = 0;
-    int totalDistance = 0;
-    int amountOfNewRecords = 0;
   }
 
   @override
