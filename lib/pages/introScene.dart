@@ -123,7 +123,6 @@ class _IntroScreenState extends State<IntroScreen> {
                   var nav = Navigator.of(context);
                   String name = nameController.text;
                   int age = int.tryParse(ageController.text) ?? 0;
-                  print("Name: $name, Age: $age");
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   prefs.setString('name', name);

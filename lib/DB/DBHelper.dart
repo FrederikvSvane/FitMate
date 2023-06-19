@@ -113,7 +113,6 @@ class DBHelper {
       workoutData,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    print('WWDWDAWDAD: $workoutData');
   }
 
   static Future<List<Map<String, dynamic>>> getAllMeals() async {

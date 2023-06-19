@@ -40,7 +40,6 @@ class ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    print(DateTime.now().subtract(Duration(days: 1)));
     initializeData();
     showList1 = true;
   }
@@ -107,7 +106,6 @@ class ProfileState extends State<Profile> {
       try {
         requested;
       } catch (error) {
-        print("Exception in authorize: $error");
       }
     }
   }
@@ -119,7 +117,6 @@ class ProfileState extends State<Profile> {
     double weight = result['weight'];
     String date = result['date'];
 
-    print('Most recent weight: $weight on date: $date');
     setState(() {
       _textEditingController.text = weight.toStringAsFixed(2);
     });
@@ -169,7 +166,6 @@ class ProfileState extends State<Profile> {
       try {
         steps = await health.getTotalStepsInInterval(midnight, now);
       } catch (error) {
-        print("Caught exception in getTotalStepsInInterval: $error");
       }
 
       setState(() {
@@ -189,7 +185,6 @@ class ProfileState extends State<Profile> {
       try {
         stepsData = await health.getTotalStepsInInterval(midnight, date);
       } catch (error) {
-        print("Caught exception in getTotalStepsInInterval: $error");
       }
 
       int steps = stepsData ?? 0;
@@ -226,9 +221,6 @@ class ProfileState extends State<Profile> {
 
       DBHelper.insertWeight(weightNumber, formattedDate);
       _textEditingController.clear();
-      print('gg ez');
-    } else {
-      print('gg not ez');
     }
   }
 

@@ -30,7 +30,6 @@ void main() {
       await DBHelper.insertMeal(mealData);
 
       final allMeals = await DBHelper.getAllMeals();
-      print(allMeals);
       expect(allMeals, isNotEmpty);
       expect(allMeals.first['nameComponent'], equals('Test Meal'));
     });
