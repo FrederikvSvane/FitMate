@@ -1,23 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_switch/sliding_switch.dart';
+
+import '../DB/DBHelper.dart';
 
 class History extends StatefulWidget {
   const History({super.key});
 
   @override
-  _HistoryState createState() => _HistoryState();
+  HistoryState createState() => HistoryState();
 }
 
-class _HistoryState extends State<History> {
+class HistoryState extends State<History> {
+
+
   @override
   initState() {
     super.initState();
+    getPrefs();
   }
 
   bool darkMode = false;
 
   bool gender = false;
+
+  late SharedPreferences prefs;
+
+  void getPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      gender = prefs.getBool('gender') ?? false;
+    });
+  }
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
+  final TextEditingController activityLevelController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -63,13 +86,13 @@ class _HistoryState extends State<History> {
                     return AlertDialog(
                       alignment: Alignment.center,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)
-                      ),
+                          borderRadius: BorderRadius.circular(15)),
                       title: const Text('Update your name'),
-                      content: const SizedBox(
+                      content: SizedBox(
                         child: TextField(
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          controller: nameController,
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
                             hintText: 'Enter your new name',
                           ),
                         ),
@@ -77,6 +100,7 @@ class _HistoryState extends State<History> {
                       actions: [
                         TextButton(
                             onPressed: () {
+                              prefs.setString("name", nameController.text);
                               Navigator.of(context).pop();
                             },
                             child: const Text('Update name')),
@@ -95,22 +119,22 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Edit your name",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Edit your name",
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
                       ),
+                      const Icon(Icons.arrow_forward_ios)
+                    ],
+                  ),
+                ),
               )),
           GestureDetector(
               onTap: () {
@@ -120,13 +144,13 @@ class _HistoryState extends State<History> {
                     return AlertDialog(
                       alignment: Alignment.center,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)
-                      ),
+                          borderRadius: BorderRadius.circular(15)),
                       title: const Text('Update your age'),
-                      content: const SizedBox(
+                      content: SizedBox(
                         child: TextField(
+                          controller: ageController,
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Enter your new age',
                           ),
                         ),
@@ -134,6 +158,7 @@ class _HistoryState extends State<History> {
                       actions: [
                         TextButton(
                             onPressed: () {
+                              prefs.setInt("age", int.tryParse(ageController.text)!);
                               Navigator.of(context).pop();
                             },
                             child: const Text('Update age')),
@@ -153,20 +178,20 @@ class _HistoryState extends State<History> {
                 height: 50,
                 color: Colors.grey[100],
                 child: Padding(
-                  padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Edit your age",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Edit your age",
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      const Icon(Icons.arrow_forward_ios)
+                    ],
+                  ),
                 ),
               )),
           GestureDetector(
@@ -177,8 +202,7 @@ class _HistoryState extends State<History> {
                     return AlertDialog(
                       alignment: Alignment.center,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)
-                      ),
+                          borderRadius: BorderRadius.circular(15)),
                       title: const Text('Update your height'),
                       content: const SizedBox(
                         child: TextField(
@@ -191,6 +215,7 @@ class _HistoryState extends State<History> {
                       actions: [
                         TextButton(
                             onPressed: () {
+                              prefs.setString("height", heightController.text);
                               Navigator.of(context).pop();
                             },
                             child: const Text('Update height')),
@@ -209,22 +234,22 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Edit your height",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Edit your height",
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      const Icon(Icons.arrow_forward_ios)
+                    ],
                   ),
+                ),
               )),
           GestureDetector(
               onTap: () {
@@ -234,13 +259,14 @@ class _HistoryState extends State<History> {
                     return AlertDialog(
                       alignment: Alignment.center,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)
-                      ),
-                      title: const Text('Update weight measurement on the date'),
-                      content: const SizedBox(
+                          borderRadius: BorderRadius.circular(15)),
+                      title:
+                          const Text('Update weight measurement on the date'),
+                      content: SizedBox(
                         child: TextField(
+                          controller: weightController,
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Enter your new weight',
                           ),
                         ),
@@ -248,6 +274,15 @@ class _HistoryState extends State<History> {
                       actions: [
                         TextButton(
                             onPressed: () {
+                              DateTime now = DateTime.now();
+                              DateTime dateOnly = DateTime(now.year, now.month, now.day);
+
+                              // Format dateOnly to a string that only contains the date
+                              String formattedDate = DateFormat('yyyy-MM-dd').format(dateOnly);
+
+                              //Add weight to database
+                              DBHelper.insertWeight(double.tryParse(weightController.text)!, formattedDate);
+                              prefs.setDouble("weight", double.tryParse(weightController.text)!);
                               Navigator.of(context).pop();
                             },
                             child: const Text('Update weight')),
@@ -266,22 +301,22 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Edit your weight data",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Edit your weight data",
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      const Icon(Icons.arrow_forward_ios)
+                    ],
                   ),
+                ),
               )),
           GestureDetector(
               onTap: () {
@@ -291,13 +326,13 @@ class _HistoryState extends State<History> {
                     return AlertDialog(
                       alignment: Alignment.center,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)
-                      ),
+                          borderRadius: BorderRadius.circular(15)),
                       title: const Text('Choose current activity level'),
-                      content: const SizedBox(
+                      content: SizedBox(
                         child: TextField(
+                          controller: activityLevelController,
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Choose one of three levels',
                           ),
                         ),
@@ -305,9 +340,13 @@ class _HistoryState extends State<History> {
                       actions: [
                         TextButton(
                             onPressed: () {
+                              int text = int.tryParse(activityLevelController.text)!;
+                              if(text == 1 && text == 2 && text == 3) {
+                                prefs.setInt("activityLevel", int.tryParse(activityLevelController.text)!);
+                              }
                               Navigator.of(context).pop();
                             },
-                            child: const Text('Update weight')),
+                            child: const Text('Update activity level')),
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -323,22 +362,22 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Change your activity level",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Change your activity level",
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      const Icon(Icons.arrow_forward_ios)
+                    ],
                   ),
+                ),
               )),
           GestureDetector(
             onTap: () {
@@ -347,29 +386,28 @@ class _HistoryState extends State<History> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)
-                    ),
+                        borderRadius: BorderRadius.circular(15)),
                     alignment: Alignment.center,
                     title: const Text('Update your gender'),
-                    content:  SizedBox(
-                        child: SlidingSwitch(
-                          value: false,
-                          onChanged: (bool value) {
-                            gender = value;
-                          },
-                          onTap: () {},
-                          onDoubleTap: () {},
-                          onSwipe: () {},
-                          textOff: 'Male',
-                          textOn: 'Female',
-                          colorOn: Color(0xFFC62828),
-                          colorOff: Color(0xFFC62828),
-                        ),
+                    content: SizedBox(
+                      child: SlidingSwitch(
+                        value: gender,
+                        onChanged: (bool value) {
+                          gender = value;
+                        },
+                        onTap: () {},
+                        onDoubleTap: () {},
+                        onSwipe: () {},
+                        textOff: 'Male',
+                        textOn: 'Female',
+                        colorOn: const Color(0xFFC62828),
+                        colorOff: const Color(0xFFC62828),
+                      ),
                     ),
-
                     actions: [
                       TextButton(
                           onPressed: () {
+                            prefs.setBool('gender', gender);
                             Navigator.of(context).pop();
                           },
                           child: const Text('Update gender')),
@@ -385,24 +423,24 @@ class _HistoryState extends State<History> {
               );
             },
             child: Container(
-                width: double.infinity,
-                height: 50,
-                color: Colors.grey[100],
+              width: double.infinity,
+              height: 50,
+              color: Colors.grey[100],
               child: Padding(
-                  padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Change your gender",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const Icon(Icons.arrow_forward_ios),
-                  ],
-                )),
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Change your gender",
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      const Icon(Icons.arrow_forward_ios),
+                    ],
+                  )),
             ),
           ),
           const Align(
@@ -418,40 +456,39 @@ class _HistoryState extends State<History> {
               ),
             ),
           ),
-             Container(
-                width: double.infinity,
-                height: 50,
-                color: Colors.grey[100],
-                 child: Padding(
-                   padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Enable dark mode",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
-                    ),
-                       FlutterSwitch(
-                        activeColor: const Color(0xFFC62828),
-                        inactiveColor: const Color(0xFFD6D6D6),
-                        height: 40,
-                        width: 60,
-                        value: darkMode,
-                        showOnOff: false,
-                        onToggle: (val) {
-                          setState(() {
-                            darkMode = val;
-                          });
-                        },
-                      ),
-
-                  ],
-                ),
-                 ),
+          Container(
+            width: double.infinity,
+            height: 50,
+            color: Colors.grey[100],
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Enable dark mode",
+                    style: TextStyle(
+                        color: Colors.grey[800],
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  FlutterSwitch(
+                    activeColor: const Color(0xFFC62828),
+                    inactiveColor: const Color(0xFFD6D6D6),
+                    height: 40,
+                    width: 60,
+                    value: darkMode,
+                    showOnOff: false,
+                    onToggle: (val) {
+                      setState(() {
+                        darkMode = val;
+                      });
+                    },
+                  ),
+                ],
               ),
+            ),
+          ),
           GestureDetector(
               onTap: () {
                 showDialog(
@@ -460,8 +497,7 @@ class _HistoryState extends State<History> {
                     return AlertDialog(
                       alignment: Alignment.center,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)
-                      ),
+                          borderRadius: BorderRadius.circular(15)),
                       title: const Text('You cannot'),
                       content: const SizedBox(
                           child: Icon(
@@ -490,22 +526,22 @@ class _HistoryState extends State<History> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.grey[100],
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Choose colour-scheme",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Choose colour-scheme",
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      const Icon(Icons.arrow_forward_ios)
+                    ],
                   ),
+                ),
               )),
         ]));
   }
