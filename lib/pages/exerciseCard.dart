@@ -18,11 +18,12 @@ class _ExerciseCardState extends State<ExerciseCard> {
 
   TextEditingController _buildTextEditingController(List<num> data, int index) {
     TextEditingController controller = TextEditingController();
-    if (data[index] != 0) {
+    if (index < data.length && data[index] != 0) {
       controller.text = data[index].toString();
     }
     return controller;
   }
+
 
 
   void _addSetRow() {
@@ -91,6 +92,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
     );
   }
 
+
   List<Widget> _buildExerciseRows(Exercise exercise) {
     List<Widget> rows = [];
     for (int i = 0; i < exercise.sets!.length; i++) {
@@ -101,7 +103,6 @@ class _ExerciseCardState extends State<ExerciseCard> {
         )
       ];
 
-      // Dynamically add columns based on non-null properties
       if (exercise.reps != null) {
         columns.add(_buildTextField(
             "Reps", i, exercise.reps!, (value) => exercise.reps![i] = value));

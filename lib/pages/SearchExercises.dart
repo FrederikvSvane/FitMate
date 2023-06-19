@@ -23,7 +23,7 @@ class SearchExercises extends SearchDelegate<Exercise> {
     return IconButton(
       icon: Icon(Icons.arrow_back),
       onPressed: () {
-        close(context, Exercise(name: "null"));
+        Navigator.pop(context);
       },
     );
   }

@@ -5,7 +5,8 @@ import 'Exercise.dart';
 class ActiveWorkoutState with ChangeNotifier {
   TimerService timerService = TimerService();
   bool isActive = false;
-  List<Exercise> activeExercises = []; // Add this list to store exercises
+  List<Exercise> activeExercises = [];
+  String workoutName = "Active Workout";
 
   bool get getIsActive => isActive;
 
@@ -19,11 +20,11 @@ class ActiveWorkoutState with ChangeNotifier {
     isActive = false;
     timerService.stopTimer();
     timerService.resetCounter();
-    activeExercises.clear(); // Clear the exercises when the workout ends
+    activeExercises.clear();
     notifyListeners();
   }
 
-  void addExercise(Exercise exercise) { // Add this method to add exercises
+  void addExercise(Exercise exercise) {
     activeExercises.add(exercise);
     notifyListeners();
   }
