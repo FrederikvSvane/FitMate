@@ -65,7 +65,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
           children: [
             Text(
               widget.exercise.name,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             ..._setRows,
             Padding(
@@ -75,8 +75,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
                 children: [
                   TextButton.icon(
                     onPressed: _addSetRow,
-                    icon: Icon(Icons.add),
-                    label: Text("Add Set"),
+                    icon: const Icon(Icons.add),
+                    label: const Text("Add Set"),
                   ),
                 ],
               ),
@@ -125,7 +125,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
   Widget _buildTextField(
       String label, int index, List<num> data, Function(num) updateFunction) {
     TextEditingController controller = _buildTextEditingController(data, index);
-    return Container(
+    return SizedBox(
       width: 100,
       child: TextField(
         controller: controller,

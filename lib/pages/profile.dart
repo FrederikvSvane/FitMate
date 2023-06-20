@@ -158,13 +158,17 @@ class ProfileState extends State<Profile> {
   }
 
   Future<StepAndCalorieData> fetchStepDataFromDate(DateTime date) async {
-    final midnight = DateTime(date.year, date.month, date.day);
+    DateTime before = DateTime(
+        date.year, date.month, date.day, 0, 0, 0);
+    DateTime after = DateTime(
+        date.year, date.month, date.day, 23, 59, 59);
+
 
     int? stepsData;
 
     if (requested) {
       try {
-        stepsData = await health.getTotalStepsInInterval(midnight, date);
+        stepsData = await health.getTotalStepsInInterval(before, after);
       } catch (error) {}
 
       int steps = stepsData ?? 0;
@@ -258,7 +262,7 @@ class ProfileState extends State<Profile> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               alignment: Alignment.center,
-                              title: Text('Update your weight'),
+                              title: const Text('Update your weight'),
                               content: SizedBox(
                                 child: TextField(
                                   keyboardType: TextInputType.number,
@@ -665,7 +669,7 @@ class ProfileState extends State<Profile> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(
-                            'Back desctruction',
+                            'Back destruction',
                             style: TextStyle(
                               color: Colors.grey[700],
                               fontSize: 20,
@@ -698,8 +702,19 @@ class ProfileState extends State<Profile> {
                             Text('13058 kg'),
                             Text('28 sets'),
                             Text('4 PR\'s')
+
                           ],
                         ),
+                        const Padding(padding: EdgeInsets.only(top: 70)),
+                        const Align(
+                          child: Text(
+                            'Functionality not available yet',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   );
