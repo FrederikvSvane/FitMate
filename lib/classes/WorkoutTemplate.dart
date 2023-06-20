@@ -64,42 +64,5 @@ Future<List<WorkoutTemplate>> convertToWorkoutTemplates() async {
     );
     workoutTemplates.add(workoutTemplate);
   }
-  List<Exercise> chestExercises = [
-    Exercise(name: "Bench Press", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Chest Flyes", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Dips", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Triceps Extensions", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Shoulder Press", sets: [1, 2, 3], reps: [], weight: [])
-  ];
-
-  WorkoutTemplate chestTemplate = WorkoutTemplate(
-      workoutName: "Push Workout", workoutExercises: chestExercises, date: "");
-
-  List<Exercise> pullExercises = [
-    Exercise(name: "Face Pull", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Lat Pulldowns", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Deadlift", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Bicep Curls", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Barbell Row", sets: [1, 2, 3], reps: [], weight: [])
-  ];
-
-  WorkoutTemplate pullTemplate = WorkoutTemplate(
-      workoutName: "Pull Workout", workoutExercises: pullExercises, date: "");
-
-  List<Exercise> legExercises = [
-    Exercise(name: "Squat", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Leg Press", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Leg Curls", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Leg Extensions", sets: [1, 2, 3], reps: [], weight: []),
-    Exercise(name: "Calf Raises", sets: [1, 2, 3], reps: [], weight: [])
-  ];
-
-  WorkoutTemplate legTemplate = WorkoutTemplate(
-      workoutName: "Leg Workout", workoutExercises: legExercises, date: "");
-
-  workoutTemplates.add(chestTemplate);
-  workoutTemplates.add(pullTemplate);
-  workoutTemplates.add(legTemplate);
-
   return workoutTemplates;
 }
