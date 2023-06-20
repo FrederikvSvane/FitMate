@@ -32,7 +32,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           leading: IconButton(
-            icon: Icon(Icons.arrow_downward, color: Colors.white),
+            icon: const Icon(Icons.arrow_downward, color: Colors.white),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -48,7 +48,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                 return Text(
                     '${activeWorkoutState.workoutName}:\n${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
               } else {
-                return Text('${activeWorkoutState.workoutName}');
+                return Text(activeWorkoutState.workoutName);
               }
             },
           ),
@@ -61,7 +61,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                   context: context,
                   builder: (BuildContext context) {
                     return SimpleDialog(
-                      title: Text('Choose an option'),
+                      title: const Text('Choose an option'),
                       children: <Widget>[
                         SimpleDialogOption(
                           onPressed: () async {
