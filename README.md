@@ -18,7 +18,7 @@ Before you begin, ensure you have met the following requirements:
 - You have installed Flutter SDK (>=3.0.2 <4.0.0)
 - You have a suitable IDE for Flutter development (like Android Studio or Visual Studio Code).
 
-### Installing Flutter Fitness App
+### Installing FitMate
 
 To install FitMate, follow these steps:
 
