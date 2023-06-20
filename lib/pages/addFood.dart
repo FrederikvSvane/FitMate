@@ -100,8 +100,6 @@ class AddFoodState extends State<AddFood> {
 
       DBHelper.insertMeal(mealData);
 
-
-
       showSnackBar("Meal added successfully");
 
       final localContext = context;

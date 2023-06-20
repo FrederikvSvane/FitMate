@@ -12,14 +12,13 @@ class FoodApi {
   String? mealType;
   String? date;
 
-  FoodApi(
-      {this.id,
-      required this.barcode,
-      required this.nameComponent,
-      required this.calories,
-      required this.proteins,
-      this.mealType,
-      this.date});
+  FoodApi({this.id,
+    required this.barcode,
+    required this.nameComponent,
+    required this.calories,
+    required this.proteins,
+    this.mealType,
+    this.date});
 
   Map<String, dynamic> toMap() {
     return {
@@ -58,7 +57,7 @@ class FoodApi {
 
   static Future<FoodApi> fetchFoodApi(int barcode) async {
     var uri =
-        Uri.https('world.openfoodfacts.org', "/api/2/product/$barcode.json");
+    Uri.https('world.openfoodfacts.org', "/api/2/product/$barcode.json");
 
     Map<String, String> requestHeaders = {
       'User-Agent': 'Your-App-Name - Android - Version 1.0'
@@ -76,9 +75,9 @@ class FoodApi {
       String barcodeData = json['code'];
       String nameComponentData = json['product']['product_name'] ?? '';
       double caloriesData =
-          (json['product']['nutriments']['energy-kcal_100g'] ?? 0).toDouble();
+      (json['product']['nutriments']['energy-kcal_100g'] ?? 0).toDouble();
       double proteinsData =
-          (json['product']['nutriments']['proteins_100g'] ?? 0).toDouble();
+      (json['product']['nutriments']['proteins_100g'] ?? 0).toDouble();
 
       FoodApi foodApi = FoodApi(
         barcode: barcodeData,
@@ -110,21 +109,5 @@ class FoodApi {
       );
     }
     return null;
-  }
-
-  getBarcode() {
-    return barcode;
-  }
-
-  getNameComponent() {
-    return nameComponent;
-  }
-
-  getCalories() {
-    return calories;
-  }
-
-  getProteins() {
-    return proteins;
   }
 }

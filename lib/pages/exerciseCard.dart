@@ -7,8 +7,7 @@ class ExerciseCard extends StatefulWidget {
   final Exercise exercise;
   final int exerciseIndex;
 
-  ExerciseCard(
-      {required this.exercise, required this.exerciseIndex});
+  ExerciseCard({required this.exercise, required this.exerciseIndex});
 
   @override
   _ExerciseCardState createState() => _ExerciseCardState();
@@ -57,7 +56,6 @@ class _ExerciseCardState extends State<ExerciseCard> {
 
   @override
   Widget build(BuildContext context) {
-    final activeWorkoutState = Provider.of<ActiveWorkoutState>(context);
     return Card(
       margin: EdgeInsets.all(8.0),
       child: Padding(

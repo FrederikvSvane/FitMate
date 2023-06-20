@@ -36,12 +36,12 @@ class _FoodState extends State<Food> {
 
   void loadGoalCalories() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    goalCalories = prefs.getDouble('goalCalories')!;
+    goalCalories = prefs.getDouble('goalCalories') ?? 0;
   }
 
   void loadGoalProteins() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    goalProteins = prefs.getDouble('goalProteins')!;
+    goalProteins = prefs.getDouble('goalProteins') ?? 0;
   }
 
   Future<void> loadMealsFromDatabase() async {

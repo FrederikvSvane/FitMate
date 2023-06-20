@@ -16,9 +16,7 @@ class _TemplateCardState extends State<TemplateCard> {
   @override
   void initState() {
     super.initState();
-    if (widget.template.workoutExercises != null) {
-      _setRows = _buildExerciseRows(widget.template);
-    }
+    _setRows = _buildExerciseRows(widget.template);
   }
 
   @override
@@ -50,7 +48,8 @@ class _TemplateCardState extends State<TemplateCard> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("${template.workoutExercises[i].sets!.length}X ${template.workoutExercises[i].name}"),
+              Text(
+                  "${template.workoutExercises[i].sets!.length}X ${template.workoutExercises[i].name}"),
             ],
           ),
         ),

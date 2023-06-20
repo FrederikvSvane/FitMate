@@ -5,7 +5,7 @@ import 'package:flutter_fitness_app/pages/activeWorkout.dart';
 import 'package:flutter_fitness_app/pages/activeWorkoutWindow.dart';
 import 'package:flutter_fitness_app/pages/addExercise.dart';
 import 'package:flutter_fitness_app/pages/addFood.dart';
-import 'package:flutter_fitness_app/pages/introScene.dart';
+import 'package:flutter_fitness_app/pages/introscene.dart';
 import 'package:flutter_fitness_app/pages/navigation.dart';
 import 'package:flutter_fitness_app/pages/profile.dart';
 import 'package:flutter_fitness_app/pages/workout.dart';

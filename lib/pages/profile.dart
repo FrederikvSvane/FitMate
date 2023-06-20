@@ -33,6 +33,8 @@ int age = 0;
 num protiensGoal = 0;
 num caloriesGoal = 0;
 
+bool gender = false;
+
 class ProfileState extends State<Profile> {
   int? steps;
 
@@ -44,9 +46,9 @@ class ProfileState extends State<Profile> {
   }
 
   Future<void> initializeData() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool introSeen = (prefs.getBool('intro') ?? false);
+    print(prefs.getBool("gender"));
 
     if (introSeen) {
       await authorize();
@@ -55,16 +57,6 @@ class ProfileState extends State<Profile> {
 
     fetchData();
     displayMostRecentWeight();
-  }
-
-  void loadGoalCalories() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    goalCalories = prefs.getDouble('goalCalories') ?? 0;
-  }
-
-  void loadGoalProteins() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    goalProteins = prefs.getDouble('goalProteins') ?? 0;
   }
 
   static final types = [
@@ -80,8 +72,9 @@ class ProfileState extends State<Profile> {
   double totalCalories = 0;
   double totalProteins = 0;
 
-  Future authorize() async {
 
+
+  Future authorize() async {
     await Permission.activityRecognition.request();
 
     bool? hasPermissions =
@@ -95,7 +88,9 @@ class ProfileState extends State<Profile> {
       ]);
       try {
         requested;
-      } catch (error) {}
+      } catch (e) {
+
+      }
     }
   }
 
@@ -104,7 +99,6 @@ class ProfileState extends State<Profile> {
         await DBHelper.getMostRecentWeight(DateTime.now());
 
     double weight = result['weight'];
-    String date = result['date'];
 
     setState(() {
       _textEditingController.text = weight.toStringAsFixed(2);
@@ -119,6 +113,7 @@ class ProfileState extends State<Profile> {
     height = (prefs.getDouble('height') ?? 0);
     caloriesGoal = (prefs.getDouble('goalCalories') ?? 0);
     protiensGoal = (prefs.getDouble('goalProteins') ?? 0);
+    gender = (prefs.getBool("gender"))!;
 
     DateTime now = DateTime.now();
     DateTime dateOnly = DateTime(now.year, now.month, now.day);
@@ -150,7 +145,9 @@ class ProfileState extends State<Profile> {
     if (requested) {
       try {
         steps = await health.getTotalStepsInInterval(midnight, now);
-      } catch (error) {}
+      } catch (error) {
+
+      }
 
       setState(() {
         steps = (steps == null) ? 0 : steps;
@@ -205,7 +202,11 @@ class ProfileState extends State<Profile> {
   }
 
   double basalCalorieBurner() {
-    double dailyCal = (10 * weight + 6.25 * height - 5 * age);
+    int factor = 0;
+    if(gender){
+      factor = 197;
+    }
+    double dailyCal = (10 * weight + 6.25 * height - 5 * age) + factor;
 
     return dailyCal;
   }
@@ -633,7 +634,7 @@ class ProfileState extends State<Profile> {
               } else if (snapshot.hasError) {
                 return Text("Error: ${snapshot.error}");
               } else {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
             },
           );

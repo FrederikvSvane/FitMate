@@ -61,6 +61,7 @@ class DBHelper {
           await insertMeal(mealData);
         }
       }
+
       for (int i = 0; i < 30; i++) {
         double tal = 100.0 - i + Random().nextInt(10);
         DateTime now = DateTime.now();
@@ -153,10 +154,6 @@ class DBHelper {
     return null;
   }
 
-  getDB() {
-    return getDatabase();
-  }
-
   static Future<List<Map<String, dynamic>>> getCaloriesForDateRange(
       DateTime before, DateTime after) async {
     final db = await getDatabase();
@@ -204,15 +201,6 @@ class DBHelper {
 
     final List<Map<String, dynamic>> maps = await db.query('workouts');
     return maps;
-  }
-
-  static Future<void> weightDB(Database db) async {
-    await db.execute('''
-        Create Table weight(
-        id INTEGER KEY,
-        weight REAL,
-        date TEXT
-        ''');
   }
 
   static Future<void> insertWeight(double weight, String date) async {

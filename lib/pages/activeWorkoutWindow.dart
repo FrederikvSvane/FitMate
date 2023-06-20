@@ -17,13 +17,15 @@ class ActiveWorkoutWindow extends StatelessWidget {
         child: Container(
           color: Colors.red[800],
           height: 70.0,
-          width: MediaQuery.of(context).size.width/1.1,
-          margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width/25,0.0,0.0,70.0),
+          width: MediaQuery.of(context).size.width / 1.1,
+          margin: EdgeInsets.fromLTRB(
+              MediaQuery.of(context).size.width / 25, 0.0, 0.0, 70.0),
           padding: EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(activeWorkoutState.workoutName,
+              Text(
+                activeWorkoutState.workoutName,
                 style: const TextStyle(
                   color: Colors.white,
                   decoration: TextDecoration.none,
@@ -58,4 +60,3 @@ class ActiveWorkoutWindow extends StatelessWidget {
     );
   }
 }
-
