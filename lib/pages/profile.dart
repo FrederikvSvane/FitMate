@@ -72,8 +72,6 @@ class ProfileState extends State<Profile> {
   double totalCalories = 0;
   double totalProteins = 0;
 
-
-
   Future authorize() async {
     await Permission.activityRecognition.request();
 
@@ -88,9 +86,7 @@ class ProfileState extends State<Profile> {
       ]);
       try {
         requested;
-      } catch (e) {
-
-      }
+      } catch (e) {}
     }
   }
 
@@ -103,6 +99,22 @@ class ProfileState extends State<Profile> {
     setState(() {
       _textEditingController.text = weight.toStringAsFixed(2);
     });
+  }
+  
+  String getTheDaysProtiensStats(String totalProtein) {
+    if (double.tryParse(totalProtein)! > goalCalories) {
+      return 'Day ended with a surplus of ${(double.tryParse(totalProtein)! - protiensGoal).abs()} grams';
+    } else {
+      return 'Day ended with a protein deficit of ${(protiensGoal - double.tryParse(totalProtein)!).abs()} grams';
+    }
+  }
+  
+  String getTheDaysCaloriesStats(String totalCalories) {
+    if (double.tryParse(totalCalories)! > goalCalories) {
+      return 'Day ended with a surplus of ${(double.tryParse(totalCalories)! - goalCalories).abs()} calories';
+    } else {
+      return 'Day ended with a calorie deficit of ${(goalCalories - double.tryParse(totalCalories)!).abs()} calories';
+    }
   }
 
   Future<void> fetchData() async {
@@ -145,9 +157,7 @@ class ProfileState extends State<Profile> {
     if (requested) {
       try {
         steps = await health.getTotalStepsInInterval(midnight, now);
-      } catch (error) {
-
-      }
+      } catch (error) {}
 
       setState(() {
         steps = (steps == null) ? 0 : steps;
@@ -158,11 +168,8 @@ class ProfileState extends State<Profile> {
   }
 
   Future<StepAndCalorieData> fetchStepDataFromDate(DateTime date) async {
-    DateTime before = DateTime(
-        date.year, date.month, date.day, 0, 0, 0);
-    DateTime after = DateTime(
-        date.year, date.month, date.day, 23, 59, 59);
-
+    DateTime before = DateTime(date.year, date.month, date.day, 0, 0, 0);
+    DateTime after = DateTime(date.year, date.month, date.day, 23, 59, 59);
 
     int? stepsData;
 
@@ -207,7 +214,7 @@ class ProfileState extends State<Profile> {
 
   double basalCalorieBurner() {
     int factor = 0;
-    if(gender){
+    if (gender) {
       factor = 197;
     }
     double dailyCal = (10 * weight + 6.25 * height - 5 * age) + factor;
@@ -611,7 +618,7 @@ class ProfileState extends State<Profile> {
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'Day ended with a protein deficit of ${protiensGoal - double.tryParse(totalProtein)!} grams',
+                            getTheDaysProtiensStats(totalProtein),
                             style: TextStyle(
                                 color: Colors.grey[600],
                                 fontSize: 16,
@@ -624,7 +631,7 @@ class ProfileState extends State<Profile> {
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'Day ended with a deficit of ${caloriesGoal - double.tryParse(totalCalories)!} calories',
+                            getTheDaysCaloriesStats(totalCalories),
                             style: TextStyle(
                                 color: Colors.grey[600],
                                 fontSize: 16,
@@ -702,7 +709,6 @@ class ProfileState extends State<Profile> {
                             Text('13058 kg'),
                             Text('28 sets'),
                             Text('4 PR\'s')
-
                           ],
                         ),
                         const Padding(padding: EdgeInsets.only(top: 70)),
