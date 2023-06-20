@@ -50,8 +50,7 @@ void main() {
       }
 
       final allMeals = await DBHelper.getAllMeals();
-      expect(
-          allMeals.where((m) => m['nameComponent'] == 'Test Meal 2'), isEmpty);
+      expect(allMeals.where((m) => m['nameComponent'] == 'Test Meal 2'), isEmpty);
     });
 
     test('get meal by id', () async {

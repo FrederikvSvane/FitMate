@@ -48,8 +48,7 @@ class _TemplateCardState extends State<TemplateCard> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                  "${template.workoutExercises[i].sets!.length}X ${template.workoutExercises[i].name}"),
+              Text("${template.workoutExercises[i].sets!.length}X ${template.workoutExercises[i].name}"),
             ],
           ),
         ),

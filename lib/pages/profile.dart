@@ -75,8 +75,7 @@ class ProfileState extends State<Profile> {
   Future authorize() async {
     await Permission.activityRecognition.request();
 
-    bool? hasPermissions =
-        await health.hasPermissions(types, permissions: permissions);
+    bool? hasPermissions = await health.hasPermissions(types, permissions: permissions);
 
     hasPermissions = false;
 
@@ -91,8 +90,7 @@ class ProfileState extends State<Profile> {
   }
 
   void displayMostRecentWeight() async {
-    Map<String, dynamic> result =
-        await DBHelper.getMostRecentWeight(DateTime.now());
+    Map<String, dynamic> result = await DBHelper.getMostRecentWeight(DateTime.now());
 
     double weight = result['weight'];
 
@@ -100,7 +98,7 @@ class ProfileState extends State<Profile> {
       _textEditingController.text = weight.toStringAsFixed(2);
     });
   }
-  
+
   String getTheDaysProtiensStats(String totalProtein) {
     if (double.tryParse(totalProtein)! > goalCalories) {
       return 'Day ended with a surplus of ${(double.tryParse(totalProtein)! - protiensGoal).abs()} grams';
@@ -108,7 +106,7 @@ class ProfileState extends State<Profile> {
       return 'Day ended with a protein deficit of ${(protiensGoal - double.tryParse(totalProtein)!).abs()} grams';
     }
   }
-  
+
   String getTheDaysCaloriesStats(String totalCalories) {
     if (double.tryParse(totalCalories)! > goalCalories) {
       return 'Day ended with a surplus of ${(double.tryParse(totalCalories)! - goalCalories).abs()} calories';
@@ -134,8 +132,7 @@ class ProfileState extends State<Profile> {
 
     DBHelper.insertWeight(weight, formattedDate);
 
-    var dbData =
-        await DBHelper.getProteinsForDateRange(DateTime.now(), dateOnly);
+    var dbData = await DBHelper.getProteinsForDateRange(DateTime.now(), dateOnly);
     totalProteins = (dbData[0]['totalProteins']);
     dbData = await DBHelper.getCaloriesForDateRange(DateTime.now(), dateOnly);
     totalCalories = (dbData[0]['totalCalories']);
@@ -190,10 +187,7 @@ class ProfileState extends State<Profile> {
     } else {
       double basalCalories = basalCalorieBurner();
       return StepAndCalorieData(
-          steps: 0,
-          basalCalories: basalCalories,
-          stepCalories: 0,
-          totalCalories: basalCalories + 0);
+          steps: 0, basalCalories: basalCalories, stepCalories: 0, totalCalories: basalCalories + 0);
     }
   }
 
@@ -250,10 +244,7 @@ class ProfileState extends State<Profile> {
                       padding: const EdgeInsets.all(10),
                       child: Text(
                         name,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 50,
-                            fontWeight: FontWeight.w500),
+                        style: const TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -283,12 +274,9 @@ class ProfileState extends State<Profile> {
                                 TextButton(
                                     onPressed: () async {
                                       addWeightToDB();
-                                      Map<String, dynamic> result =
-                                          await DBHelper.getMostRecentWeight(
-                                              DateTime.now());
+                                      Map<String, dynamic> result = await DBHelper.getMostRecentWeight(DateTime.now());
                                       double weightDouble = result['weight'];
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
                                       prefs.setDouble('weight', weightDouble);
 
                                       setState(() {
@@ -311,10 +299,7 @@ class ProfileState extends State<Profile> {
                       },
                       child: Text(
                         "Weight: $weight kg",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500),
+                        style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -324,10 +309,7 @@ class ProfileState extends State<Profile> {
                       padding: const EdgeInsets.all(10),
                       child: Text(
                         "Steps today: ${steps ?? 0}",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500),
+                        style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -375,16 +357,11 @@ class ProfileState extends State<Profile> {
         itemCount: 30,
         itemBuilder: (BuildContext context, index) {
           DateTime currentDate = DateTime.now().subtract(Duration(days: index));
-          DateTime before = DateTime(
-              currentDate.year, currentDate.month, currentDate.day, 0, 0, 0);
-          DateTime after = DateTime(
-              currentDate.year, currentDate.month, currentDate.day, 23, 59, 59);
-          Future<List<Map<String, dynamic>>> dbData =
-              DBHelper.getProteinsForDateRange(before, after);
-          Future<List<Map<String, dynamic>>> dbData2 =
-              DBHelper.getCaloriesForDateRange(before, after);
-          Future<StepAndCalorieData> stepAndCalorieData =
-              fetchStepDataFromDate(currentDate);
+          DateTime before = DateTime(currentDate.year, currentDate.month, currentDate.day, 0, 0, 0);
+          DateTime after = DateTime(currentDate.year, currentDate.month, currentDate.day, 23, 59, 59);
+          Future<List<Map<String, dynamic>>> dbData = DBHelper.getProteinsForDateRange(before, after);
+          Future<List<Map<String, dynamic>>> dbData2 = DBHelper.getCaloriesForDateRange(before, after);
+          Future<StepAndCalorieData> stepAndCalorieData = fetchStepDataFromDate(currentDate);
 
           return FutureBuilder<List<dynamic>>(
             future: Future.wait([dbData, dbData2, stepAndCalorieData]),
@@ -394,10 +371,8 @@ class ProfileState extends State<Profile> {
                 List<Map<String, dynamic>> calorieData = snapshot.data?[1];
                 StepAndCalorieData data = snapshot.data?[2];
 
-                String totalProtein =
-                    proteinData[0]['totalProteins'].toString();
-                String totalCalories =
-                    calorieData[0]['totalCalories'].toString();
+                String totalProtein = proteinData[0]['totalProteins'].toString();
+                String totalCalories = calorieData[0]['totalCalories'].toString();
 
                 int stepsTaken = data.steps;
                 double activeCalories = data.stepCalories;
@@ -455,8 +430,7 @@ class ProfileState extends State<Profile> {
                                           top: 10,
                                           child: Text("Calories burned ",
                                               style: TextStyle(
-                                                  decoration:
-                                                      TextDecoration.underline,
+                                                  decoration: TextDecoration.underline,
                                                   color: Colors.grey[600],
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold)),
@@ -466,58 +440,42 @@ class ProfileState extends State<Profile> {
                                           left: 10,
                                           child: Text("Active calories: ",
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 80,
                                           left: 10,
                                           child: Text("Basal calories:",
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 110,
                                           left: 10,
                                           child: Text("Total calories:",
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 50,
                                           left: 140,
-                                          child: Text(
-                                              activeCalories.toStringAsFixed(2),
+                                          child: Text(activeCalories.toStringAsFixed(2),
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 80,
                                           left: 140,
-                                          child: Text(
-                                              basalCalories.toStringAsFixed(2),
+                                          child: Text(basalCalories.toStringAsFixed(2),
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 110,
                                           left: 140,
-                                          child: Text(
-                                              totalCaloriesUsed
-                                                  .toStringAsFixed(2),
+                                          child: Text(totalCaloriesUsed.toStringAsFixed(2),
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                       ],
                                     ),
@@ -544,8 +502,7 @@ class ProfileState extends State<Profile> {
                                           top: 10,
                                           child: Text("Calories consumed ",
                                               style: TextStyle(
-                                                  decoration:
-                                                      TextDecoration.underline,
+                                                  decoration: TextDecoration.underline,
                                                   color: Colors.grey[600],
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold)),
@@ -555,54 +512,42 @@ class ProfileState extends State<Profile> {
                                           left: 10,
                                           child: Text("Protein goal:",
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 80,
                                           left: 10,
                                           child: Text("Total Protein:",
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 110,
                                           left: 10,
                                           child: Text("Total calories:",
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 50,
                                           left: 140,
                                           child: Text(protiensGoal.toString(),
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 80,
                                           left: 140,
                                           child: Text(totalProtein,
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                         Positioned(
                                           top: 110,
                                           left: 140,
                                           child: Text(totalCalories,
                                               style: TextStyle(
-                                                  color: Colors.grey[500],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
+                                                  color: Colors.grey[500], fontSize: 15, fontWeight: FontWeight.bold)),
                                         ),
                                       ],
                                     ),
@@ -619,10 +564,7 @@ class ProfileState extends State<Profile> {
                           alignment: Alignment.center,
                           child: Text(
                             getTheDaysProtiensStats(totalProtein),
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(color: Colors.grey[600], fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
@@ -632,10 +574,7 @@ class ProfileState extends State<Profile> {
                           alignment: Alignment.center,
                           child: Text(
                             getTheDaysCaloriesStats(totalCalories),
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(color: Colors.grey[600], fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
@@ -690,8 +629,7 @@ class ProfileState extends State<Profile> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(
-                            DateFormat('EEEE, MMMM d yyyy ')
-                                .format(currentDate),
+                            DateFormat('EEEE, MMMM d yyyy ').format(currentDate),
                             style: TextStyle(
                               color: Colors.grey[700],
                               fontSize: 16,
@@ -704,12 +642,7 @@ class ProfileState extends State<Profile> {
                         ),
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text('1 h 3 min'),
-                            Text('13058 kg'),
-                            Text('28 sets'),
-                            Text('4 PR\'s')
-                          ],
+                          children: [Text('1 h 3 min'), Text('13058 kg'), Text('28 sets'), Text('4 PR\'s')],
                         ),
                         const Padding(padding: EdgeInsets.only(top: 70)),
                         const Align(
