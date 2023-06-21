@@ -26,9 +26,7 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
     final activeWorkoutState = Provider.of<ActiveWorkoutState>(context);
     final timerService = activeWorkoutState.timerService;
 
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           leading: IconButton(
@@ -46,7 +44,10 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
                 final int minutes = (totalSeconds % 3600) ~/ 60;
                 final int seconds = totalSeconds % 60;
                 return Text(
-                    '${activeWorkoutState.workoutName}:\n${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}');
+                    '${activeWorkoutState.workoutName}:\n'
+                        '${hours.toString().padLeft(2, '0')}:'
+                        '${minutes.toString().padLeft(2, '0')}:'
+                        '${seconds.toString().padLeft(2, '0')}');
               } else {
                 return Text(activeWorkoutState.workoutName);
               }
@@ -359,7 +360,6 @@ class _ActiveWorkoutState extends State<ActiveWorkout> {
             ),
           ],
         ),
-      ),
     );
   }
 
