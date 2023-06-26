@@ -48,7 +48,6 @@ class ProfileState extends State<Profile> {
   Future<void> initializeData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool introSeen = (prefs.getBool('intro') ?? false);
-    print(prefs.getBool("gender"));
 
     if (introSeen) {
       await authorize();
@@ -593,76 +592,70 @@ class ProfileState extends State<Profile> {
 
   Widget listBuilder2() {
     return ListView.builder(
-        padding: EdgeInsets.zero,
-        itemCount: 30,
-        itemBuilder: (BuildContext context, index) {
-          DateTime currentDate = DateTime.now().subtract(Duration(days: index));
-          return FutureBuilder<StepAndCalorieData>(
-              future: fetchStepDataFromDate(currentDate),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Container(
-                    height: 285,
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white70,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: Text(
-                            'Back destruction',
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: Text(
-                            DateFormat('EEEE, MMMM d yyyy ').format(currentDate),
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [Text('1 h 3 min'), Text('13058 kg'), Text('28 sets'), Text('4 PR\'s')],
-                        ),
-                        const Padding(padding: EdgeInsets.only(top: 70)),
-                        const Align(
-                          child: Text(
-                            'Functionality not available yet',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )
-                      ],
+      padding: EdgeInsets.zero,
+      itemCount: 30,
+      itemBuilder: (BuildContext context, index) {
+        DateTime currentDate = DateTime.now().subtract(Duration(days: index));
+
+        return FutureBuilder<List<Map<String, dynamic>>>(
+          future: DBHelper.getExercisesForDate(currentDate),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final exercises = snapshot.data!;
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: exercises.length,
+                itemBuilder: (context, exerciseIndex) {
+                  final exercise = exercises[exerciseIndex];
+                  return Card(
+                    margin: EdgeInsets.all(8),
+                    elevation: 5.0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(DateFormat('EEEE, MMMM d, yyyy').format(currentDate),
+                              style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                          SizedBox(height: 10),
+                          Text('${exercise['name']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                          SizedBox(height: 10),
+                          if (exercise['sets'] != '') ...[
+                            Text('Sets: ${exercise['sets']}', style: TextStyle(fontSize: 16)),
+                            SizedBox(height: 10),
+                          ],
+                          if (exercise['reps'] != '') ...[
+                            Text('Reps: ${exercise['reps']}', style: TextStyle(fontSize: 16)),
+                            SizedBox(height: 10),
+                          ],
+                          if (exercise['weight'] != '') ...[
+                            Text('Weight: ${exercise['weight']}', style: TextStyle(fontSize: 16)),
+                            SizedBox(height: 10),
+                          ],
+                          if (exercise['time'] != '') ...[
+                            Text('Time: ${exercise['time']}', style: TextStyle(fontSize: 16)),
+                            SizedBox(height: 10),
+                          ],
+                          if (exercise['distance'] != '') ...[
+                            Text('Distance: ${exercise['distance']}', style: TextStyle(fontSize: 16)),
+                            SizedBox(height: 10),
+                          ],
+                        ],
+                      ),
                     ),
                   );
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                }
-                return const CircularProgressIndicator();
-              });
-        });
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Text("Error: ${snapshot.error}");
+            }
+            return const CircularProgressIndicator();
+          },
+        );
+      },
+    );
   }
 }
 

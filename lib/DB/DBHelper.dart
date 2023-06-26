@@ -249,4 +249,23 @@ class DBHelper {
 
     return weights;
   }
+
+  static Future<List<Map<String, dynamic>>> getExercisesForDate(DateTime date) async {
+    final db = await getDatabase();
+
+    DateTime startDate = DateTime(date.year, date.month, date.day);
+    DateTime endDate = startDate.add(const Duration(days: 1));
+
+    List<Map<String, dynamic>> exercises = await db.query(
+      'exercises',
+      where: 'date >= ? AND date < ?',
+      whereArgs: [startDate.toIso8601String(), endDate.toIso8601String()],
+    );
+
+    return exercises;
+  }
+
+
+
+
 }
