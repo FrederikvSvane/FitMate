@@ -186,15 +186,14 @@ class ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return MaterialApp(
-      title: 'Flutter demo',
       home: Scaffold(
-        backgroundColor: Colors.grey[200],
         body: Column(
           children: [
             Container(
               height: 200,
-              color: Colors.red[800],
+              color: theme.primaryColor,
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Stack(
                 children: [
@@ -212,7 +211,7 @@ class ProfileState extends State<Profile> {
                     alignment: Alignment.bottomRight,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[900],
+
                       ),
                       onPressed: () {
                         showDialog(
@@ -292,12 +291,12 @@ class ProfileState extends State<Profile> {
                     showList1 = !showList1;
                   });
                 },
-                colorOn: Colors.red,
-                colorOff: Colors.red,
-                background: Colors.white,
-                buttonColor: Colors.white70,
-                inactiveColor: Colors.grey,
-                contentSize: 20,
+                colorOn: theme.primaryColor,
+                colorOff: theme.primaryColor,
+                // background: Colors.white,
+                // buttonColor: Colors.white70,
+                // inactiveColor: Colors.grey,
+                // contentSize: 20,
               ),
             ),
             Expanded(

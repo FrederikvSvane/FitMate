@@ -97,6 +97,7 @@ class MeasureState extends State<Measure> {
   }
 
   void _selectDateRange(BuildContext context) async {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final picked = await showDateRangePicker(
       context: context,
       initialDateRange: selectedDateRange,
@@ -107,9 +108,7 @@ class MeasureState extends State<Measure> {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light().copyWith(
-              primary: Colors.red[800],
-            ),
+            colorScheme: colorScheme,
           ),
           child: child!,
         );
@@ -160,6 +159,8 @@ class MeasureState extends State<Measure> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Column(
@@ -168,12 +169,11 @@ class MeasureState extends State<Measure> {
             const Text('Measure'),
             Text(
               '${DateFormat('MMM dd, yyyy').format(selectedDateRange.start)} - ${DateFormat('MMM dd, yyyy').format(selectedDateRange.end)}',
-              style: const TextStyle(fontSize: 12),
             ),
           ],
         ),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.red[800],
+        foregroundColor: themeData.appBarTheme.foregroundColor,
+        backgroundColor: themeData.appBarTheme.backgroundColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.date_range),

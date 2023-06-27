@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../classes/Exercise.dart';
 import '../classes/WorkoutTemplate.dart';
-import '../pages/activeWorkout.dart';
+
 
 class Workout extends StatefulWidget {
   @override
@@ -30,65 +30,46 @@ class _WorkoutState extends State<Workout> {
   void fetchWorkoutTemplates() async {
     var templates = await convertToWorkoutTemplates();
     setState(() {
-      workoutTemplates = templates ?? [];
+      workoutTemplates = templates;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
     return Builder(builder: (BuildContext scaffoldContext) {
       return Scaffold(
-        backgroundColor: Colors.grey[200],
+        appBar: AppBar(
+          title: const Text(
+            "Workouts",
+          ),
+          backgroundColor: themeData.primaryColor,
+          foregroundColor: themeData.appBarTheme.foregroundColor,
+        ),
         body: Column(
           children: [
-            Container(
-              height: 120,
-              color: Colors.red[800],
-              padding: const EdgeInsets.fromLTRB(20, 55, 20, 20),
-              child: const Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: EdgeInsets.all(0),
-                      child: Text(
-                        "Workouts",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 40,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0.0, 25.0, 0.0, 0.0),
                   child: TextButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                    ),
+                    style: ElevatedButton.styleFrom(),
                     onPressed: () {
-                      var activeWorkoutState = Provider.of<ActiveWorkoutState>(
-                          scaffoldContext,
-                          listen: false);
+                      var activeWorkoutState = Provider.of<ActiveWorkoutState>(scaffoldContext, listen: false);
                       if (activeWorkoutState.isActive) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Alert'),
-                              content: Text('Workout already active'),
+                              title: const Text('Alert'),
+                              content: const Text('Workout already active'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                 ),
                               ],
                             );
@@ -103,7 +84,7 @@ class _WorkoutState extends State<Workout> {
                     child: Text(
                       'Start Empty Workout',
                       style: TextStyle(
-                        color: Colors.red[800],
+                        color: themeData.primaryColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
@@ -125,8 +106,7 @@ class _WorkoutState extends State<Workout> {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () async {
-            var activeWorkoutState =
-                Provider.of<ActiveWorkoutState>(context, listen: false);
+            var activeWorkoutState = Provider.of<ActiveWorkoutState>(context, listen: false);
 
             if (activeWorkoutState.isActive) {
               showDialog(
@@ -147,16 +127,13 @@ class _WorkoutState extends State<Workout> {
                 },
               );
             } else {
-              for (Exercise exercise
-                  in workoutTemplates[index].workoutExercises) {
+              for (Exercise exercise in workoutTemplates[index].workoutExercises) {
                 exercise = await checkDatabase(exercise);
                 activeWorkoutState.addExercise(exercise);
               }
-              activeWorkoutState.workoutName =
-                  workoutTemplates[index].workoutName;
+              activeWorkoutState.workoutName = workoutTemplates[index].workoutName;
               activeWorkoutState.startWorkout();
-              Navigator.pushNamed(context, "/activeWorkout",
-                  arguments: workoutTemplates[index].workoutName);
+              Navigator.pushNamed(context, "/activeWorkout", arguments: workoutTemplates[index].workoutName);
             }
           },
           child: TemplateCard(template: workoutTemplates[index]),

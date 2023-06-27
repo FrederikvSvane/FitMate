@@ -6,7 +6,7 @@ import 'package:flutter_fitness_app/pages/settings.dart';
 import 'package:flutter_fitness_app/pages/workout.dart';
 
 class Navigation extends StatefulWidget {
-  const Navigation({super.key});
+  const Navigation({Key? key}) : super(key: key);
 
   @override
   State<Navigation> createState() => _NavigationState();
@@ -30,38 +30,42 @@ class _NavigationState extends State<Navigation> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined, color: Colors.red[800]),
+            icon: Icon(Icons.settings_outlined),
             label: 'Settings',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.fitness_center, color: Colors.red[800]),
+            icon: Icon(Icons.fitness_center),
             label: 'Workout',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.red[800]),
+            icon: Icon(Icons.person),
             label: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.set_meal, color: Colors.red[800]),
+            icon: Icon(Icons.set_meal),
             label: 'Food',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart, color: Colors.red[800]),
+            icon: Icon(Icons.bar_chart),
             label: 'Measure',
           ),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: Colors.black,
+        selectedItemColor: theme.colorScheme.primary,
+        unselectedItemColor: theme.colorScheme.primary,
+        selectedIconTheme: IconThemeData(color: theme.colorScheme.primary),
+        unselectedIconTheme: IconThemeData(color: theme.colorScheme.primary),
         onTap: _onItemTapped,
       ),
     );
   }
 }
+

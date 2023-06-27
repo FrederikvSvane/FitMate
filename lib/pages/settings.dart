@@ -39,39 +39,26 @@ class HistoryState extends State<History> {
   final TextEditingController activityLevelController = TextEditingController();
   final TextEditingController genderController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+
     return Scaffold(
-        backgroundColor: Colors.grey[200],
+        appBar: AppBar(
+          title: const Text(
+            "Settings",
+          ),
+          backgroundColor: themeData.primaryColor,
+          foregroundColor: themeData.appBarTheme.foregroundColor,
+        ),
         body: Column(children: [
-          Container(
-              height: 120,
-              color: Colors.red[800],
-              child: const Stack(children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      "Settings",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ),
-              ])),
           const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: EdgeInsets.all(10),
               child: Text(
                 'Personal information',
-                style: TextStyle(
-                    color: Color.fromARGB(255, 150, 0, 0),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400),
               ),
             ),
           ),
@@ -368,7 +355,7 @@ class HistoryState extends State<History> {
                 height: 50,
                 color: Colors.grey[100],
                 child: Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

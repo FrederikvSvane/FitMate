@@ -152,7 +152,6 @@ class _FoodState extends State<Food> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: const Text('Food'),
         actions: <Widget>[
@@ -197,7 +196,6 @@ class _FoodState extends State<Food> {
                               style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
                               ),
                             ),
                     ),
@@ -237,7 +235,7 @@ class _FoodState extends State<Food> {
                           ? const Text(
                               "Please set a calorie goal.",
                               style: TextStyle(
-                                color: Colors.red,
+
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -365,7 +363,6 @@ class _FoodState extends State<Food> {
                               ? const Text(
                                   "Please set a\nprotein goal.",
                                   style: TextStyle(
-                                    color: Colors.red,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -416,7 +413,7 @@ class _FoodState extends State<Food> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.red),
+                        icon: const Icon(Icons.arrow_back),
                         onPressed: () async {
                           setState(() {
                             selectedDate =
@@ -430,12 +427,11 @@ class _FoodState extends State<Food> {
                         DateFormat('EEEE, MMMM d, y').format(selectedDate),
                         style: const TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red),
+                            fontWeight: FontWeight.bold),
                       ),
                       IconButton(
                         icon:
-                            const Icon(Icons.arrow_forward, color: Colors.red),
+                            const Icon(Icons.arrow_forward),
                         onPressed: selectedDate.isBefore(DateTime(
                                 DateTime.now().year,
                                 DateTime.now().month,
